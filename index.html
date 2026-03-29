@@ -1,244 +1,297 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ALQURMANIX | بوابة الهوية الرسمية</title>
-    <link rel="icon" type="image/png" href="favicon.png">
-    
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, sendEmailVerification, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-        import { getFirestore, doc, setDoc, getDoc, updateDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ALQURMANI X - Auth</title>
 
-        const firebaseConfig = {
-            apiKey: "AIzaSyDA0gnR9U3I90umdJsAJI4h93nEPD3BJ9w",
-            authDomain: "alqurmanix-aswan.firebaseapp.com",
-            projectId: "alqurmanix-aswan",
-            storageBucket: "alqurmanix-aswan.firebasestorage.app",
-            messagingSenderId: "882189888648",
-            appId: "1:882189888648:web:41d3f89c74ad76fd6a833d",
-            measurementId: "G-5SZY72ESEV"
-        };
+<!-- Google Font -->
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;800&display=swap" rel="stylesheet">
 
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const db = getFirestore(app);
+<style>
+:root{
+  --gold1:#d4af37;
+  --gold2:#ffd700;
+  --gold3:#c9a227;
+  --gold4:#e6c200;
+  --gold5:#b8960a;
+  --gold6:#f5d76e;
+  --gold7:#a67c00;
+  --bg:#000;
+}
 
-        window.auth = auth; window.db = db;
-    </script>
+*{box-sizing:border-box;font-family:'Cairo',sans-serif}
+body{
+  margin:0;
+  background:#000;
+  color:#fff;
+  overflow-x:hidden;
+}
 
-    <style>
-        :root {
-            --gold-1: #FFD700; --gold-2: #FDB931; --gold-3: #EAA315; --gold-4: #D4AF37;
-            --gold-5: #C5A028; --gold-6: #B8860B; --gold-7: #996515; --gold-8: #855E42;
-            --bg: #05070a; --card-bg: rgba(15, 23, 42, 0.8); --neon-glow: 0 0 15px var(--gold-4);
-        }
+/* LOGO */
+.logo{
+  text-align:center;
+  font-size:32px;
+  font-weight:800;
+  letter-spacing:3px;
+  margin-top:30px;
+  animation:goldShift 6s infinite alternate;
+}
 
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { background: var(--bg); color: #fff; font-family: 'Segoe UI', Roboto, sans-serif; overflow-x: hidden; min-height: 100vh; display: flex; align-items: center; justify-content: center; }
+@keyframes goldShift{
+  0%{color:var(--gold1)}
+  20%{color:var(--gold2)}
+  40%{color:var(--gold3)}
+  60%{color:var(--gold4)}
+  80%{color:var(--gold5)}
+  100%{color:var(--gold6)}
+}
 
-        /* خلفية سينمائية */
-        body::before { content: ''; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: radial-gradient(circle at center, #1e293b 0%, #05070a 100%); z-index: -1; }
+.container{
+  width:90%;
+  max-width:420px;
+  margin:40px auto;
+  background:#111;
+  border-radius:20px;
+  padding:20px;
+  box-shadow:0 0 30px rgba(255,215,0,0.2);
+}
 
-        /* محول اللغات الفخم */
-        .lang-switcher { position: fixed; top: 20px; right: 20px; z-index: 1000; cursor: pointer; display: flex; align-items: center; gap: 10px; background: rgba(255,255,255,0.05); padding: 10px 20px; border-radius: 50px; border: 1px solid var(--gold-6); transition: 0.3s; }
-        .lang-switcher:hover { background: rgba(255,255,255,0.1); box-shadow: var(--neon-glow); }
-        .globe { width: 25px; height: 25px; animation: rotation 10s linear infinite; }
-        @keyframes rotation { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+.tabs{
+  display:flex;
+}
+.tabs button{
+  flex:1;
+  padding:12px;
+  background:#222;
+  border:none;
+  color:#fff;
+  cursor:pointer;
+}
+.tabs button.active{
+  background:linear-gradient(90deg,var(--gold1),var(--gold2));
+  color:#000;
+}
 
-        .lang-menu { position: absolute; top: 60px; right: 0; background: var(--card-bg); border: 1px solid var(--gold-4); border-radius: 15px; display: none; overflow: hidden; width: 180px; backdrop-filter: blur(15px); }
-        .lang-menu a { display: block; padding: 12px 20px; color: #fff; text-decoration: none; font-size: 0.9rem; transition: 0.3s; text-align: right; }
-        .lang-menu a:hover { background: var(--gold-4); color: #000; }
+.form{
+  display:none;
+  margin-top:20px;
+}
+.form.active{display:block}
 
-        /* لوجو النيون الذهبي المتغير */
-        .logo-neon { font-size: 3rem; font-weight: 900; letter-spacing: 5px; margin-bottom: 30px; text-transform: uppercase; animation: neon-gold-shift 8s infinite alternate; }
-        @keyframes neon-gold-shift {
-            0% { color: var(--gold-1); text-shadow: 0 0 10px var(--gold-1); }
-            14% { color: var(--gold-2); text-shadow: 0 0 15px var(--gold-2); }
-            28% { color: var(--gold-3); text-shadow: 0 0 20px var(--gold-3); }
-            42% { color: var(--gold-4); text-shadow: 0 0 25px var(--gold-4); }
-            57% { color: var(--gold-5); text-shadow: 0 0 20px var(--gold-5); }
-            71% { color: var(--gold-6); text-shadow: 0 0 15px var(--gold-6); }
-            85% { color: var(--gold-7); text-shadow: 0 0 10px var(--gold-7); }
-            100% { color: var(--gold-8); text-shadow: 0 0 5px var(--gold-8); }
-        }
+input{
+  width:100%;
+  padding:12px;
+  margin:10px 0;
+  border:none;
+  border-radius:10px;
+}
 
-        /* الحاوية الرئيسية */
-        .main-card { background: var(--card-bg); backdrop-filter: blur(20px); border: 1px solid rgba(255,215,0,0.2); border-radius: 30px; width: 90%; max-width: 450px; padding: 40px; box-shadow: 0 25px 50px rgba(0,0,0,0.8); position: relative; }
+button.submit{
+  width:100%;
+  padding:12px;
+  background:linear-gradient(90deg,var(--gold1),var(--gold2));
+  border:none;
+  border-radius:10px;
+  font-weight:bold;
+  cursor:pointer;
+}
 
-        .tabs-header { display: flex; margin-bottom: 30px; background: rgba(0,0,0,0.3); border-radius: 15px; padding: 5px; }
-        .tab-trigger { flex: 1; padding: 15px; border: none; background: none; color: #94a3b8; cursor: pointer; font-weight: bold; border-radius: 12px; transition: 0.4s; }
-        .tab-trigger.active { background: var(--gold-4); color: #000; box-shadow: var(--neon-glow); }
+.password-strength{
+  height:6px;
+  background:#333;
+  border-radius:10px;
+  margin-top:-5px;
+}
+.password-strength div{
+  height:100%;
+  width:0%;
+  background:lime;
+  border-radius:10px;
+}
 
-        .form-content { display: none; flex-direction: column; gap: 20px; }
-        .form-content.active { display: flex; }
+.popup{
+  position:fixed;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  background:rgba(0,0,0,0.8);
+  display:none;
+  justify-content:center;
+  align-items:center;
+}
 
-        .input-group { position: relative; display: flex; flex-direction: column; gap: 8px; }
-        input { background: rgba(0,0,0,0.5); border: 1px solid #334155; padding: 15px; border-radius: 12px; color: #fff; font-size: 1rem; outline: none; transition: 0.3s; text-align: right; }
-        input:focus { border-color: var(--gold-4); box-shadow: 0 0 10px rgba(212, 175, 55, 0.3); }
+.popup-content{
+  background:#111;
+  padding:30px;
+  border-radius:20px;
+  max-width:400px;
+  text-align:center;
+  box-shadow:0 0 40px gold;
+}
 
-        /* شريط قوة كلمة السر */
-        .strength-meter { height: 4px; background: #334155; border-radius: 2px; margin-top: -10px; overflow: hidden; display: flex; }
-        .strength-bar { height: 100%; width: 0; transition: 0.5s; }
+.close{
+  float:left;
+  cursor:pointer;
+  color:red;
+}
 
-        .btn-prime { background: linear-gradient(45deg, var(--gold-6), var(--gold-4)); color: #000; border: none; padding: 18px; border-radius: 12px; font-weight: 900; cursor: pointer; transition: 0.4s; font-size: 1.1rem; }
-        .btn-prime:hover { transform: translateY(-3px); box-shadow: 0 10px 20px rgba(212, 175, 55, 0.4); }
+.lang-switch{
+  position:absolute;
+  top:10px;
+  left:10px;
+  cursor:pointer;
+}
 
-        /* النوافذ المنبثقة الفخمة (Modal) */
-        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); backdrop-filter: blur(10px); display: none; align-items: center; justify-content: center; z-index: 2000; }
-        .modal-box { background: linear-gradient(135deg, #1e293b, #0f172a); border: 2px solid var(--gold-4); padding: 40px; border-radius: 25px; max-width: 500px; width: 90%; text-align: center; position: relative; animation: modalIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
-        @keyframes modalIn { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
-        .modal-close { position: absolute; top: 15px; left: 15px; color: var(--gold-4); font-size: 1.5rem; cursor: pointer; }
-    </style>
+</style>
 </head>
+
 <body>
 
-    <div class="lang-switcher" onclick="toggleLangMenu()">
-        <img src="https://cdn-icons-png.flaticon.com/512/814/814513.png" class="globe" alt="Globe">
-        <span>العربية</span>
-        <div class="lang-menu" id="langMenu">
-            <a href="index-en.html">English (الإنجليزية)</a>
-            <a href="index-es.html">Español (الإسبانية)</a>
-            <a href="index-fr.html">Français (الفرنسية)</a>
-        </div>
-    </div>
+<div class="lang-switch" onclick="toggleLang()">🌍 AR</div>
 
-    <div class="main-card">
-        <div class="logo-neon">ALQURMANIX</div>
-        
-        <div class="tabs-header">
-            <button class="tab-trigger active" onclick="switchTab('login')">تسجيل دخول</button>
-            <button class="tab-trigger" onclick="switchTab('signup')">اشتراك جديد</button>
-        </div>
+<div class="logo">ALQURMANI X</div>
 
-        <div id="loginForm" class="form-content active">
-            <div class="input-group">
-                <input type="email" id="logEmail" placeholder="البريد الإلكتروني الموثق">
-            </div>
-            <div class="input-group">
-                <input type="password" id="logPass" placeholder="كلمة المرور">
-            </div>
-            <button class="btn-prime" onclick="handleLogin()">دخول آمن</button>
-            <p style="font-size: 0.8rem; color: var(--gold-4); cursor: pointer; margin-top: 10px;" onclick="showResetModal()">نسيت كلمة المرور؟</p>
-        </div>
+<div class="container">
 
-        <div id="signupForm" class="form-content">
-            <div class="input-group">
-                <input type="email" id="regEmail" placeholder="البريد الإلكتروني">
-            </div>
-            <div class="input-group">
-                <input type="password" id="regPass" placeholder="كلمة المرور" oninput="checkStrength(this.value)">
-                <div class="strength-meter"><div id="strengthBar" class="strength-bar"></div></div>
-            </div>
-            <div style="display: flex; align-items: center; gap: 10px; font-size: 0.8rem; color: #94a3b8;">
-                <input type="checkbox" id="termsCheck">
-                <span onclick="showTerms()" style="cursor: pointer; text-decoration: underline;">أوافق على اتفاقية المستخدم الصارمة</span>
-            </div>
-            <button class="btn-prime" onclick="handleSignup()">إنشاء الهوية الرقمية</button>
-        </div>
-    </div>
+<div class="tabs">
+  <button class="active" onclick="switchTab('login')">تسجيل الدخول</button>
+  <button onclick="switchTab('signup')">اشتراك</button>
+</div>
 
-    <div class="modal-overlay" id="modalOverlay">
-        <div class="modal-box">
-            <div class="modal-close" onclick="closeModal()">✕</div>
-            <h2 id="modalTitle" style="color: var(--gold-4); margin-bottom: 20px;"></h2>
-            <div id="modalBody" style="line-height: 1.6; color: #cbd5e1; margin-bottom: 30px;"></div>
-            <div id="modalFooter"></div>
-        </div>
-    </div>
+<!-- LOGIN -->
+<div id="login" class="form active">
+  <input type="email" id="loginEmail" placeholder="البريد الإلكتروني">
+  <input type="password" id="loginPass" placeholder="كلمة المرور">
+  <button class="submit" onclick="login()">دخول</button>
+  <p onclick="resetPass()" style="cursor:pointer;color:gold">نسيت كلمة السر؟</p>
+</div>
 
-    <script>
-        function toggleLangMenu() {
-            const menu = document.getElementById('langMenu');
-            menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
-        }
+<!-- SIGNUP -->
+<div id="signup" class="form">
+  <input type="email" id="signEmail" placeholder="البريد الإلكتروني">
+  <input type="password" id="signPass" placeholder="كلمة المرور" oninput="checkStrength()">
+  <div class="password-strength"><div id="strengthBar"></div></div>
+  <label><input type="checkbox" id="terms"> موافق على الشروط</label>
+  <button class="submit" onclick="signup()">اشتراك</button>
+</div>
 
-        function switchTab(type) {
-            document.querySelectorAll('.tab-trigger').forEach(b => b.classList.remove('active'));
-            document.querySelectorAll('.form-content').forEach(f => f.classList.remove('active'));
-            if(type === 'login') {
-                document.querySelector('[onclick="switchTab(\'login\')"]').classList.add('active');
-                document.getElementById('loginForm').classList.add('active');
-            } else {
-                document.querySelector('[onclick="switchTab(\'signup\')"]').classList.add('active');
-                document.getElementById('signupForm').classList.add('active');
-            }
-        }
+</div>
 
-        function showModal(title, body, footer = '') {
-            document.getElementById('modalTitle').innerText = title;
-            document.getElementById('modalBody').innerHTML = body;
-            document.getElementById('modalFooter').innerHTML = footer;
-            document.getElementById('modalOverlay').style.display = 'flex';
-        }
+<div id="popup" class="popup">
+  <div class="popup-content">
+    <span class="close" onclick="closePopup()">✖</span>
+    <p id="popupText"></p>
+  </div>
+</div>
 
-        function closeModal() { document.getElementById('modalOverlay').style.display = 'none'; }
+<script type="module">
 
-        function checkStrength(p) {
-            let s = 0; if(p.length > 8) s++; if(/[A-Z]/.test(p)) s++; if(/[0-9]/.test(p)) s++; if(/[^A-Za-z0-9]/.test(p)) s++;
-            const bar = document.getElementById('strengthBar');
-            const colors = ['#ff4444', '#ffbb33', '#00C851', '#007E33'];
-            bar.style.width = (s*25) + '%';
-            bar.style.background = colors[s-1] || '#334155';
-        }
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, sendPasswordResetEmail, sendEmailVerification } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+import { getFirestore, doc, setDoc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-        async function handleSignup() {
-            const email = document.getElementById('regEmail').value;
-            const pass = document.getElementById('regPass').value;
-            if(!document.getElementById('termsCheck').checked) return showModal('تنبيه', 'يجب الموافقة على الشروط الصارمة للمنصة');
+const firebaseConfig = {
+  apiKey: "AIzaSyDA0gnR9U3I90umdJsAJI4h93nEPD3BJ9w",
+  authDomain: "alqurmanix-aswan.firebaseapp.com",
+  projectId: "alqurmanix-aswan",
+  storageBucket: "alqurmanix-aswan.firebasestorage.app",
+  messagingSenderId: "882189888648",
+  appId: "1:882189888648:web:41d3f89c74ad76fd6a833d",
+  measurementId: "G-5SZY72ESEV"
+};
 
-            try {
-                const userCred = await createUserWithEmailAndPassword(window.auth, email, pass);
-                await sendEmailVerification(userCred.user);
-                
-                // إنشاء ملف المستخدم في Firestore (الوضع المعلق)
-                await setDoc(doc(window.db, "users", userCred.user.uid), {
-                    email: email,
-                    status: 'pending',
-                    createdAt: new Date(),
-                    lockUntil: null
-                });
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
 
-                showModal('نجاح العملية', 'مرحباً بك في نظام القرماني. تم إنشاء هويتك بنجاح. يرجى تفعيل حسابك عبر الرابط المرسل لبريدك الإلكتروني الآن.');
-                setTimeout(() => { window.location.reload(); }, 5000);
-            } catch (error) {
-                showModal('خطأ في التسجيل', error.message);
-            }
-        }
+window.switchTab = (tab)=>{
+  document.querySelectorAll('.form').forEach(f=>f.classList.remove('active'));
+  document.getElementById(tab).classList.add('active');
+}
 
-        async function handleLogin() {
-            const email = document.getElementById('logEmail').value;
-            const pass = document.getElementById('logPass').value;
+window.checkStrength = ()=>{
+  let val=document.getElementById('signPass').value;
+  let strength=0;
+  if(val.length>6) strength+=30;
+  if(/[A-Z]/.test(val)) strength+=30;
+  if(/[0-9]/.test(val)) strength+=20;
+  if(/[^A-Za-z0-9]/.test(val)) strength+=20;
+  document.getElementById('strengthBar').style.width=strength+'%';
+}
 
-            try {
-                const userCred = await signInWithEmailAndPassword(window.auth, email, pass);
-                const userDoc = await getDoc(doc(window.db, "users", userCred.user.uid));
-                const data = userDoc.data();
+function popup(msg){
+  document.getElementById('popupText').innerText=msg;
+  document.getElementById('popup').style.display='flex';
+}
+window.closePopup=()=> document.getElementById('popup').style.display='none';
 
-                if(!userCred.user.emailVerified) return showModal('تنبيه الأمان', 'الحساب غير نشط. يرجى تفعيل البريد الإلكتروني أولاً.');
-                if(data.status !== 'active' && data.status !== 'pending') return showModal('وصول مرفوض', `حسابك في حالة: ${data.status}. تواصل مع الدعم الفني.`, `<button class="btn-prime" onclick="location.href='AuthSupport.html'">الدعم الفني</button>`);
-                
-                // تحديث الحالة لـ Active عند أول دخول بعد التفعيل
-                if(data.status === 'pending') await updateDoc(doc(window.db, "users", userCred.user.uid), { status: 'active' });
+window.signup = async ()=>{
+  let email=signEmail.value;
+  let pass=signPass.value;
+  if(!terms.checked) return popup("يجب الموافقة على الشروط");
 
-                location.href = 'PortalHub.html';
-            } catch (error) {
-                showModal('فشل الدخول', 'بيانات الاعتماد غير مطابقة للقيود الصارمة للنظام.');
-            }
-        }
+  try{
+    let user=await createUserWithEmailAndPassword(auth,email,pass);
+    await sendEmailVerification(user.user);
 
-        function showTerms() {
-            showModal('اتفاقية المستخدم', '1. النظام صارم ولا يقبل التلاعب. <br> 2. الحظر نهائي لأي محاولة اختراق. <br> 3. العملة مربوطة بأصول حقيقية. <br> 4. يمنع تعدد الحسابات. <br> 5. البيانات مشفرة للأبد.');
-        }
+    await setDoc(doc(db,'users',user.user.uid),{
+      email:email,
+      status:'pending',
+      createdAt:new Date(),
+      lockUntil:null
+    });
 
-        async function showResetModal() {
-            const email = prompt("أدخل بريدك الإلكتروني لإرسال رابط الاستعادة:");
-            if(email) {
-                await sendPasswordResetEmail(window.auth, email);
-                showModal('إعادة تعيين', 'تم إرسال رابط الأمان لبريدك الإلكتروني.');
-            }
-        }
-    </script>
+    popup("تم إنشاء الحساب وإرسال رابط التفعيل إلى بريدك الإلكتروني");
+
+    setTimeout(()=>switchTab('login'),4000);
+
+  }catch(e){popup(e.message)}
+}
+
+window.login = async ()=>{
+  let email=loginEmail.value;
+  let pass=loginPass.value;
+
+  try{
+    let user=await signInWithEmailAndPassword(auth,email,pass);
+
+    if(!user.user.emailVerified){
+      popup("يجب تفعيل البريد الإلكتروني أولاً");
+      return;
+    }
+
+    let ref=doc(db,'users',user.user.uid);
+    let snap=await getDoc(ref);
+
+    if(!snap.exists()) return popup("الحساب غير موجود");
+
+    let data=snap.data();
+
+    if(data.status!='active') return popup("الحساب غير مفعل أو موقوف");
+
+    if(data.lockUntil && new Date()<data.lockUntil.toDate()){
+      return popup("الحساب مقفل مؤقتاً");
+    }
+
+    window.location.href="PortalHub.html";
+
+  }catch(e){popup("بيانات غير صحيحة أو الحساب غير متاح")}
+}
+
+window.resetPass = async ()=>{
+  let email=prompt("ادخل بريدك");
+  if(!email) return;
+  await sendPasswordResetEmail(auth,email);
+  popup("تم إرسال رابط إعادة تعيين كلمة المرور");
+}
+
+window.toggleLang=()=>{
+  window.location.href="index-en.html";
+}
+
+</script>
+
 </body>
 </html>
