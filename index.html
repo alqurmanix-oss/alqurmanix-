@@ -24,26 +24,23 @@ import {
 const firebaseConfig = {
   apiKey: "AIzaSyDA0gnR9U3I90umdJsAJI4h93nEPD3BJ9w",
   authDomain: "alqurmanix-aswan.firebaseapp.com",
-  projectId: "alqurmanix-aswan",
+  projectId: "alqurmanix-aswan"
 };
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 
-/* ================= GLOBAL GUARD ================= */
+/* ================= SAFE GET ================= */
+const $ = (id) => document.getElementById(id);
+
+/* ================= ANTI SPAM ================= */
 let busy = false;
-function lockUI(btn) {
+function lock() {
   if (busy) return false;
   busy = true;
-  if (btn) btn.disabled = true;
-  setTimeout(()=>{ busy=false; if(btn) btn.disabled=false; },3000);
+  setTimeout(()=>busy=false, 2500);
   return true;
-}
-
-/* ================= FINGERPRINT ================= */
-function getFP() {
-  return btoa(navigator.userAgent + screen.width + screen.height + Date.now());
 }
 
 /* ================= LOG ================= */
@@ -66,23 +63,29 @@ async function createSession(user) {
 }
 
 async function deleteSession(user) {
-  await deleteDoc(doc(db, "sessions", user.uid));
+  try {
+    await deleteDoc(doc(db, "sessions", user.uid));
+  } catch {}
 }
 
 /* ================= SIGNUP ================= */
 window.handleSignup = async (e) => {
   e.preventDefault();
-  if (!lockUI(e.submitter)) return;
+  if (!lock()) return;
 
-  const email = signupEmail.value.trim();
-  const pass = signupPassword.value;
-  const conf = signupConfirm.value;
+  const email = $("signupEmail").value.trim();
+  const pass = $("signupPassword").value;
+  const conf = $("signupConfirm").value;
 
-  if (pass !== conf)
-    return showModal("خطأ", "كلمة المرور غير متطابقة", "fas fa-times", "#ff4444");
+  if (pass !== conf) {
+    showModal("خطأ", "كلمة المرور غير متطابقة", "fas fa-times", "#ff4444");
+    return;
+  }
 
-  if (!/^(?=.*\d)(?=.*[!@#$%^&*]).{8,}$/.test(pass))
-    return showModal("ضعيف", "كلمة مرور غير قوية", "fas fa-shield", "#ff4444");
+  if (!/^(?=.*\d)(?=.*[!@#$%^&*]).{8,}$/.test(pass)) {
+    showModal("ضعيف", "كلمة المرور ضعيفة", "fas fa-shield", "#ff4444");
+    return;
+  }
 
   try {
     const cred = await createUserWithEmailAndPassword(auth, email, pass);
@@ -105,23 +108,23 @@ window.handleSignup = async (e) => {
 
     await signOut(auth);
 
-    showModal("تم", "راجع بريدك لتفعيل الحساب", "fas fa-envelope", "#00ff66");
+    showModal("تم", "تم إنشاء الحساب - راجع بريدك للتفعيل", "fas fa-envelope", "#00ff66");
 
-    signupForm.reset();
+    $("signupForm").reset();
     switchTab("login");
 
   } catch (err) {
-    showModal("خطأ", "فشل إنشاء الحساب", "fas fa-times", "#ff4444");
+    showModal("خطأ", err.message, "fas fa-times", "#ff4444");
   }
 };
 
 /* ================= LOGIN ================= */
 window.handleLogin = async (e) => {
   e.preventDefault();
-  if (!lockUI(e.submitter)) return;
+  if (!lock()) return;
 
-  const email = loginEmail.value.trim();
-  const pass = loginPassword.value;
+  const email = $("loginEmail").value.trim();
+  const pass = $("loginPassword").value;
 
   try {
     const cred = await signInWithEmailAndPassword(auth, email, pass);
@@ -129,29 +132,32 @@ window.handleLogin = async (e) => {
 
     if (!user.emailVerified) {
       await signOut(auth);
-      return showModal("تنبيه", "فعل بريدك أولاً", "fas fa-lock", "#ffaa00");
+      showModal("تنبيه", "فعل بريدك أولاً", "fas fa-lock", "#ffaa00");
+      return;
     }
 
-    const userRef = doc(db, "users", user.uid);
-    const snap = await getDoc(userRef);
+    const ref = doc(db, "users", user.uid);
+    const snap = await getDoc(ref);
 
-    if (!snap.exists()) throw "no_user";
+    if (!snap.exists()) throw new Error("no_user");
 
     const data = snap.data();
 
     const banned = await getDoc(doc(db, "blacklist", user.uid));
     if (banned.exists()) {
       await signOut(auth);
-      return showModal("محظور", "تم حظر الحساب", "fas fa-ban", "#ff0000");
+      showModal("محظور", "تم حظر الحساب", "fas fa-ban", "#ff0000");
+      return;
     }
 
     if (data.lockUntil && Date.now() < data.lockUntil.toMillis()) {
       await signOut(auth);
-      return showModal("مقفل", "الحساب مقفل مؤقتاً", "fas fa-lock", "#ffaa00");
+      showModal("مقفل", "الحساب مقفل مؤقتاً", "fas fa-lock", "#ffaa00");
+      return;
     }
 
     if (data.status === "pending") {
-      await updateDoc(userRef, { status: "active" });
+      await updateDoc(ref, { status: "active" });
     }
 
     await createSession(user);
@@ -159,18 +165,21 @@ window.handleLogin = async (e) => {
 
     showModal("نجاح", "جارى الدخول...", "fas fa-crown", "#FFD700");
 
-    setTimeout(() => location.href = "index.html", 2000);
+    setTimeout(()=>location.href="index.html", 2000);
 
-  } catch {
+  } catch (err) {
     showModal("فشل", "بيانات غير صحيحة", "fas fa-times", "#ff4444");
   }
 };
 
 /* ================= RESET ================= */
 window.showResetModal = async () => {
-  const email = loginEmail.value.trim();
-  if (!email)
-    return showModal("تنبيه", "اكتب بريدك أولاً", "fas fa-info", "#ffaa00");
+  const email = $("loginEmail").value.trim();
+
+  if (!email) {
+    showModal("تنبيه", "اكتب بريدك أولاً", "fas fa-info", "#ffaa00");
+    return;
+  }
 
   try {
     await sendPasswordResetEmail(auth, email);
@@ -180,7 +189,7 @@ window.showResetModal = async () => {
       createdAt: serverTimestamp()
     });
 
-    showModal("تم", "تم إرسال الرابط", "fas fa-paper-plane", "#00ff66");
+    showModal("تم", "تم إرسال رابط إعادة التعيين", "fas fa-paper-plane", "#00ff66");
 
   } catch {
     showModal("خطأ", "فشل الإرسال", "fas fa-times", "#ff4444");
@@ -189,21 +198,23 @@ window.showResetModal = async () => {
 
 /* ================= RESEND ================= */
 window.resendVerification = async () => {
-  const email = loginEmail.value;
-  const pass = loginPassword.value;
+  const email = $("loginEmail").value;
+  const pass = $("loginPassword").value;
 
-  if (!email || !pass)
-    return showModal("تنبيه", "اكتب البيانات أولاً", "fas fa-info", "#ffaa00");
+  if (!email || !pass) {
+    showModal("تنبيه", "اكتب البيانات أولاً", "fas fa-info", "#ffaa00");
+    return;
+  }
 
   try {
     const cred = await signInWithEmailAndPassword(auth, email, pass);
     const user = cred.user;
 
-    if (user.emailVerified) {
-      showModal("تم", "الحساب مفعل", "fas fa-check", "#00ff66");
-    } else {
+    if (!user.emailVerified) {
       await sendEmailVerification(user);
-      showModal("تم", "أُرسل مجدداً", "fas fa-paper-plane", "#FFD700");
+      showModal("تم", "تم إرسال رابط جديد", "fas fa-paper-plane", "#FFD700");
+    } else {
+      showModal("تم", "الحساب مفعل", "fas fa-check", "#00ff66");
     }
 
     await signOut(auth);
@@ -224,35 +235,30 @@ window.logout = async () => {
   location.href = "login.html";
 };
 
-/* ================= SESSION GUARD ================= */
+/* ================= SESSION CHECK ================= */
 onAuthStateChanged(auth, async (user) => {
   if (!user) return;
 
-  const session = await getDoc(doc(db, "sessions", user.uid));
-
-  if (!session.exists()) {
-    await signOut(auth);
-    location.href = "login.html";
-  }
+  try {
+    const s = await getDoc(doc(db, "sessions", user.uid));
+    if (!s.exists()) {
+      await signOut(auth);
+      location.href = "login.html";
+    }
+  } catch {}
 });
 
-/* ================= ANTI-HACK ================= */
+/* ================= ANTI HACK ================= */
 let clicks = 0;
 window.addEventListener("click", () => {
   clicks++;
-  if (clicks > 60) autoBan();
+  if (clicks > 80) {
+    const user = auth.currentUser;
+    if (user) {
+      setDoc(doc(db, "blacklist", user.uid), { reason: "spam" });
+      signOut(auth);
+      showModal("تحذير", "تم حظرك تلقائياً", "fas fa-ban", "#ff0000");
+    }
+  }
 });
-
-async function autoBan() {
-  const user = auth.currentUser;
-  if (!user) return;
-
-  await setDoc(doc(db, "blacklist", user.uid), {
-    reason: "abuse"
-  });
-
-  await signOut(auth);
-
-  showModal("تم حظرك", "نشاط مشبوه", "fas fa-ban", "#ff0000");
-}
 </script>
