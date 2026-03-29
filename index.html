@@ -3,10 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ALQURMANI X - Auth</title>
+<title>ALQURMANI X</title>
 
-<!-- Google Font -->
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;700;900&display=swap" rel="stylesheet">
 
 <style>
 :root{
@@ -17,66 +16,93 @@
   --gold5:#b8960a;
   --gold6:#f5d76e;
   --gold7:#a67c00;
-  --bg:#000;
 }
 
-*{box-sizing:border-box;font-family:'Cairo',sans-serif}
 body{
   margin:0;
+  font-family:'Cairo';
   background:#000;
   color:#fff;
-  overflow-x:hidden;
 }
 
-/* LOGO */
+/* ===== LOGO ===== */
 .logo{
   text-align:center;
-  font-size:32px;
-  font-weight:800;
-  letter-spacing:3px;
+  font-size:36px;
+  font-weight:900;
   margin-top:30px;
-  animation:goldShift 6s infinite alternate;
+  animation:goldFlow 5s infinite linear;
 }
 
-@keyframes goldShift{
+@keyframes goldFlow{
   0%{color:var(--gold1)}
-  20%{color:var(--gold2)}
-  40%{color:var(--gold3)}
-  60%{color:var(--gold4)}
-  80%{color:var(--gold5)}
-  100%{color:var(--gold6)}
+  25%{color:var(--gold2)}
+  50%{color:var(--gold3)}
+  75%{color:var(--gold4)}
+  100%{color:var(--gold5)}
 }
 
+/* ===== LANGUAGE MENU ===== */
+.lang-box{
+  position:absolute;
+  top:15px;
+  left:15px;
+}
+
+.lang-btn{
+  cursor:pointer;
+  font-size:18px;
+}
+
+.lang-menu{
+  display:none;
+  position:absolute;
+  top:30px;
+  background:#111;
+  border-radius:10px;
+  box-shadow:0 0 20px gold;
+}
+
+.lang-menu div{
+  padding:10px;
+  cursor:pointer;
+}
+
+.lang-menu div:hover{
+  background:gold;
+  color:#000;
+}
+
+/* ===== CONTAINER ===== */
 .container{
-  width:90%;
+  width:95%;
   max-width:420px;
   margin:40px auto;
   background:#111;
+  padding:25px;
   border-radius:20px;
-  padding:20px;
-  box-shadow:0 0 30px rgba(255,215,0,0.2);
+  box-shadow:0 0 40px rgba(255,215,0,0.3);
 }
 
 .tabs{
   display:flex;
 }
+
 .tabs button{
   flex:1;
   padding:12px;
-  background:#222;
   border:none;
+  background:#222;
   color:#fff;
   cursor:pointer;
 }
-.tabs button.active{
+
+.tabs .active{
   background:linear-gradient(90deg,var(--gold1),var(--gold2));
   color:#000;
 }
 
-.form{
-  display:none;
-  margin-top:20px;
-}
+.form{display:none}
 .form.active{display:block}
 
 input{
@@ -87,7 +113,9 @@ input{
   border-radius:10px;
 }
 
-button.submit{
+.error{color:red;font-size:12px}
+
+.submit{
   width:100%;
   padding:12px;
   background:linear-gradient(90deg,var(--gold1),var(--gold2));
@@ -97,200 +125,179 @@ button.submit{
   cursor:pointer;
 }
 
-.password-strength{
+/* ===== PASSWORD ===== */
+.strength{
   height:6px;
   background:#333;
   border-radius:10px;
-  margin-top:-5px;
 }
-.password-strength div{
+.strength div{
   height:100%;
   width:0%;
   background:lime;
-  border-radius:10px;
 }
 
+.rules span{display:block;font-size:12px;color:#888}
+.rules .ok{color:lime}
+
+/* ===== POPUP ===== */
 .popup{
   position:fixed;
-  top:0;
-  left:0;
-  width:100%;
-  height:100%;
-  background:rgba(0,0,0,0.8);
+  top:0;left:0;
+  width:100%;height:100%;
+  background:rgba(0,0,0,0.85);
   display:none;
   justify-content:center;
   align-items:center;
 }
 
-.popup-content{
+.popup-box{
   background:#111;
   padding:30px;
   border-radius:20px;
+  box-shadow:0 0 50px gold;
   max-width:400px;
   text-align:center;
-  box-shadow:0 0 40px gold;
 }
 
-.close{
-  float:left;
-  cursor:pointer;
-  color:red;
-}
-
-.lang-switch{
-  position:absolute;
-  top:10px;
-  left:10px;
-  cursor:pointer;
-}
+.close{cursor:pointer;color:red;float:left}
 
 </style>
 </head>
 
 <body>
 
-<div class="lang-switch" onclick="toggleLang()">🌍 AR</div>
+<div class="lang-box">
+  <div class="lang-btn" onclick="toggleLangMenu()">🌍</div>
+  <div id="langMenu" class="lang-menu">
+    <div onclick="goLang('index-en.html')">English</div>
+    <div onclick="goLang('index-es.html')">Español</div>
+    <div onclick="goLang('index-fr.html')">Français</div>
+  </div>
+</div>
 
 <div class="logo">ALQURMANI X</div>
 
 <div class="container">
 
 <div class="tabs">
-  <button class="active" onclick="switchTab('login')">تسجيل الدخول</button>
-  <button onclick="switchTab('signup')">اشتراك</button>
+<button class="active" onclick="switchTab('login',this)">دخول</button>
+<button onclick="switchTab('signup',this)">اشتراك</button>
 </div>
 
-<!-- LOGIN -->
 <div id="login" class="form active">
-  <input type="email" id="loginEmail" placeholder="البريد الإلكتروني">
-  <input type="password" id="loginPass" placeholder="كلمة المرور">
-  <button class="submit" onclick="login()">دخول</button>
-  <p onclick="resetPass()" style="cursor:pointer;color:gold">نسيت كلمة السر؟</p>
+<input id="lEmail" type="email" placeholder="البريد">
+<input id="lPass" type="password" placeholder="كلمة السر">
+<button class="submit" onclick="login()">دخول</button>
+<p onclick="resetPass()" style="cursor:pointer;color:gold">نسيت كلمة السر؟</p>
 </div>
 
-<!-- SIGNUP -->
 <div id="signup" class="form">
-  <input type="email" id="signEmail" placeholder="البريد الإلكتروني">
-  <input type="password" id="signPass" placeholder="كلمة المرور" oninput="checkStrength()">
-  <div class="password-strength"><div id="strengthBar"></div></div>
-  <label><input type="checkbox" id="terms"> موافق على الشروط</label>
-  <button class="submit" onclick="signup()">اشتراك</button>
+<input id="sEmail" type="email" placeholder="البريد">
+<input id="sPass" type="password" placeholder="كلمة السر" oninput="checkPass()">
+<input id="sPass2" type="password" placeholder="تأكيد كلمة السر">
+
+<div class="strength"><div id="bar"></div></div>
+
+<div class="rules">
+<span id="r1">6+ حروف</span>
+<span id="r2">حرف كبير</span>
+<span id="r3">رقم</span>
+<span id="r4">رمز</span>
+</div>
+
+<label><input type="checkbox" id="terms"> موافق على الشروط</label>
+<button class="submit" onclick="signup()">اشتراك</button>
 </div>
 
 </div>
 
 <div id="popup" class="popup">
-  <div class="popup-content">
-    <span class="close" onclick="closePopup()">✖</span>
-    <p id="popupText"></p>
-  </div>
+<div class="popup-box">
+<span class="close" onclick="closePop()">✖</span>
+<p id="msg"></p>
+</div>
 </div>
 
 <script type="module">
-
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, sendPasswordResetEmail, sendEmailVerification } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-import { getFirestore, doc, setDoc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-const firebaseConfig = {
-  apiKey: "AIzaSyDA0gnR9U3I90umdJsAJI4h93nEPD3BJ9w",
-  authDomain: "alqurmanix-aswan.firebaseapp.com",
-  projectId: "alqurmanix-aswan",
-  storageBucket: "alqurmanix-aswan.firebasestorage.app",
-  messagingSenderId: "882189888648",
-  appId: "1:882189888648:web:41d3f89c74ad76fd6a833d",
-  measurementId: "G-5SZY72ESEV"
-};
+const app=initializeApp({
+apiKey:"AIzaSyDA0gnR9U3I90umdJsAJI4h93nEPD3BJ9w",
+authDomain:"alqurmanix-aswan.firebaseapp.com",
+projectId:"alqurmanix-aswan"
+});
 
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db = getFirestore(app);
+const auth=getAuth(app);
+const db=getFirestore(app);
 
-window.switchTab = (tab)=>{
-  document.querySelectorAll('.form').forEach(f=>f.classList.remove('active'));
-  document.getElementById(tab).classList.add('active');
+window.switchTab=(id,el)=>{
+ document.querySelectorAll('.form').forEach(f=>f.classList.remove('active'));
+ document.getElementById(id).classList.add('active');
+ document.querySelectorAll('.tabs button').forEach(b=>b.classList.remove('active'));
+ el.classList.add('active');
 }
 
-window.checkStrength = ()=>{
-  let val=document.getElementById('signPass').value;
-  let strength=0;
-  if(val.length>6) strength+=30;
-  if(/[A-Z]/.test(val)) strength+=30;
-  if(/[0-9]/.test(val)) strength+=20;
-  if(/[^A-Za-z0-9]/.test(val)) strength+=20;
-  document.getElementById('strengthBar').style.width=strength+'%';
+window.toggleLangMenu=()=>{
+ let m=document.getElementById('langMenu');
+ m.style.display=m.style.display=='block'?'none':'block';
 }
 
-function popup(msg){
-  document.getElementById('popupText').innerText=msg;
-  document.getElementById('popup').style.display='flex';
+window.goLang=(file)=>window.location.href=file;
+
+function pop(t){
+ document.getElementById('msg').innerText=t;
+ document.getElementById('popup').style.display='flex';
 }
-window.closePopup=()=> document.getElementById('popup').style.display='none';
+window.closePop=()=>document.getElementById('popup').style.display='none';
 
-window.signup = async ()=>{
-  let email=signEmail.value;
-  let pass=signPass.value;
-  if(!terms.checked) return popup("يجب الموافقة على الشروط");
-
-  try{
-    let user=await createUserWithEmailAndPassword(auth,email,pass);
-    await sendEmailVerification(user.user);
-
-    await setDoc(doc(db,'users',user.user.uid),{
-      email:email,
-      status:'pending',
-      createdAt:new Date(),
-      lockUntil:null
-    });
-
-    popup("تم إنشاء الحساب وإرسال رابط التفعيل إلى بريدك الإلكتروني");
-
-    setTimeout(()=>switchTab('login'),4000);
-
-  }catch(e){popup(e.message)}
+window.checkPass=()=>{
+ let v=sPass.value;
+ let score=0;
+ if(v.length>=6){r1.classList.add('ok');score+=25}else r1.classList.remove('ok');
+ if(/[A-Z]/.test(v)){r2.classList.add('ok');score+=25}else r2.classList.remove('ok');
+ if(/[0-9]/.test(v)){r3.classList.add('ok');score+=25}else r3.classList.remove('ok');
+ if(/[^A-Za-z0-9]/.test(v)){r4.classList.add('ok');score+=25}else r4.classList.remove('ok');
+ bar.style.width=score+'%';
 }
 
-window.login = async ()=>{
-  let email=loginEmail.value;
-  let pass=loginPass.value;
-
-  try{
-    let user=await signInWithEmailAndPassword(auth,email,pass);
-
-    if(!user.user.emailVerified){
-      popup("يجب تفعيل البريد الإلكتروني أولاً");
-      return;
-    }
-
-    let ref=doc(db,'users',user.user.uid);
-    let snap=await getDoc(ref);
-
-    if(!snap.exists()) return popup("الحساب غير موجود");
-
-    let data=snap.data();
-
-    if(data.status!='active') return popup("الحساب غير مفعل أو موقوف");
-
-    if(data.lockUntil && new Date()<data.lockUntil.toDate()){
-      return popup("الحساب مقفل مؤقتاً");
-    }
-
-    window.location.href="PortalHub.html";
-
-  }catch(e){popup("بيانات غير صحيحة أو الحساب غير متاح")}
+window.signup=async()=>{
+ if(sPass.value!==sPass2.value) return pop("كلمتا السر غير متطابقتين");
+ if(!terms.checked) return pop("وافق على الشروط أولاً");
+ try{
+ let u=await createUserWithEmailAndPassword(auth,sEmail.value,sPass.value);
+ await sendEmailVerification(u.user);
+ await setDoc(doc(db,'users',u.user.uid),{
+ email:sEmail.value,
+ status:'pending',
+ createdAt:new Date(),
+ lockUntil:null
+ });
+ pop("تم التسجيل بنجاح — تحقق من بريدك لتفعيل الحساب");
+ setTimeout(()=>switchTab('login',document.querySelectorAll('.tabs button')[0]),4000);
+ }catch(e){pop(e.message)}
 }
 
-window.resetPass = async ()=>{
-  let email=prompt("ادخل بريدك");
-  if(!email) return;
-  await sendPasswordResetEmail(auth,email);
-  popup("تم إرسال رابط إعادة تعيين كلمة المرور");
+window.login=async()=>{
+ try{
+ let u=await signInWithEmailAndPassword(auth,lEmail.value,lPass.value);
+ if(!u.user.emailVerified) return pop("يجب تفعيل البريد الإلكتروني");
+ let d=await getDoc(doc(db,'users',u.user.uid));
+ if(!d.exists()) return pop("الحساب غير موجود");
+ let data=d.data();
+ if(data.status!='active') return pop("الحساب غير مفعل أو موقوف");
+ window.location.href='PortalHub.html';
+ }catch(e){pop("فشل تسجيل الدخول")}
 }
 
-window.toggleLang=()=>{
-  window.location.href="index-en.html";
+window.resetPass=async()=>{
+ let e=prompt("ادخل بريدك");
+ if(!e) return;
+ await sendPasswordResetEmail(auth,e);
+ pop("تم إرسال رابط إعادة التعيين");
 }
-
 </script>
 
 </body>
