@@ -1,304 +1,686 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ALQURMANI X</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alqurmanix - الدخول والاشتراك</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800&family=Cinzel:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --gold-1: #BF953F;
+            --gold-2: #FCF6BA;
+            --gold-3: #B38728;
+            --gold-4: #FBF5B7;
+            --gold-5: #AA771C;
+            --gold-6: #FDF9CD;
+            --gold-7: #8A5A19;
+            --gold-8: #E8D387;
+            --dark-bg: #050505;
+            --glass-bg: rgba(20, 20, 20, 0.6);
+            --glass-border: rgba(191, 149, 63, 0.3);
+            --neon-green: #00ff66;
+        }
 
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;700;900&display=swap" rel="stylesheet">
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: var(--dark-bg);
+            background-image: radial-gradient(circle at center, #1a1a1a 0%, #000 100%);
+            font-family: 'Cairo', sans-serif;
+            color: #fff;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
 
-<style>
-:root{
-  --gold1:#d4af37;
-  --gold2:#ffd700;
-  --gold3:#c9a227;
-  --gold4:#e6c200;
-  --gold5:#b8960a;
-  --gold6:#f5d76e;
-  --gold7:#a67c00;
-}
+        /* الجسيمات الذهبية المتطايرة */
+        #particles {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none; z-index: 0;
+        }
+        .particle {
+            position: absolute;
+            background: radial-gradient(circle, var(--gold-2) 0%, transparent 70%);
+            border-radius: 50%;
+            animation: floatUp linear infinite;
+        }
+        @keyframes floatUp {
+            0% { transform: translateY(100vh) scale(0); opacity: 0; }
+            50% { opacity: 0.8; }
+            100% { transform: translateY(-10vh) scale(1); opacity: 0; }
+        }
 
-body{
-  margin:0;
-  font-family:'Cairo';
-  background:#000;
-  color:#fff;
-}
+        /* الهيدر (الشريط العلوي) */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 40px;
+            position: relative;
+            z-index: 10;
+        }
 
-/* ===== LOGO ===== */
-.logo{
-  text-align:center;
-  font-size:36px;
-  font-weight:900;
-  margin-top:30px;
-  animation:goldFlow 5s infinite linear;
-}
+        /* حالة النظام والعداد */
+        .status-box {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            background: var(--glass-bg);
+            padding: 10px 20px;
+            border-radius: 30px;
+            border: 1px solid var(--glass-border);
+            backdrop-filter: blur(10px);
+        }
+        .live-dot {
+            width: 10px; height: 10px;
+            background-color: var(--neon-green);
+            border-radius: 50%;
+            box-shadow: 0 0 10px var(--neon-green), 0 0 20px var(--neon-green);
+            animation: pulseGreen 1.5s infinite alternate;
+        }
+        @keyframes pulseGreen { from { opacity: 0.5; transform: scale(0.8); } to { opacity: 1; transform: scale(1.2); } }
+        .global-count {
+            color: var(--gold-2);
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
 
-@keyframes goldFlow{
-  0%{color:var(--gold1)}
-  25%{color:var(--gold2)}
-  50%{color:var(--gold3)}
-  75%{color:var(--gold4)}
-  100%{color:var(--gold5)}
-}
+        /* اللوجو النيون الذهبي */
+        .logo {
+            font-family: 'Cinzel', serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            animation: goldNeon 4s infinite alternate;
+            cursor: default;
+        }
+        @keyframes goldNeon {
+            0% { color: var(--gold-1); text-shadow: 0 0 5px var(--gold-1); }
+            14% { color: var(--gold-2); text-shadow: 0 0 10px var(--gold-2), 0 0 20px var(--gold-2); }
+            28% { color: var(--gold-3); text-shadow: 0 0 5px var(--gold-3); }
+            42% { color: var(--gold-4); text-shadow: 0 0 15px var(--gold-4); }
+            56% { color: var(--gold-5); text-shadow: 0 0 5px var(--gold-5); }
+            70% { color: var(--gold-6); text-shadow: 0 0 20px var(--gold-6), 0 0 30px var(--gold-1); }
+            84% { color: var(--gold-7); text-shadow: 0 0 5px var(--gold-7); }
+            100% { color: var(--gold-8); text-shadow: 0 0 10px var(--gold-8); }
+        }
 
-/* ===== LANGUAGE MENU ===== */
-.lang-box{
-  position:absolute;
-  top:15px;
-  left:15px;
-}
+        /* القوائم والكرة الأرضية */
+        .top-icons {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        .icon-btn {
+            background: none; border: none;
+            color: var(--gold-1);
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex; align-items: center; gap: 8px;
+        }
+        .icon-btn:hover { color: var(--gold-2); text-shadow: 0 0 10px var(--gold-2); }
+        .globe-icon { animation: spinSlow 10s linear infinite; }
+        @keyframes spinSlow { 100% { transform: rotate(360deg); } }
+        
+        .faq-icon { animation: hoverMove 2s infinite alternate; }
+        @keyframes hoverMove { from { transform: translateY(-3px); } to { transform: translateY(3px); } }
 
-.lang-btn{
-  cursor:pointer;
-  font-size:18px;
-}
+        .dropdown {
+            position: relative;
+        }
+        .dropdown-menu {
+            position: absolute;
+            top: 120%; left: 0;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 10px;
+            backdrop-filter: blur(15px);
+            display: none;
+            flex-direction: column;
+            min-width: 150px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+        .dropdown.active .dropdown-menu { display: flex; }
+        .dropdown-item {
+            padding: 12px 20px;
+            color: #fff;
+            text-decoration: none;
+            display: flex; align-items: center; gap: 10px;
+            transition: background 0.3s;
+        }
+        .dropdown-item:hover { background: rgba(191, 149, 63, 0.2); color: var(--gold-2); }
 
-.lang-menu{
-  display:none;
-  position:absolute;
-  top:30px;
-  background:#111;
-  border-radius:10px;
-  box-shadow:0 0 20px gold;
-}
+        /* حاوية النماذج الرئيسية */
+        .main-container {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10;
+            padding: 20px;
+        }
+        .auth-box {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 40px;
+            width: 100%;
+            max-width: 450px;
+            backdrop-filter: blur(20px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.6), inset 0 0 20px rgba(191, 149, 63, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
 
-.lang-menu div{
-  padding:10px;
-  cursor:pointer;
-}
+        /* التبويبات */
+        .tabs {
+            display: flex;
+            margin-bottom: 30px;
+            border-bottom: 2px solid rgba(255,255,255,0.1);
+        }
+        .tab {
+            flex: 1;
+            text-align: center;
+            padding: 15px 0;
+            cursor: pointer;
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #888;
+            transition: all 0.3s;
+            position: relative;
+        }
+        .tab.active {
+            color: var(--gold-2);
+            text-shadow: 0 0 10px var(--gold-2);
+        }
+        .tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: -2px; left: 0; width: 100%; height: 2px;
+            background: linear-gradient(90deg, transparent, var(--gold-1), transparent);
+            box-shadow: 0 0 10px var(--gold-1);
+        }
 
-.lang-menu div:hover{
-  background:gold;
-  color:#000;
-}
+        /* النماذج والمدخلات */
+        .form-section { display: none; }
+        .form-section.active { display: block; animation: fadeIn 0.5s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-/* ===== CONTAINER ===== */
-.container{
-  width:95%;
-  max-width:420px;
-  margin:40px auto;
-  background:#111;
-  padding:25px;
-  border-radius:20px;
-  box-shadow:0 0 40px rgba(255,215,0,0.3);
-}
+        .input-group {
+            position: relative;
+            margin-bottom: 25px;
+        }
+        .input-group input {
+            width: 100%;
+            padding: 15px 45px 15px 15px;
+            background: rgba(0,0,0,0.4);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 10px;
+            color: #fff;
+            font-family: 'Cairo';
+            font-size: 1rem;
+            outline: none;
+            transition: all 0.3s;
+            box-sizing: border-box;
+        }
+        .input-group input:focus {
+            border-color: var(--gold-1);
+            box-shadow: 0 0 15px rgba(191, 149, 63, 0.3);
+        }
+        .input-group i.main-icon {
+            position: absolute;
+            right: 15px; top: 50%;
+            transform: translateY(-50%);
+            color: var(--gold-1);
+        }
+        .toggle-password {
+            position: absolute;
+            left: 15px; top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: #888;
+            transition: color 0.3s;
+        }
+        .toggle-password:hover { color: var(--gold-2); }
 
-.tabs{
-  display:flex;
-}
+        /* تأثير الماسح الضوئي (الليزر) */
+        .scanner-line {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 2px;
+            background: var(--gold-2);
+            box-shadow: 0 0 10px var(--gold-2), 0 0 20px var(--gold-1);
+            opacity: 0;
+            pointer-events: none;
+            z-index: 5;
+        }
+        .scanning .scanner-line {
+            animation: scanEffect 1.5s ease-in-out;
+        }
+        @keyframes scanEffect {
+            0% { top: 0; opacity: 1; }
+            50% { top: 100%; opacity: 1; }
+            100% { top: 100%; opacity: 0; }
+        }
 
-.tabs button{
-  flex:1;
-  padding:12px;
-  border:none;
-  background:#222;
-  color:#fff;
-  cursor:pointer;
-}
+        /* شروط كلمة المرور */
+        .password-reqs {
+            font-size: 0.85rem;
+            color: #888;
+            margin-top: -10px;
+            margin-bottom: 20px;
+            padding-right: 10px;
+        }
+        .req-item { display: flex; align-items: center; gap: 8px; margin-bottom: 5px; transition: color 0.3s; }
+        .req-item i { font-size: 0.7rem; }
+        .req-item.valid { color: var(--neon-green); text-shadow: 0 0 5px var(--neon-green); }
 
-.tabs .active{
-  background:linear-gradient(90deg,var(--gold1),var(--gold2));
-  color:#000;
-}
+        /* الأزرار الراقية */
+        .btn-submit {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(45deg, var(--gold-5), var(--gold-1));
+            border: none;
+            border-radius: 10px;
+            color: #000;
+            font-family: 'Cairo';
+            font-size: 1.1rem;
+            font-weight: 800;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+        .btn-submit:hover {
+            box-shadow: 0 0 20px var(--gold-1);
+            transform: scale(1.02);
+        }
+        .forgot-link {
+            display: block;
+            text-align: left;
+            margin-top: -15px;
+            margin-bottom: 20px;
+            color: #aaa;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.3s;
+        }
+        .forgot-link:hover { color: var(--gold-2); }
 
-.form{display:none}
-.form.active{display:block}
+        /* الفوتر (الروابط السفلية) */
+        .footer {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            padding: 30px;
+            z-index: 10;
+        }
+        .footer-link {
+            color: #fff;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s;
+            position: relative;
+        }
+        .support-link {
+            animation: supportNeon 2s infinite alternate;
+        }
+        @keyframes supportNeon {
+            0% { color: #fff; text-shadow: 0 0 5px #fff; }
+            50% { color: var(--gold-2); text-shadow: 0 0 15px var(--gold-2), 0 0 30px var(--gold-1); }
+            100% { color: var(--gold-5); text-shadow: 0 0 5px var(--gold-5); }
+        }
+        .footer-link:hover { color: var(--gold-2); }
 
-input{
-  width:100%;
-  padding:12px;
-  margin:10px 0;
-  border:none;
-  border-radius:10px;
-}
+        /* النوافذ المنبثقة (Modals) الفخمة */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.8);
+            backdrop-filter: blur(5px);
+            display: flex; justify-content: center; align-items: center;
+            z-index: 100;
+            opacity: 0; pointer-events: none;
+            transition: opacity 0.4s;
+        }
+        .modal-overlay.active { opacity: 1; pointer-events: all; }
+        .modal-box {
+            background: var(--dark-bg);
+            border: 2px solid var(--gold-1);
+            border-radius: 15px;
+            padding: 40px;
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
+            box-shadow: 0 0 40px rgba(191, 149, 63, 0.4);
+            transform: scale(0.8);
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .modal-overlay.active .modal-box { transform: scale(1); }
+        .modal-icon {
+            font-size: 4rem; margin-bottom: 20px;
+            color: var(--gold-2);
+            text-shadow: 0 0 20px var(--gold-2);
+        }
+        .modal-title { font-size: 1.5rem; color: var(--gold-4); margin-bottom: 10px; }
+        .modal-text { font-size: 1rem; color: #ccc; margin-bottom: 25px; line-height: 1.6; }
+        .modal-btn {
+            background: transparent;
+            border: 1px solid var(--gold-1);
+            color: var(--gold-1);
+            padding: 10px 30px; border-radius: 5px; cursor: pointer;
+            font-family: 'Cairo'; font-weight: 600; font-size: 1rem;
+            transition: all 0.3s;
+        }
+        .modal-btn:hover { background: var(--gold-1); color: #000; box-shadow: 0 0 15px var(--gold-1); }
 
-.error{color:red;font-size:12px}
-
-.submit{
-  width:100%;
-  padding:12px;
-  background:linear-gradient(90deg,var(--gold1),var(--gold2));
-  border:none;
-  border-radius:10px;
-  font-weight:bold;
-  cursor:pointer;
-}
-
-/* ===== PASSWORD ===== */
-.strength{
-  height:6px;
-  background:#333;
-  border-radius:10px;
-}
-.strength div{
-  height:100%;
-  width:0%;
-  background:lime;
-}
-
-.rules span{display:block;font-size:12px;color:#888}
-.rules .ok{color:lime}
-
-/* ===== POPUP ===== */
-.popup{
-  position:fixed;
-  top:0;left:0;
-  width:100%;height:100%;
-  background:rgba(0,0,0,0.85);
-  display:none;
-  justify-content:center;
-  align-items:center;
-}
-
-.popup-box{
-  background:#111;
-  padding:30px;
-  border-radius:20px;
-  box-shadow:0 0 50px gold;
-  max-width:400px;
-  text-align:center;
-}
-
-.close{cursor:pointer;color:red;float:left}
-
-</style>
+    </style>
 </head>
-
 <body>
 
-<div class="lang-box">
-  <div class="lang-btn" onclick="toggleLangMenu()">🌍</div>
-  <div id="langMenu" class="lang-menu">
-    <div onclick="goLang('index-en.html')">English</div>
-    <div onclick="goLang('index-es.html')">Español</div>
-    <div onclick="goLang('index-fr.html')">Français</div>
-  </div>
-</div>
+    <div id="particles"></div>
 
-<div class="logo">ALQURMANI X</div>
+    <header class="header">
+        <div class="status-box">
+            <div class="live-dot"></div>
+            <span style="font-size: 0.9rem;">النظام متصل وآمن</span>
+            <span style="color: #444;">|</span>
+            <span style="font-size: 0.9rem;">المشتركون: <span class="global-count" id="userCount">1,024</span></span>
+        </div>
 
-<div class="container">
+        <div class="logo">Alqurmanix</div>
 
-<div class="tabs">
-<button class="active" onclick="switchTab('login',this)">دخول</button>
-<button onclick="switchTab('signup',this)">اشتراك</button>
-</div>
+        <div class="top-icons">
+            <div class="dropdown" id="langDropdown">
+                <button class="icon-btn" onclick="toggleDropdown()">
+                    <i class="fas fa-globe globe-icon"></i>
+                    <span style="font-size: 1rem; font-weight: 600;">AR 🇪🇬</span>
+                </button>
+                <div class="dropdown-menu">
+                    <a href="index-es.html" class="dropdown-item">ES 🇪🇸 الإسبانية</a>
+                    <a href="index-fr.html" class="dropdown-item">FR 🇫🇷 الفرنسية</a>
+                    <a href="index-en.html" class="dropdown-item">EN 🇬🇧 الإنجليزية</a>
+                </div>
+            </div>
+            <button class="icon-btn" onclick="window.location.href='FAQ.html'">
+                <i class="fas fa-question-circle faq-icon"></i>
+            </button>
+        </div>
+    </header>
 
-<div id="login" class="form active">
-<input id="lEmail" type="email" placeholder="البريد">
-<input id="lPass" type="password" placeholder="كلمة السر">
-<button class="submit" onclick="login()">دخول</button>
-<p onclick="resetPass()" style="cursor:pointer;color:gold">نسيت كلمة السر؟</p>
-</div>
+    <main class="main-container">
+        <div class="auth-box" id="authBox">
+            <div class="scanner-line"></div>
+            
+            <div class="tabs">
+                <div class="tab active" onclick="switchTab('login')">تسجيل الدخول</div>
+                <div class="tab" onclick="switchTab('signup')">الاشتراك</div>
+            </div>
 
-<div id="signup" class="form">
-<input id="sEmail" type="email" placeholder="البريد">
-<input id="sPass" type="password" placeholder="كلمة السر" oninput="checkPass()">
-<input id="sPass2" type="password" placeholder="تأكيد كلمة السر">
+            <div id="loginForm" class="form-section active">
+                <form onsubmit="handleLogin(event)">
+                    <div class="input-group">
+                        <i class="fas fa-envelope main-icon"></i>
+                        <input type="email" id="loginEmail" placeholder="البريد الإلكتروني" required>
+                    </div>
+                    <div class="input-group">
+                        <i class="fas fa-lock main-icon"></i>
+                        <input type="password" id="loginPassword" placeholder="كلمة المرور" required>
+                        <i class="fas fa-eye toggle-password" onclick="togglePass('loginPassword', this)"></i>
+                    </div>
+                    <a href="#" class="forgot-link" onclick="showResetModal()">نسيت كلمة السر؟</a>
+                    <button type="submit" class="btn-submit">دخول آمن</button>
+                </form>
+            </div>
 
-<div class="strength"><div id="bar"></div></div>
+            <div id="signupForm" class="form-section">
+                <form onsubmit="handleSignup(event)">
+                    <div class="input-group">
+                        <i class="fas fa-envelope main-icon"></i>
+                        <input type="email" id="signupEmail" placeholder="البريد الإلكتروني" required>
+                    </div>
+                    <div class="input-group">
+                        <i class="fas fa-lock main-icon"></i>
+                        <input type="password" id="signupPassword" placeholder="كلمة المرور" oninput="checkPasswordStrength()" required>
+                        <i class="fas fa-eye toggle-password" onclick="togglePass('signupPassword', this)"></i>
+                    </div>
+                    
+                    <div class="password-reqs">
+                        <div class="req-item" id="req-len"><i class="fas fa-circle"></i> 8 أحرف على الأقل</div>
+                        <div class="req-item" id="req-num"><i class="fas fa-circle"></i> يحتوي على أرقام</div>
+                        <div class="req-item" id="req-char"><i class="fas fa-circle"></i> رموز خاصة (!@#$)</div>
+                    </div>
 
-<div class="rules">
-<span id="r1">6+ حروف</span>
-<span id="r2">حرف كبير</span>
-<span id="r3">رقم</span>
-<span id="r4">رمز</span>
-</div>
+                    <div class="input-group">
+                        <i class="fas fa-check-double main-icon"></i>
+                        <input type="password" id="signupConfirm" placeholder="تأكيد كلمة المرور" required>
+                    </div>
+                    <button type="submit" class="btn-submit">إنشاء حساب فاخر</button>
+                </form>
+            </div>
+        </div>
+    </main>
 
-<label><input type="checkbox" id="terms"> موافق على الشروط</label>
-<button class="submit" onclick="signup()">اشتراك</button>
-</div>
+    <footer class="footer">
+        <a href="AuthSupport.html" class="footer-link support-link">الدعم الفني</a>
+        <a href="SecurityShield.html" class="footer-link">تنبيهات الأمان</a>
+        <a href="AlqurmanixInfo.html" class="footer-link">من نحن</a>
+    </footer>
 
-</div>
+    <div class="modal-overlay" id="customModal">
+        <div class="modal-box">
+            <i class="fas fa-check-circle modal-icon" id="modalIcon"></i>
+            <h2 class="modal-title" id="modalTitle">العنوان</h2>
+            <p class="modal-text" id="modalText">الرسالة تظهر هنا</p>
+            <button class="modal-btn" onclick="closeModal()">حسناً</button>
+        </div>
+    </div>
 
-<div id="popup" class="popup">
-<div class="popup-box">
-<span class="close" onclick="closePop()">✖</span>
-<p id="msg"></p>
-</div>
-</div>
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { 
+            getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, 
+            sendEmailVerification, sendPasswordResetEmail, signOut
+        } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { 
+            getFirestore, doc, setDoc, getDoc, updateDoc, serverTimestamp 
+        } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, sendPasswordResetEmail, sendEmailVerification } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        const firebaseConfig = {
+            apiKey: "AIzaSyDA0gnR9U3I90umdJsAJI4h93nEPD3BJ9w",
+            authDomain: "alqurmanix-aswan.firebaseapp.com",
+            projectId: "alqurmanix-aswan",
+            storageBucket: "alqurmanix-aswan.firebasestorage.app",
+            messagingSenderId: "882189888648",
+            appId: "1:882189888648:web:41d3f89c74ad76fd6a833d",
+            measurementId: "G-5SZY72ESEV"
+        };
 
-const app=initializeApp({
-apiKey:"AIzaSyDA0gnR9U3I90umdJsAJI4h93nEPD3BJ9w",
-authDomain:"alqurmanix-aswan.firebaseapp.com",
-projectId:"alqurmanix-aswan"
-});
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
 
-const auth=getAuth(app);
-const db=getFirestore(app);
+        // وظائف الواجهة المساعدة
+        window.switchTab = (tabName) => {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.form-section').forEach(f => f.classList.remove('active'));
+            if(tabName === 'login') {
+                document.querySelectorAll('.tab')[0].classList.add('active');
+                document.getElementById('loginForm').classList.add('active');
+            } else {
+                document.querySelectorAll('.tab')[1].classList.add('active');
+                document.getElementById('signupForm').classList.add('active');
+            }
+        };
 
-window.switchTab=(id,el)=>{
- document.querySelectorAll('.form').forEach(f=>f.classList.remove('active'));
- document.getElementById(id).classList.add('active');
- document.querySelectorAll('.tabs button').forEach(b=>b.classList.remove('active'));
- el.classList.add('active');
-}
+        window.toggleDropdown = () => {
+            document.getElementById('langDropdown').classList.toggle('active');
+        };
 
-window.toggleLangMenu=()=>{
- let m=document.getElementById('langMenu');
- m.style.display=m.style.display=='block'?'none':'block';
-}
+        window.togglePass = (inputId, iconEl) => {
+            const input = document.getElementById(inputId);
+            if(input.type === 'password') {
+                input.type = 'text';
+                iconEl.classList.replace('fa-eye', 'fa-eye-slash');
+            } else {
+                input.type = 'password';
+                iconEl.classList.replace('fa-eye-slash', 'fa-eye');
+            }
+        };
 
-window.goLang=(file)=>window.location.href=file;
+        window.showModal = (title, text, iconClass, iconColor) => {
+            document.getElementById('modalTitle').innerText = title;
+            document.getElementById('modalText').innerText = text;
+            const icon = document.getElementById('modalIcon');
+            icon.className = `modal-icon ${iconClass}`;
+            icon.style.color = iconColor;
+            icon.style.textShadow = `0 0 20px ${iconColor}`;
+            document.getElementById('customModal').classList.add('active');
+        };
 
-function pop(t){
- document.getElementById('msg').innerText=t;
- document.getElementById('popup').style.display='flex';
-}
-window.closePop=()=>document.getElementById('popup').style.display='none';
+        window.closeModal = () => {
+            document.getElementById('customModal').classList.remove('active');
+        };
 
-window.checkPass=()=>{
- let v=sPass.value;
- let score=0;
- if(v.length>=6){r1.classList.add('ok');score+=25}else r1.classList.remove('ok');
- if(/[A-Z]/.test(v)){r2.classList.add('ok');score+=25}else r2.classList.remove('ok');
- if(/[0-9]/.test(v)){r3.classList.add('ok');score+=25}else r3.classList.remove('ok');
- if(/[^A-Za-z0-9]/.test(v)){r4.classList.add('ok');score+=25}else r4.classList.remove('ok');
- bar.style.width=score+'%';
-}
+        // فحص قوة كلمة المرور
+        window.checkPasswordStrength = () => {
+            const pass = document.getElementById('signupPassword').value;
+            const updateReq = (id, isValid) => {
+                const el = document.getElementById(id);
+                if(isValid) {
+                    el.classList.add('valid');
+                    el.querySelector('i').className = 'fas fa-check-circle';
+                } else {
+                    el.classList.remove('valid');
+                    el.querySelector('i').className = 'fas fa-circle';
+                }
+            };
+            updateReq('req-len', pass.length >= 8);
+            updateReq('req-num', /\d/.test(pass));
+            updateReq('req-char', /[!@#$%^&*(),.?":{}|<>]/.test(pass));
+        };
 
-window.signup=async()=>{
- if(sPass.value!==sPass2.value) return pop("كلمتا السر غير متطابقتين");
- if(!terms.checked) return pop("وافق على الشروط أولاً");
- try{
- let u=await createUserWithEmailAndPassword(auth,sEmail.value,sPass.value);
- await sendEmailVerification(u.user);
- await setDoc(doc(db,'users',u.user.uid),{
- email:sEmail.value,
- status:'pending',
- createdAt:new Date(),
- lockUntil:null
- });
- pop("تم التسجيل بنجاح — تحقق من بريدك لتفعيل الحساب");
- setTimeout(()=>switchTab('login',document.querySelectorAll('.tabs button')[0]),4000);
- }catch(e){pop(e.message)}
-}
+        // تأثير الماسح
+        const triggerScan = () => {
+            const box = document.getElementById('authBox');
+            box.classList.add('scanning');
+            setTimeout(() => box.classList.remove('scanning'), 1500);
+        };
 
-window.login=async()=>{
- try{
- let u=await signInWithEmailAndPassword(auth,lEmail.value,lPass.value);
- if(!u.user.emailVerified) return pop("يجب تفعيل البريد الإلكتروني");
- let d=await getDoc(doc(db,'users',u.user.uid));
- if(!d.exists()) return pop("الحساب غير موجود");
- let data=d.data();
- if(data.status!='active') return pop("الحساب غير مفعل أو موقوف");
- window.location.href='PortalHub.html';
- }catch(e){pop("فشل تسجيل الدخول")}
-}
+        // 1. الاشتراك الصارم
+        window.handleSignup = async (e) => {
+            e.preventDefault();
+            triggerScan();
+            const email = document.getElementById('signupEmail').value;
+            const pass = document.getElementById('signupPassword').value;
+            const conf = document.getElementById('signupConfirm').value;
 
-window.resetPass=async()=>{
- let e=prompt("ادخل بريدك");
- if(!e) return;
- await sendPasswordResetEmail(auth,e);
- pop("تم إرسال رابط إعادة التعيين");
-}
-</script>
+            if(pass !== conf) {
+                return showModal("تنبيه", "كلمات المرور غير متطابقة", "fas fa-exclamation-triangle", "#ff4444");
+            }
 
+            try {
+                const userCredential = await createUserWithEmailAndPassword(auth, email, pass);
+                const user = userCredential.user;
+                
+                // الامتثال لقواعدك: إنشاء السجل بحالة pending
+                await setDoc(doc(db, "users", user.uid), {
+                    email: user.email,
+                    status: "pending",
+                    createdAt: serverTimestamp(),
+                    lockUntil: null
+                });
+
+                await sendEmailVerification(user);
+                await signOut(auth); // خروج إجباري حتى يؤكد الإيميل
+
+                showModal("تم بنجاح فاخر", "تم إنشاء الحساب، يرجى مراجعة بريدك الإلكتروني لتفعيل الحساب قبل الدخول.", "fas fa-envelope-open-text", "var(--neon-green)");
+                switchTab('login');
+                document.getElementById('signupForm').reset();
+            } catch (error) {
+                showModal("عذراً", error.message, "fas fa-times-circle", "#ff4444");
+            }
+        };
+
+        // 2. تسجيل الدخول الذكي
+        window.handleLogin = async (e) => {
+            e.preventDefault();
+            triggerScan();
+            const email = document.getElementById('loginEmail').value;
+            const pass = document.getElementById('loginPassword').value;
+
+            try {
+                const userCredential = await signInWithEmailAndPassword(auth, email, pass);
+                const user = userCredential.user;
+
+                if (!user.emailVerified) {
+                    await signOut(auth);
+                    return showModal("الحساب معلق", "يرجى تأكيد بريدك الإلكتروني أولاً لتفعيل حسابك.", "fas fa-user-lock", "var(--gold-1)");
+                }
+
+                // جلب بيانات المستخدم لفحص الحالة
+                const userDocRef = doc(db, "users", user.uid);
+                const userDocSnap = await getDoc(userDocRef);
+
+                if (userDocSnap.exists()) {
+                    const userData = userDocSnap.data();
+
+                    // الترقية التلقائية من pending إلى active بناءً على القواعد
+                    if (userData.status === "pending") {
+                        await updateDoc(userDocRef, { status: "active" });
+                    } 
+                    // إذا كان الحساب محظوراً أو مجمداً
+                    else if (userData.status !== "active" && userData.status !== "pending") {
+                        await signOut(auth);
+                        return showModal("إيقاف مؤقت", "هذا الحساب غير نشط حالياً، يرجى التواصل مع الدعم الفني.", "fas fa-ban", "#ff4444");
+                    }
+                }
+
+                // نجاح الدخول
+                showModal("ترحيب حار", "أهلاً بك مجدداً في نظام Alqurmanix الفاخر، جاري تحويلك للوحة التحكم...", "fas fa-crown", "var(--gold-2)");
+                setTimeout(() => { window.location.href = 'index.html'; }, 2500);
+
+            } catch (error) {
+                showModal("خطأ في الدخول", "بيانات الاعتماد غير صحيحة، يرجى المحاولة مرة أخرى.", "fas fa-times-circle", "#ff4444");
+            }
+        };
+
+        // 3. استعادة كلمة المرور
+        window.showResetModal = async () => {
+            const email = document.getElementById('loginEmail').value;
+            if(!email) {
+                showModal("خطوة مطلوبة", "يرجى كتابة بريدك الإلكتروني في خانة تسجيل الدخول أولاً لإرسال الرابط.", "fas fa-info-circle", "var(--gold-1)");
+                return;
+            }
+            try {
+                triggerScan();
+                await sendPasswordResetEmail(auth, email);
+                showModal("تم الإرسال بأمان", "تم إرسال رابط إعادة تعيين كلمة المرور إلى بريدك، يرجى التحقق.", "fas fa-paper-plane", "var(--neon-green)");
+            } catch (error) {
+                showModal("خطأ", "لم نتمكن من إرسال الرابط، تأكد من صحة البريد.", "fas fa-exclamation-triangle", "#ff4444");
+            }
+        };
+
+        // توليد تأثيرات الجسيمات في الخلفية
+        const createParticles = () => {
+            const container = document.getElementById('particles');
+            for(let i=0; i<30; i++) {
+                const p = document.createElement('div');
+                p.className = 'particle';
+                p.style.left = Math.random() * 100 + 'vw';
+                p.style.width = Math.random() * 5 + 2 + 'px';
+                p.style.height = p.style.width;
+                p.style.animationDuration = Math.random() * 10 + 5 + 's';
+                p.style.animationDelay = Math.random() * 5 + 's';
+                container.appendChild(p);
+            }
+        };
+        createParticles();
+
+    </script>
 </body>
 </html>
