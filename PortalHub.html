@@ -1,27 +1,982 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <title>بوابة القرماني - جاري التجهيز</title>
-    <style>
-        body { background: #0f172a; color: #f8fafc; font-family: sans-serif; display: flex; align-items: center; justify-content: center; height: 100vh; margin: 0; overflow: hidden; }
-        .container { text-align: center; border: 2px solid #1e293b; padding: 40px; border-radius: 20px; background: #1e293b; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-        .logo { font-size: 2.5rem; font-weight: bold; color: #38bdf8; margin-bottom: 20px; letter-spacing: 2px; }
-        .status-badge { background: #0369a1; padding: 5px 15px; border-radius: 50px; font-size: 0.8rem; margin-bottom: 20px; display: inline-block; }
-        h1 { font-size: 1.5rem; margin-bottom: 10px; }
-        p { color: #94a3b8; font-size: 0.9rem; }
-        .loader { border: 3px solid #1e293b; border-top: 3px solid #38bdf8; border-radius: 50%; width: 30px; height: 30px; animation: spin 1s linear infinite; margin: 20px auto; }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AlQurmanix — بوابة المستقبل</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Tajawal:wght@300;400;500;700;900&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+
+<!-- Firebase -->
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-analytics-compat.js"></script>
+
+<style>
+:root {
+  --gold-1: #fff4b0;
+  --gold-2: #f5d060;
+  --gold-3: #e0a820;
+  --gold-4: #c87f00;
+  --gold-5: #a05000;
+  --gold-6: #7a3200;
+  --gold-7: #3d1500;
+  --neon-green: #00ff88;
+  --neon-red: #ff2244;
+  --bg-deep: #050508;
+  --bg-dark: #08080f;
+  --bg-card: rgba(255,255,255,0.03);
+  --border-gold: rgba(224,168,32,0.3);
+  --sidebar-w: 290px;
+  --glow-gold: 0 0 20px rgba(224,168,32,0.5), 0 0 60px rgba(224,168,32,0.2);
+}
+
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+
+html, body {
+  width:100%; min-height:100vh;
+  background: var(--bg-deep);
+  color: #e8d5a0;
+  font-family: 'Tajawal', sans-serif;
+  overflow-x: hidden;
+}
+
+/* ═══ CANVAS DE PARTICULES ═══ */
+#particles-canvas {
+  position: fixed; inset: 0;
+  pointer-events: none; z-index: 0;
+}
+
+/* ═══ SIDEBAR ═══ */
+.sidebar {
+  position: fixed; top:0; right:0;
+  width: var(--sidebar-w);
+  height: 100vh;
+  background: linear-gradient(180deg, #0a0a15 0%, #060610 100%);
+  border-left: 1px solid var(--border-gold);
+  z-index: 100;
+  display: flex; flex-direction: column;
+  box-shadow: -5px 0 40px rgba(0,0,0,0.8);
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--gold-3) transparent;
+}
+.sidebar::-webkit-scrollbar { width: 4px; }
+.sidebar::-webkit-scrollbar-track { background: transparent; }
+.sidebar::-webkit-scrollbar-thumb { background: var(--gold-3); border-radius:2px; }
+
+/* datetime box */
+.sidebar-datetime {
+  margin: 18px 14px 0;
+  padding: 14px 16px;
+  background: linear-gradient(135deg, rgba(224,168,32,0.1), rgba(224,168,32,0.04));
+  border: 1px solid var(--border-gold);
+  border-radius: 12px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.sidebar-datetime::before {
+  content:'';
+  position: absolute; inset:0;
+  background: linear-gradient(45deg, transparent 30%, rgba(224,168,32,0.05) 50%, transparent 70%);
+  animation: sheen 3s linear infinite;
+}
+@keyframes sheen {
+  0%{transform:translateX(-100%)} 100%{transform:translateX(100%)}
+}
+.dt-time {
+  font-family: 'Orbitron', monospace;
+  font-size: 1.5rem; font-weight:900;
+  background: linear-gradient(90deg, var(--gold-1), var(--gold-3), var(--gold-1));
+  -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+  background-clip:text;
+  text-shadow: none;
+  letter-spacing: 3px;
+}
+.dt-date {
+  font-size: 0.72rem; color: var(--gold-3);
+  margin-top: 4px; letter-spacing:1px;
+  font-family: 'Tajawal', sans-serif;
+}
+
+/* sidebar logo small */
+.sidebar-logo-sm {
+  text-align:center;
+  padding: 10px 14px 0;
+  font-family: 'Cinzel Decorative', serif;
+  font-size: 0.7rem;
+  letter-spacing:2px;
+  color: var(--gold-3);
+  opacity:0.6;
+}
+
+/* nav items */
+.sidebar-nav {
+  padding: 10px 0 30px;
+  flex:1;
+}
+.nav-section {
+  padding: 14px 16px 4px;
+  font-size: 0.6rem;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  color: var(--gold-4);
+  opacity: 0.6;
+}
+.nav-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 11px 18px;
+  cursor: pointer;
+  transition: all 0.3s;
+  border-left: 3px solid transparent;
+  position: relative;
+  text-decoration: none;
+  color: #c9a84c;
+  font-size: 0.88rem;
+  font-weight: 500;
+}
+.nav-item:hover {
+  background: linear-gradient(90deg, rgba(224,168,32,0.1), transparent);
+  border-left-color: var(--gold-3);
+  color: var(--gold-1);
+  transform: translateX(-3px);
+}
+.nav-item .nav-icon {
+  font-size: 1.1rem; min-width:22px; text-align:center;
+}
+.nav-item .nav-badge {
+  margin-right: auto;
+  background: var(--gold-3);
+  color: #000;
+  font-size: 0.6rem;
+  padding: 2px 6px;
+  border-radius: 10px;
+  font-weight:700;
+}
+
+/* ═══ TOPBAR ═══ */
+.topbar {
+  position: fixed; top:0; left:0;
+  right: var(--sidebar-w);
+  height: 64px;
+  background: linear-gradient(90deg, rgba(5,5,8,0.95) 0%, rgba(8,8,20,0.95) 100%);
+  border-bottom: 1px solid var(--border-gold);
+  backdrop-filter: blur(20px);
+  z-index: 90;
+  display: flex; align-items: center;
+  padding: 0 28px;
+  gap: 20px;
+}
+
+/* LOGO NEON */
+.logo-neon {
+  font-family: 'Cinzel Decorative', serif;
+  font-size: 1.3rem; font-weight:900;
+  letter-spacing: 3px;
+  animation: goldShift 4s linear infinite;
+  cursor: default;
+  text-shadow: 0 0 10px rgba(224,168,32,0.8), 0 0 30px rgba(224,168,32,0.4);
+}
+@keyframes goldShift {
+  0%   { color: var(--gold-1); text-shadow: 0 0 15px var(--gold-1); }
+  14%  { color: var(--gold-2); text-shadow: 0 0 20px var(--gold-2); }
+  28%  { color: var(--gold-3); text-shadow: 0 0 25px var(--gold-3); }
+  42%  { color: var(--gold-4); text-shadow: 0 0 20px var(--gold-4); }
+  56%  { color: var(--gold-5); text-shadow: 0 0 15px var(--gold-5), 0 0 5px #fff; }
+  70%  { color: var(--gold-6); text-shadow: 0 0 10px var(--gold-6); }
+  84%  { color: var(--gold-7); text-shadow: 0 0 8px var(--gold-7); }
+  100% { color: var(--gold-1); text-shadow: 0 0 15px var(--gold-1); }
+}
+
+.topbar-spacer { flex:1; }
+
+/* connection dot */
+.conn-status {
+  display: flex; align-items: center; gap:8px;
+  font-size: 0.75rem; font-family:'Orbitron', monospace;
+  letter-spacing:1px;
+}
+.conn-dot {
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  background: var(--neon-green);
+  animation: blink 1.5s ease-in-out infinite;
+  box-shadow: 0 0 8px var(--neon-green), 0 0 20px var(--neon-green);
+}
+.conn-dot.offline {
+  background: var(--neon-red);
+  animation: blinkRed 1s ease-in-out infinite;
+  box-shadow: 0 0 8px var(--neon-red), 0 0 20px var(--neon-red);
+}
+@keyframes blink {
+  0%,100%{opacity:1} 50%{opacity:0.3}
+}
+@keyframes blinkRed {
+  0%,100%{opacity:1} 50%{opacity:0.2}
+}
+.conn-label { color: #aaa; }
+.conn-label.online { color: var(--neon-green); }
+.conn-label.offline { color: var(--neon-red); }
+
+/* GLOBE language selector */
+.globe-wrap {
+  position: relative;
+}
+.globe-btn {
+  background: none; border: 1px solid var(--border-gold);
+  border-radius: 8px;
+  padding: 7px 12px;
+  cursor: pointer;
+  display: flex; align-items:center; gap:8px;
+  color: var(--gold-2);
+  transition: all 0.3s;
+  font-size: 0.8rem;
+}
+.globe-btn:hover {
+  background: rgba(224,168,32,0.1);
+  border-color: var(--gold-3);
+  box-shadow: var(--glow-gold);
+}
+.globe-icon {
+  font-size: 1.2rem;
+  animation: spin 8s linear infinite;
+  display:inline-block;
+}
+@keyframes spin {
+  from{transform:rotate(0deg)} to{transform:rotate(360deg)}
+}
+.lang-dropdown {
+  position: absolute; top: calc(100% + 8px); left: 0;
+  background: #0c0c18;
+  border: 1px solid var(--border-gold);
+  border-radius: 12px;
+  min-width: 180px;
+  overflow: hidden;
+  display: none;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.9), var(--glow-gold);
+  animation: dropIn 0.25s ease;
+  z-index:200;
+}
+@keyframes dropIn {
+  from{opacity:0;transform:translateY(-10px)} to{opacity:1;transform:translateY(0)}
+}
+.lang-dropdown.open { display: block; }
+.lang-item {
+  display: flex; align-items:center; gap:10px;
+  padding: 10px 16px;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 0.82rem;
+  color: #c9a84c;
+  text-decoration:none;
+}
+.lang-item:hover {
+  background: rgba(224,168,32,0.12);
+  color: var(--gold-1);
+}
+.lang-flag { font-size:1.3rem; }
+.lang-code {
+  font-family:'Orbitron',monospace;
+  font-size:0.7rem;
+  color: var(--gold-3);
+  margin-right:auto;
+}
+
+/* ═══ MAIN CONTENT ═══ */
+.main-content {
+  margin-right: var(--sidebar-w);
+  padding-top: 64px;
+  min-height:100vh;
+  position: relative; z-index: 1;
+}
+
+/* HERO */
+.hero {
+  padding: 60px 40px 30px;
+  text-align: center;
+  position: relative;
+}
+.hero-title {
+  font-family: 'Cinzel Decorative', serif;
+  font-size: clamp(1.5rem, 3vw, 2.8rem);
+  font-weight: 900;
+  line-height: 1.3;
+  background: linear-gradient(135deg, var(--gold-1) 0%, var(--gold-3) 40%, var(--gold-5) 60%, var(--gold-2) 100%);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 12px;
+  text-shadow: none;
+}
+.hero-sub {
+  font-size: 1rem;
+  color: var(--gold-4);
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  font-family: 'Orbitron', monospace;
+  margin-bottom: 40px;
+}
+.hero-divider {
+  width: 200px; height: 2px;
+  margin: 0 auto 50px;
+  background: linear-gradient(90deg, transparent, var(--gold-3), transparent);
+  box-shadow: 0 0 12px var(--gold-3);
+}
+
+/* ═══ GATEWAY GRID ═══ */
+.gateways-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 24px;
+  padding: 0 36px 60px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.gateway-card {
+  position: relative;
+  border-radius: 20px;
+  padding: 34px 28px;
+  cursor: pointer;
+  transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+  overflow: hidden;
+  border: 1px solid rgba(255,255,255,0.05);
+  background: linear-gradient(145deg, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0.01) 100%);
+  backdrop-filter: blur(10px);
+  text-decoration: none;
+  display: block;
+  group: true;
+}
+.gateway-card::before {
+  content:'';
+  position:absolute; inset:0;
+  background: linear-gradient(135deg, rgba(224,168,32,0.08) 0%, transparent 60%);
+  opacity:0; transition: opacity 0.4s;
+  border-radius: 20px;
+}
+.gateway-card::after {
+  content:'';
+  position:absolute;
+  top:-2px; left:-2px; right:-2px; bottom:-2px;
+  border-radius: 22px;
+  background: linear-gradient(135deg, var(--gold-3), transparent, var(--gold-4), transparent);
+  z-index:-1;
+  opacity:0;
+  transition: opacity 0.4s;
+}
+.gateway-card:hover {
+  transform: translateY(-10px) scale(1.02);
+  box-shadow: 0 30px 80px rgba(0,0,0,0.7), 0 0 30px rgba(224,168,32,0.2);
+  border-color: rgba(224,168,32,0.5);
+}
+.gateway-card:hover::before { opacity:1; }
+.gateway-card:hover::after { opacity:0.6; }
+
+/* card color themes */
+.card-employees { --card-accent: #4fc3f7; }
+.card-clients   { --card-accent: #81c784; }
+.card-business  { --card-accent: #ffb74d; }
+.card-social    { --card-accent: #f48fb1; }
+.card-wallet    { --card-accent: #e0a820; }
+.card-earn      { --card-accent: #a5d6a7; }
+.card-education { --card-accent: #9fa8da; }
+.card-health    { --card-accent: #ef9a9a; }
+
+.card-icon-wrap {
+  width: 70px; height: 70px;
+  border-radius: 18px;
+  display: flex; align-items:center; justify-content:center;
+  margin-bottom: 20px;
+  font-size: 2rem;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.1);
+  position: relative;
+  overflow:hidden;
+  transition: all 0.4s;
+}
+.gateway-card:hover .card-icon-wrap {
+  background: rgba(255,255,255,0.1);
+  box-shadow: 0 0 30px var(--card-accent, var(--gold-3));
+  border-color: var(--card-accent, var(--gold-3));
+}
+.card-icon {
+  font-size: 2.2rem;
+  animation: iconFloat 3s ease-in-out infinite;
+}
+@keyframes iconFloat {
+  0%,100%{transform:translateY(0)} 50%{transform:translateY(-4px)}
+}
+
+.card-title {
+  font-family: 'Tajawal', sans-serif;
+  font-size: 1.15rem; font-weight: 700;
+  color: var(--gold-1);
+  margin-bottom: 8px;
+}
+.card-desc {
+  font-size: 0.8rem;
+  color: rgba(200,160,80,0.7);
+  line-height: 1.6;
+}
+.card-tag {
+  display: inline-block;
+  margin-top: 14px;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.65rem;
+  font-family: 'Orbitron', monospace;
+  letter-spacing:1px;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.1);
+  color: var(--card-accent, var(--gold-3));
+  text-transform: uppercase;
+}
+.card-arrow {
+  position: absolute;
+  bottom: 20px; left: 24px;
+  font-size: 1.2rem;
+  opacity:0;
+  transform: translateX(10px);
+  transition: all 0.3s;
+  color: var(--card-accent, var(--gold-3));
+}
+.gateway-card:hover .card-arrow {
+  opacity:1; transform:translateX(0);
+}
+
+/* shine overlay */
+.card-shine {
+  position: absolute;
+  top:-50%; left:-50%;
+  width:200%; height:200%;
+  background: radial-gradient(ellipse at center, rgba(255,255,255,0.04) 0%, transparent 70%);
+  pointer-events:none;
+  transition: all 0.5s;
+  opacity:0;
+}
+.gateway-card:hover .card-shine { opacity:1; }
+
+/* ═══ FOOTER ═══ */
+.main-footer {
+  border-top: 1px solid var(--border-gold);
+  padding: 20px 40px;
+  display: flex; align-items:center; justify-content:space-between;
+  font-size: 0.72rem;
+  color: var(--gold-5);
+  font-family: 'Orbitron', monospace;
+  letter-spacing:1px;
+}
+
+/* ═══ OVERLAY MODAL ═══ */
+.modal-overlay {
+  position:fixed; inset:0;
+  background: rgba(0,0,0,0.85);
+  backdrop-filter:blur(10px);
+  z-index:999;
+  display:flex; align-items:center; justify-content:center;
+  opacity:0; pointer-events:none;
+  transition: opacity 0.3s;
+}
+.modal-overlay.show { opacity:1; pointer-events:all; }
+.modal-box {
+  background: linear-gradient(145deg, #0d0d1e, #0a0a18);
+  border: 1px solid var(--border-gold);
+  border-radius: 24px;
+  padding: 50px 60px;
+  text-align:center;
+  box-shadow: var(--glow-gold), 0 40px 100px rgba(0,0,0,0.9);
+  max-width: 440px;
+  animation: modalIn 0.4s cubic-bezier(0.23,1,0.32,1);
+}
+@keyframes modalIn {
+  from{transform:scale(0.8) translateY(30px); opacity:0}
+  to{transform:scale(1) translateY(0); opacity:1}
+}
+.modal-icon { font-size:3.5rem; margin-bottom:20px; }
+.modal-title {
+  font-family:'Cinzel Decorative', serif;
+  font-size:1.4rem; font-weight:700;
+  color: var(--gold-2);
+  margin-bottom:12px;
+}
+.modal-text { font-size:0.9rem; color:var(--gold-4); line-height:1.7; margin-bottom:30px; }
+.modal-btn {
+  padding: 14px 40px;
+  background: linear-gradient(135deg, var(--gold-3), var(--gold-4));
+  border: none;
+  border-radius: 12px;
+  color: #000;
+  font-family:'Orbitron', monospace;
+  font-size: 0.85rem; font-weight:700;
+  cursor:pointer;
+  letter-spacing:2px;
+  transition: all 0.3s;
+  box-shadow: 0 0 20px rgba(224,168,32,0.5);
+}
+.modal-btn:hover {
+  transform:scale(1.05);
+  box-shadow: 0 0 40px rgba(224,168,32,0.8);
+}
+
+/* ═══ SCROLLBAR ═══ */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--bg-deep); }
+::-webkit-scrollbar-thumb { background: var(--gold-4); border-radius:3px; }
+
+/* ═══ RESPONSIVE ═══ */
+@media(max-width:768px) {
+  .sidebar { display:none; }
+  .main-content { margin-right:0; }
+  .topbar { right:0; }
+  .gateways-grid { grid-template-columns:1fr; padding:0 16px 40px; }
+}
+</style>
 </head>
 <body>
-    <div class="container">
-        <div class="logo">ALQURMANIX</div>
-        <div class="status-badge">نظام محمي - الإصدار 2.0</div>
-        <h1>بوابة الدخول قيد الإنشاء الصارم</h1>
-        <p>يتم الآن ربط قواعد البيانات وتفعيل بروتوكولات الأمان النهائية.</p>
-        <div class="loader"></div>
-        <p style="font-size: 0.7rem;">قواعد "القرماني" البدائية.. لا استثناء، لا تراجع.</p>
+
+<!-- Particles Canvas -->
+<canvas id="particles-canvas"></canvas>
+
+<!-- ═══ TOPBAR ═══ -->
+<header class="topbar">
+  <div class="logo-neon">AlQurmanix</div>
+  <div class="topbar-spacer"></div>
+
+  <!-- Connection Status -->
+  <div class="conn-status">
+    <div class="conn-dot" id="connDot"></div>
+    <span class="conn-label online" id="connLabel">متصل</span>
+  </div>
+
+  <!-- Language Globe -->
+  <div class="globe-wrap">
+    <button class="globe-btn" onclick="toggleLang(event)">
+      <span class="globe-icon">🌍</span>
+      <span id="currentLang">AR</span>
+    </button>
+    <div class="lang-dropdown" id="langDropdown">
+      <a href="lang/ar.html" class="lang-item">
+        <span class="lang-flag">🇪🇬</span>
+        <span>العربية</span>
+        <span class="lang-code">AR</span>
+      </a>
+      <a href="lang/en.html" class="lang-item">
+        <span class="lang-flag">🇬🇧</span>
+        <span>English</span>
+        <span class="lang-code">EN</span>
+      </a>
+      <a href="lang/es.html" class="lang-item">
+        <span class="lang-flag">🇪🇸</span>
+        <span>Español</span>
+        <span class="lang-code">ES</span>
+      </a>
+      <a href="lang/fr.html" class="lang-item">
+        <span class="lang-flag">🇫🇷</span>
+        <span>Français</span>
+        <span class="lang-code">FR</span>
+      </a>
+      <a href="lang/zh.html" class="lang-item">
+        <span class="lang-flag">🇨🇳</span>
+        <span>中文</span>
+        <span class="lang-code">ZH</span>
+      </a>
+      <a href="lang/ja.html" class="lang-item">
+        <span class="lang-flag">🇯🇵</span>
+        <span>日本語</span>
+        <span class="lang-code">JA</span>
+      </a>
+      <a href="lang/ru.html" class="lang-item">
+        <span class="lang-flag">🇷🇺</span>
+        <span>Русский</span>
+        <span class="lang-code">RU</span>
+      </a>
+      <a href="lang/tr.html" class="lang-item">
+        <span class="lang-flag">🇹🇷</span>
+        <span>Türkçe</span>
+        <span class="lang-code">TR</span>
+      </a>
+      <a href="lang/ko.html" class="lang-item">
+        <span class="lang-flag">🇰🇷</span>
+        <span>한국어</span>
+        <span class="lang-code">KO</span>
+      </a>
     </div>
+  </div>
+</header>
+
+<!-- ═══ SIDEBAR ═══ -->
+<aside class="sidebar">
+  <!-- DateTime -->
+  <div class="sidebar-datetime">
+    <div class="dt-time" id="clockTime">00:00:00</div>
+    <div class="dt-date" id="clockDate">الإثنين، ١ يناير ٢٠٢٥</div>
+  </div>
+
+  <div class="sidebar-logo-sm">AlQurmanix Platform</div>
+
+  <nav class="sidebar-nav">
+    <div class="nav-section">الحساب</div>
+    <a href="profile.html" class="nav-item">
+      <span class="nav-icon">👤</span>
+      <span>الملف الشخصي</span>
+    </a>
+    <a href="settings.html" class="nav-item">
+      <span class="nav-icon">⚙️</span>
+      <span>الإعدادات</span>
+    </a>
+    <a href="notifications.html" class="nav-item">
+      <span class="nav-icon">🔔</span>
+      <span>الإشعارات</span>
+      <span class="nav-badge">3</span>
+    </a>
+    <a href="verify.html" class="nav-item">
+      <span class="nav-icon">🛡️</span>
+      <span>توثيق الحساب</span>
+    </a>
+
+    <div class="nav-section">AlQurmanix Vif</div>
+    <a href="qurmanix-vif.html" class="nav-item">
+      <span class="nav-icon">⚡</span>
+      <span>AlQurmanix Vif</span>
+    </a>
+    <a href="referrals.html" class="nav-item">
+      <span class="nav-icon">🤝</span>
+      <span>إحالاتي وفريقي</span>
+    </a>
+    <a href="earn.html" class="nav-item">
+      <span class="nav-icon">🪙</span>
+      <span>أربح القرماني كوين</span>
+    </a>
+    <a href="wallet.html" class="nav-item">
+      <span class="nav-icon">💎</span>
+      <span>المحفظة الرقمية</span>
+    </a>
+
+    <div class="nav-section">الدعم والمعلومات</div>
+    <a href="support.html" class="nav-item">
+      <span class="nav-icon">🎧</span>
+      <span>الدعم الفني</span>
+    </a>
+    <a href="faq.html" class="nav-item">
+      <span class="nav-icon">❓</span>
+      <span>الأسئلة الشائعة</span>
+    </a>
+    <a href="about.html" class="nav-item">
+      <span class="nav-icon">🏛️</span>
+      <span>من نحن</span>
+    </a>
+    <a href="privacy.html" class="nav-item">
+      <span class="nav-icon">🔐</span>
+      <span>سياسة الخصوصية</span>
+    </a>
+    <a href="cookies.html" class="nav-item">
+      <span class="nav-icon">🍪</span>
+      <span>ملفات الارتباط</span>
+    </a>
+    <a href="terms.html" class="nav-item">
+      <span class="nav-icon">📜</span>
+      <span>الشروط والأحكام</span>
+    </a>
+    <a href="contact.html" class="nav-item">
+      <span class="nav-icon">📩</span>
+      <span>اتصل بنا</span>
+    </a>
+    <a href="updates.html" class="nav-item">
+      <span class="nav-icon">🚀</span>
+      <span>آخر التحديثات</span>
+    </a>
+    <a href="partners.html" class="nav-item">
+      <span class="nav-icon">🤲</span>
+      <span>شركاؤنا</span>
+    </a>
+    <a href="blog.html" class="nav-item">
+      <span class="nav-icon">📰</span>
+      <span>المدونة</span>
+    </a>
+  </nav>
+</aside>
+
+<!-- ═══ MAIN CONTENT ═══ -->
+<main class="main-content">
+  <!-- HERO -->
+  <section class="hero">
+    <h1 class="hero-title">بوابة المستقبل الرقمي ✨</h1>
+    <p class="hero-sub">AlQurmanix Platform</p>
+    <div class="hero-divider"></div>
+  </section>
+
+  <!-- GATEWAYS -->
+  <div class="gateways-grid">
+
+    <!-- 1. بوابة الموظفين -->
+    <a href="employees-portal.html" class="gateway-card card-employees">
+      <div class="card-shine"></div>
+      <div class="card-icon-wrap">
+        <span class="card-icon">👔</span>
+      </div>
+      <div class="card-title">بوابة الموظفين 🏢</div>
+      <div class="card-desc">إدارة الفريق، الحضور والانصراف، الرواتب، والمهام اليومية بكل سهولة واحترافية</div>
+      <span class="card-tag">Employee Portal</span>
+      <div class="card-arrow">← دخول</div>
+    </a>
+
+    <!-- 2. بوابة العملاء -->
+    <a href="clients-portal.html" class="gateway-card card-clients">
+      <div class="card-shine"></div>
+      <div class="card-icon-wrap">
+        <span class="card-icon">🌟</span>
+      </div>
+      <div class="card-title">بوابة العملاء 🤝</div>
+      <div class="card-desc">خدمات العملاء المتميزة، تتبع الطلبات، الدعم الفوري، وتجربة فريدة لا تُنسى</div>
+      <span class="card-tag">Client Portal</span>
+      <div class="card-arrow">← دخول</div>
+    </a>
+
+    <!-- 3. بوابة الأعمال والتجارة -->
+    <a href="business-portal.html" class="gateway-card card-business">
+      <div class="card-shine"></div>
+      <div class="card-icon-wrap">
+        <span class="card-icon">📊</span>
+      </div>
+      <div class="card-title">بوابة الأعمال والتجارة 🏦</div>
+      <div class="card-desc">حلول تجارية متكاملة، تحليلات السوق، إدارة المشاريع والشراكات الاستراتيجية</div>
+      <span class="card-tag">Business Portal</span>
+      <div class="card-arrow">← دخول</div>
+    </a>
+
+    <!-- 4. البوابة الاجتماعية -->
+    <a href="social-portal.html" class="gateway-card card-social">
+      <div class="card-shine"></div>
+      <div class="card-icon-wrap">
+        <span class="card-icon">🌐</span>
+      </div>
+      <div class="card-title">البوابة الاجتماعية 🤝</div>
+      <div class="card-desc">تواصل، تعاون، ابتكار معاً — مجتمع رقمي متكامل يربط أفراد AlQurmanix</div>
+      <span class="card-tag">Social Portal</span>
+      <div class="card-arrow">← دخول</div>
+    </a>
+
+    <!-- 5. المحفظة الرقمية -->
+    <a href="wallet.html" class="gateway-card card-wallet">
+      <div class="card-shine"></div>
+      <div class="card-icon-wrap">
+        <span class="card-icon">💎</span>
+      </div>
+      <div class="card-title">المحفظة الرقمية القرماني كوين 🪙</div>
+      <div class="card-desc">أدر رصيدك، حولاتك، وعمليات القرماني كوين بأمان تام وشفافية كاملة</div>
+      <span class="card-tag">QurmanyCoin Wallet</span>
+      <div class="card-arrow">← دخول</div>
+    </a>
+
+    <!-- 6. أربح القرماني كوين -->
+    <a href="earn.html" class="gateway-card card-earn">
+      <div class="card-shine"></div>
+      <div class="card-icon-wrap">
+        <span class="card-icon">🪙</span>
+      </div>
+      <div class="card-title">أربح القرماني كوين ✨</div>
+      <div class="card-desc">مهام، تحديات، إحالات، ومكافآت يومية — اكسب أكوام من القرماني كوين الذهبي</div>
+      <span class="card-tag">Earn QurmanyCoin</span>
+      <div class="card-arrow">← دخول</div>
+    </a>
+
+    <!-- 7. البوابة التعليمية -->
+    <a href="education-portal.html" class="gateway-card card-education">
+      <div class="card-shine"></div>
+      <div class="card-icon-wrap">
+        <span class="card-icon">🎓</span>
+      </div>
+      <div class="card-title">البوابة التعليمية 📚</div>
+      <div class="card-desc">دورات، شهادات، محاضرات حية، وموارد تعليمية عالمية — تعلم وتطور بلا حدود</div>
+      <span class="card-tag">Education Portal</span>
+      <div class="card-arrow">← دخول</div>
+    </a>
+
+    <!-- 8. البوابة الصحية -->
+    <a href="health-portal.html" class="gateway-card card-health">
+      <div class="card-shine"></div>
+      <div class="card-icon-wrap">
+        <span class="card-icon">🏥</span>
+      </div>
+      <div class="card-title">البوابة الصحية ❤️‍🔥</div>
+      <div class="card-desc">رعاية صحية متكاملة، استشارات طبية، متابعة صحية ذكية، وخدمات صحة رقمية</div>
+      <span class="card-tag">Health Portal</span>
+      <div class="card-arrow">← دخول</div>
+    </a>
+
+  </div>
+
+  <footer class="main-footer">
+    <span>© 2025 AlQurmanix — جميع الحقوق محفوظة</span>
+    <span>v2.5.0 — Powered by Firebase</span>
+  </footer>
+</main>
+
+<!-- Unauthorized Access Modal -->
+<div class="modal-overlay" id="authModal">
+  <div class="modal-box">
+    <div class="modal-icon">🔒</div>
+    <div class="modal-title">وصول محظور</div>
+    <div class="modal-text">هذه الصفحة محمية. يتم توجيهك إلى الصفحة الرئيسية تلقائياً.</div>
+    <button class="modal-btn" onclick="window.location.replace('index.html')">انتقل الآن</button>
+  </div>
+</div>
+
+<script>
+/* ══════════════════════════════════════
+   FIREBASE INIT
+══════════════════════════════════════ */
+const firebaseConfig = {
+  apiKey: "AIzaSyDA0gnR9U3I90umdJsAJI4h93nEPD3BJ9w",
+  authDomain: "alqurmanix-aswan.firebaseapp.com",
+  projectId: "alqurmanix-aswan",
+  storageBucket: "alqurmanix-aswan.firebasestorage.app",
+  messagingSenderId: "882189888648",
+  appId: "1:882189888648:web:41d3f89c74ad76fd6a833d",
+  measurementId: "G-5SZY72ESEV"
+};
+
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+const auth = firebase.auth();
+firebase.analytics();
+
+/* ══════════════════════════════════════
+   CONNECTION STATUS
+══════════════════════════════════════ */
+db.collection('_ping').limit(1).get()
+  .then(() => setConn(true))
+  .catch(() => setConn(false));
+
+function setConn(online) {
+  const dot = document.getElementById('connDot');
+  const label = document.getElementById('connLabel');
+  if (online) {
+    dot.classList.remove('offline');
+    label.className = 'conn-label online';
+    label.textContent = 'متصل';
+  } else {
+    dot.classList.add('offline');
+    label.className = 'conn-label offline';
+    label.textContent = 'غير متصل';
+  }
+}
+
+/* ══════════════════════════════════════
+   CLOCK
+══════════════════════════════════════ */
+function updateClock() {
+  const now = new Date();
+  document.getElementById('clockTime').textContent =
+    now.toLocaleTimeString('ar-EG', {hour:'2-digit', minute:'2-digit', second:'2-digit'});
+  document.getElementById('clockDate').textContent =
+    now.toLocaleDateString('ar-EG', {weekday:'long', year:'numeric', month:'long', day:'numeric'});
+}
+updateClock();
+setInterval(updateClock, 1000);
+
+/* ══════════════════════════════════════
+   LANGUAGE DROPDOWN
+══════════════════════════════════════ */
+function toggleLang(e) {
+  e.stopPropagation();
+  document.getElementById('langDropdown').classList.toggle('open');
+}
+document.addEventListener('click', () => {
+  document.getElementById('langDropdown').classList.remove('open');
+});
+
+/* ══════════════════════════════════════
+   GOLDEN PARTICLES
+══════════════════════════════════════ */
+const canvas = document.getElementById('particles-canvas');
+const ctx = canvas.getContext('2d');
+let W, H, particles = [];
+
+function resize() {
+  W = canvas.width = window.innerWidth;
+  H = canvas.height = window.innerHeight;
+}
+resize();
+window.addEventListener('resize', resize);
+
+function randBetween(a, b) { return a + Math.random() * (b - a); }
+
+const GOLD_COLORS = ['#fff4b0','#f5d060','#e0a820','#c87f00','#ffdf80','#ffd700'];
+
+for (let i = 0; i < 90; i++) {
+  particles.push({
+    x: randBetween(0, window.innerWidth),
+    y: randBetween(0, window.innerHeight),
+    r: randBetween(1, 3.5),
+    vx: randBetween(-0.4, 0.4),
+    vy: randBetween(-0.8, -0.2),
+    color: GOLD_COLORS[Math.floor(Math.random() * GOLD_COLORS.length)],
+    alpha: randBetween(0.3, 0.9),
+    life: randBetween(0, 360)
+  });
+}
+
+function drawParticles() {
+  ctx.clearRect(0, 0, W, H);
+  particles.forEach(p => {
+    p.life++;
+    p.x += p.vx + Math.sin(p.life * 0.02) * 0.3;
+    p.y += p.vy;
+    p.alpha = 0.4 + Math.sin(p.life * 0.04) * 0.3;
+    if (p.y < -10) {
+      p.y = H + 10;
+      p.x = randBetween(0, W);
+    }
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+    ctx.fillStyle = p.color;
+    ctx.globalAlpha = p.alpha;
+    ctx.shadowBlur = 8;
+    ctx.shadowColor = p.color;
+    ctx.fill();
+    ctx.globalAlpha = 1;
+    ctx.shadowBlur = 0;
+  });
+  requestAnimationFrame(drawParticles);
+}
+drawParticles();
+
+/* ══════════════════════════════════════
+   GUARD: Block direct access to protected pages
+   (This is index.html — it IS the allowed page)
+══════════════════════════════════════ */
+// Mark that index.html was visited properly
+sessionStorage.setItem('fromIndex', '1');
+
+/* ══════════════════════════════════════
+   CARD HOVER PARALLAX
+══════════════════════════════════════ */
+document.querySelectorAll('.gateway-card').forEach(card => {
+  card.addEventListener('mousemove', e => {
+    const rect = card.getBoundingClientRect();
+    const x = e.clientX - rect.left - rect.width / 2;
+    const y = e.clientY - rect.top - rect.height / 2;
+    card.style.transform = `translateY(-10px) scale(1.02) perspective(600px) rotateX(${-y*0.015}deg) rotateY(${x*0.015}deg)`;
+  });
+  card.addEventListener('mouseleave', () => {
+    card.style.transform = '';
+  });
+});
+
+/* ══════════════════════════════════════
+   ENTRANCE ANIMATION
+══════════════════════════════════════ */
+document.querySelectorAll('.gateway-card').forEach((card, i) => {
+  card.style.opacity = '0';
+  card.style.transform = 'translateY(40px)';
+  card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+  setTimeout(() => {
+    card.style.opacity = '1';
+    card.style.transform = 'translateY(0)';
+  }, 100 + i * 80);
+});
+</script>
 </body>
-          </html>
+</html>
