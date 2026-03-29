@@ -2,7 +2,7 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Alqurmanix - الدخول والاشتراك</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800&family=Cinzel:wght@700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -32,13 +32,12 @@
             min-height: 100vh;
             display: flex;
             flex-direction: column;
-            overflow-x: hidden;
+            overflow-x: hidden; /* لمنع أي اهتزاز جانبي */
         }
 
-        /* الجسيمات الذهبية المتطايرة */
+        /* الجسيمات الذهبية */
         #particles {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             pointer-events: none; z-index: 0;
         }
         .particle {
@@ -53,23 +52,34 @@
             100% { transform: translateY(-10vh) scale(1); opacity: 0; }
         }
 
-        /* الهيدر (الشريط العلوي) */
+        /* تنسيق الهيدر المتجاوب (مقسم لسطرين) */
         .header {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 15px 20px;
+            position: relative;
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .top-row {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 20px 40px;
-            position: relative;
-            z-index: 10;
+            width: 100%;
+            max-width: 600px;
         }
 
-        /* حالة النظام والعداد */
+        /* حالة النظام */
         .status-box {
             display: flex;
             align-items: center;
-            gap: 15px;
+            gap: 10px;
             background: var(--glass-bg);
-            padding: 10px 20px;
+            padding: 8px 15px;
             border-radius: 30px;
             border: 1px solid var(--glass-border);
             backdrop-filter: blur(10px);
@@ -82,16 +92,81 @@
             animation: pulseGreen 1.5s infinite alternate;
         }
         @keyframes pulseGreen { from { opacity: 0.5; transform: scale(0.8); } to { opacity: 1; transform: scale(1.2); } }
-        .global-count {
-            color: var(--gold-2);
-            font-weight: 700;
-            letter-spacing: 1px;
+        .status-text { font-size: 0.85rem; font-weight: 600; color: #ccc; }
+
+        /* الأيقونات العلوية */
+        .top-icons {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .icon-btn {
+            background: none; border: none;
+            color: var(--gold-1);
+            cursor: pointer;
+            display: flex; align-items: center; gap: 5px;
+        }
+        
+        /* الكرة الأرضية الحقيقية */
+        .real-globe {
+            font-size: 1.5rem;
+            display: inline-block;
+            animation: spinSlow 8s linear infinite;
+            filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.3));
+        }
+        @keyframes spinSlow { 100% { transform: rotate(360deg); } }
+
+        /* علامة الاستفهام المتغيرة الألوان */
+        .faq-icon {
+            font-size: 1.5rem;
+            animation: rainbowColors 6s infinite, hoverMove 2s infinite alternate;
+        }
+        @keyframes hoverMove { from { transform: translateY(-3px); } to { transform: translateY(3px); } }
+        @keyframes rainbowColors {
+            0% { color: #ff0055; text-shadow: 0 0 10px #ff0055; }
+            16% { color: #ffaa00; text-shadow: 0 0 10px #ffaa00; }
+            33% { color: #00ffaa; text-shadow: 0 0 10px #00ffaa; }
+            50% { color: #00aaff; text-shadow: 0 0 10px #00aaff; }
+            66% { color: #aa00ff; text-shadow: 0 0 10px #aa00ff; }
+            83% { color: #ff00aa; text-shadow: 0 0 10px #ff00aa; }
+            100% { color: #ff0055; text-shadow: 0 0 10px #ff0055; }
         }
 
-        /* اللوجو النيون الذهبي */
+        /* القائمة المنسدلة للغات */
+        .dropdown { position: relative; }
+        .dropdown-menu {
+            position: absolute;
+            top: 130%; left: 0;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 10px;
+            backdrop-filter: blur(15px);
+            display: none;
+            flex-direction: column;
+            min-width: 140px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            z-index: 100;
+        }
+        .dropdown.active .dropdown-menu { display: flex; animation: fadeInDown 0.3s ease; }
+        @keyframes fadeInDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+        .dropdown-item {
+            padding: 10px 15px;
+            color: #fff; text-decoration: none;
+            display: flex; align-items: center; gap: 10px;
+            font-size: 0.9rem;
+            transition: background 0.3s;
+        }
+        .dropdown-item:hover { background: rgba(191, 149, 63, 0.2); color: var(--gold-2); }
+
+        /* اللوجو المصغر المنسق للهواتف */
+        .logo-row {
+            width: 100%;
+            text-align: center;
+        }
         .logo {
             font-family: 'Cinzel', serif;
-            font-size: 2.5rem;
+            font-size: 1.8rem; /* تصغير اللوجو لعدم الخروج عن الشاشة */
+            letter-spacing: 2px;
             font-weight: 700;
             text-transform: uppercase;
             animation: goldNeon 4s infinite alternate;
@@ -108,228 +183,104 @@
             100% { color: var(--gold-8); text-shadow: 0 0 10px var(--gold-8); }
         }
 
-        /* القوائم والكرة الأرضية */
-        .top-icons {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-        }
-        .icon-btn {
-            background: none; border: none;
-            color: var(--gold-1);
-            font-size: 1.5rem;
-            cursor: pointer;
-            transition: all 0.3s;
-            display: flex; align-items: center; gap: 8px;
-        }
-        .icon-btn:hover { color: var(--gold-2); text-shadow: 0 0 10px var(--gold-2); }
-        .globe-icon { animation: spinSlow 10s linear infinite; }
-        @keyframes spinSlow { 100% { transform: rotate(360deg); } }
-        
-        .faq-icon { animation: hoverMove 2s infinite alternate; }
-        @keyframes hoverMove { from { transform: translateY(-3px); } to { transform: translateY(3px); } }
-
-        .dropdown {
-            position: relative;
-        }
-        .dropdown-menu {
-            position: absolute;
-            top: 120%; left: 0;
-            background: var(--glass-bg);
-            border: 1px solid var(--glass-border);
-            border-radius: 10px;
-            backdrop-filter: blur(15px);
-            display: none;
-            flex-direction: column;
-            min-width: 150px;
-            overflow: hidden;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-        }
-        .dropdown.active .dropdown-menu { display: flex; }
-        .dropdown-item {
-            padding: 12px 20px;
-            color: #fff;
-            text-decoration: none;
-            display: flex; align-items: center; gap: 10px;
-            transition: background 0.3s;
-        }
-        .dropdown-item:hover { background: rgba(191, 149, 63, 0.2); color: var(--gold-2); }
-
-        /* حاوية النماذج الرئيسية */
+        /* حاوية النماذج */
         .main-container {
-            flex: 1;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 10;
-            padding: 20px;
+            flex: 1; display: flex; justify-content: center; align-items: center;
+            padding: 10px 20px; z-index: 10;
         }
         .auth-box {
             background: var(--glass-bg);
             border: 1px solid var(--glass-border);
             border-radius: 20px;
-            padding: 40px;
+            padding: 30px 20px;
             width: 100%;
-            max-width: 450px;
+            max-width: 400px; /* مقاس مثالي للهواتف */
             backdrop-filter: blur(20px);
             box-shadow: 0 15px 35px rgba(0,0,0,0.6), inset 0 0 20px rgba(191, 149, 63, 0.1);
-            position: relative;
-            overflow: hidden;
+            position: relative; overflow: hidden;
+            box-sizing: border-box;
         }
 
-        /* التبويبات */
         .tabs {
-            display: flex;
-            margin-bottom: 30px;
-            border-bottom: 2px solid rgba(255,255,255,0.1);
+            display: flex; margin-bottom: 25px; border-bottom: 2px solid rgba(255,255,255,0.1);
         }
         .tab {
-            flex: 1;
-            text-align: center;
-            padding: 15px 0;
-            cursor: pointer;
-            font-size: 1.2rem;
-            font-weight: 600;
-            color: #888;
-            transition: all 0.3s;
-            position: relative;
+            flex: 1; text-align: center; padding: 10px 0; cursor: pointer;
+            font-size: 1.1rem; font-weight: 600; color: #888; transition: all 0.3s; position: relative;
         }
-        .tab.active {
-            color: var(--gold-2);
-            text-shadow: 0 0 10px var(--gold-2);
-        }
+        .tab.active { color: var(--gold-2); text-shadow: 0 0 10px var(--gold-2); }
         .tab.active::after {
-            content: '';
-            position: absolute;
-            bottom: -2px; left: 0; width: 100%; height: 2px;
+            content: ''; position: absolute; bottom: -2px; left: 0; width: 100%; height: 2px;
             background: linear-gradient(90deg, transparent, var(--gold-1), transparent);
             box-shadow: 0 0 10px var(--gold-1);
         }
 
-        /* النماذج والمدخلات */
         .form-section { display: none; }
         .form-section.active { display: block; animation: fadeIn 0.5s ease; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        .input-group {
-            position: relative;
-            margin-bottom: 25px;
-        }
+        /* حقول الإدخال */
+        .input-group { position: relative; margin-bottom: 20px; }
         .input-group input {
-            width: 100%;
-            padding: 15px 45px 15px 15px;
-            background: rgba(0,0,0,0.4);
+            width: 100%; padding: 12px 40px 12px 15px; /* مسافة للأيقونة اليمنى */
+            background: rgba(0,0,0,0.5);
             border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 10px;
-            color: #fff;
-            font-family: 'Cairo';
-            font-size: 1rem;
-            outline: none;
-            transition: all 0.3s;
-            box-sizing: border-box;
+            border-radius: 10px; color: #fff; font-family: 'Cairo'; font-size: 0.95rem;
+            outline: none; transition: all 0.3s; box-sizing: border-box;
         }
-        .input-group input:focus {
-            border-color: var(--gold-1);
-            box-shadow: 0 0 15px rgba(191, 149, 63, 0.3);
-        }
+        .input-group input:focus { border-color: var(--gold-1); box-shadow: 0 0 15px rgba(191, 149, 63, 0.3); }
+        
         .input-group i.main-icon {
-            position: absolute;
-            right: 15px; top: 50%;
-            transform: translateY(-50%);
+            position: absolute; right: 15px; top: 50%; transform: translateY(-50%);
             color: var(--gold-1);
         }
         .toggle-password {
-            position: absolute;
-            left: 15px; top: 50%;
-            transform: translateY(-50%);
-            cursor: pointer;
-            color: #888;
-            transition: color 0.3s;
+            position: absolute; left: 15px; top: 50%; transform: translateY(-50%);
+            cursor: pointer; color: #888; transition: color 0.3s;
         }
         .toggle-password:hover { color: var(--gold-2); }
 
-        /* تأثير الماسح الضوئي (الليزر) */
         .scanner-line {
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 2px;
-            background: var(--gold-2);
-            box-shadow: 0 0 10px var(--gold-2), 0 0 20px var(--gold-1);
-            opacity: 0;
-            pointer-events: none;
-            z-index: 5;
+            position: absolute; top: 0; left: 0; width: 100%; height: 2px;
+            background: var(--gold-2); box-shadow: 0 0 10px var(--gold-2), 0 0 20px var(--gold-1);
+            opacity: 0; pointer-events: none; z-index: 5;
         }
-        .scanning .scanner-line {
-            animation: scanEffect 1.5s ease-in-out;
-        }
-        @keyframes scanEffect {
-            0% { top: 0; opacity: 1; }
-            50% { top: 100%; opacity: 1; }
-            100% { top: 100%; opacity: 0; }
-        }
+        .scanning .scanner-line { animation: scanEffect 1.5s ease-in-out; }
+        @keyframes scanEffect { 0% { top: 0; opacity: 1; } 50% { top: 100%; opacity: 1; } 100% { top: 100%; opacity: 0; } }
 
-        /* شروط كلمة المرور */
-        .password-reqs {
-            font-size: 0.85rem;
-            color: #888;
-            margin-top: -10px;
-            margin-bottom: 20px;
-            padding-right: 10px;
-        }
+        .password-reqs { font-size: 0.8rem; color: #888; margin-top: -10px; margin-bottom: 15px; padding-right: 5px; }
         .req-item { display: flex; align-items: center; gap: 8px; margin-bottom: 5px; transition: color 0.3s; }
-        .req-item i { font-size: 0.7rem; }
         .req-item.valid { color: var(--neon-green); text-shadow: 0 0 5px var(--neon-green); }
 
-        /* الأزرار الراقية */
         .btn-submit {
-            width: 100%;
-            padding: 15px;
+            width: 100%; padding: 12px;
             background: linear-gradient(45deg, var(--gold-5), var(--gold-1));
-            border: none;
-            border-radius: 10px;
-            color: #000;
-            font-family: 'Cairo';
-            font-size: 1.1rem;
-            font-weight: 800;
-            cursor: pointer;
-            transition: all 0.3s;
-            position: relative;
-            overflow: hidden;
+            border: none; border-radius: 10px; color: #000;
+            font-family: 'Cairo'; font-size: 1.1rem; font-weight: 800; cursor: pointer;
+            transition: all 0.3s; overflow: hidden;
         }
-        .btn-submit:hover {
-            box-shadow: 0 0 20px var(--gold-1);
-            transform: scale(1.02);
-        }
+        .btn-submit:hover { box-shadow: 0 0 20px var(--gold-1); transform: scale(1.02); }
         .forgot-link {
-            display: block;
-            text-align: left;
-            margin-top: -15px;
-            margin-bottom: 20px;
-            color: #aaa;
-            text-decoration: none;
-            font-size: 0.9rem;
-            transition: color 0.3s;
+            display: block; text-align: left; margin-top: -10px; margin-bottom: 15px;
+            color: #aaa; text-decoration: none; font-size: 0.85rem; transition: color 0.3s;
         }
         .forgot-link:hover { color: var(--gold-2); }
 
-        /* الفوتر (الروابط السفلية) */
+        /* الفوتر المتجاوب */
         .footer {
             display: flex;
+            flex-wrap: wrap; /* يسمح بالتفاف العناصر لتجنب الازدحام */
             justify-content: center;
-            gap: 40px;
-            padding: 30px;
+            align-items: center;
+            gap: 15px 25px;
+            padding: 20px;
             z-index: 10;
         }
         .footer-link {
-            color: #fff;
-            text-decoration: none;
-            font-weight: 600;
-            font-size: 1.1rem;
-            transition: all 0.3s;
-            position: relative;
+            color: #fff; text-decoration: none; font-weight: 600;
+            font-size: 0.95rem; transition: all 0.3s;
         }
-        .support-link {
-            animation: supportNeon 2s infinite alternate;
-        }
+        .support-link { animation: supportNeon 2s infinite alternate; }
         @keyframes supportNeon {
             0% { color: #fff; text-shadow: 0 0 5px #fff; }
             50% { color: var(--gold-2); text-shadow: 0 0 15px var(--gold-2), 0 0 30px var(--gold-1); }
@@ -337,44 +288,31 @@
         }
         .footer-link:hover { color: var(--gold-2); }
 
-        /* النوافذ المنبثقة (Modals) الفخمة */
+        /* النوافذ المنبثقة الفخمة */
         .modal-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.8);
-            backdrop-filter: blur(5px);
+            background: rgba(0,0,0,0.85); backdrop-filter: blur(8px);
             display: flex; justify-content: center; align-items: center;
-            z-index: 100;
-            opacity: 0; pointer-events: none;
-            transition: opacity 0.4s;
+            z-index: 1000; opacity: 0; pointer-events: none; transition: opacity 0.4s;
         }
         .modal-overlay.active { opacity: 1; pointer-events: all; }
         .modal-box {
-            background: var(--dark-bg);
-            border: 2px solid var(--gold-1);
-            border-radius: 15px;
-            padding: 40px;
-            text-align: center;
-            max-width: 400px;
-            width: 90%;
-            box-shadow: 0 0 40px rgba(191, 149, 63, 0.4);
-            transform: scale(0.8);
-            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            background: #0a0a0a; border: 1px solid var(--gold-1);
+            border-radius: 20px; padding: 35px 20px; text-align: center;
+            max-width: 350px; width: 90%;
+            box-shadow: 0 0 40px rgba(191, 149, 63, 0.3), inset 0 0 15px rgba(191, 149, 63, 0.1);
+            transform: scale(0.8) translateY(20px);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
-        .modal-overlay.active .modal-box { transform: scale(1); }
-        .modal-icon {
-            font-size: 4rem; margin-bottom: 20px;
-            color: var(--gold-2);
-            text-shadow: 0 0 20px var(--gold-2);
-        }
-        .modal-title { font-size: 1.5rem; color: var(--gold-4); margin-bottom: 10px; }
-        .modal-text { font-size: 1rem; color: #ccc; margin-bottom: 25px; line-height: 1.6; }
+        .modal-overlay.active .modal-box { transform: scale(1) translateY(0); }
+        .modal-icon { font-size: 3.5rem; margin-bottom: 15px; color: var(--gold-2); text-shadow: 0 0 20px var(--gold-2); }
+        .modal-title { font-size: 1.4rem; color: var(--gold-4); margin-bottom: 10px; font-weight: 800; }
+        .modal-text { font-size: 0.95rem; color: #ddd; margin-bottom: 25px; line-height: 1.6; }
         .modal-btn {
-            background: transparent;
-            border: 1px solid var(--gold-1);
-            color: var(--gold-1);
-            padding: 10px 30px; border-radius: 5px; cursor: pointer;
-            font-family: 'Cairo'; font-weight: 600; font-size: 1rem;
-            transition: all 0.3s;
+            background: linear-gradient(45deg, transparent, rgba(191, 149, 63, 0.1));
+            border: 1px solid var(--gold-1); color: var(--gold-2);
+            padding: 8px 30px; border-radius: 8px; cursor: pointer;
+            font-family: 'Cairo'; font-weight: 600; font-size: 1rem; transition: all 0.3s;
         }
         .modal-btn:hover { background: var(--gold-1); color: #000; box-shadow: 0 0 15px var(--gold-1); }
 
@@ -385,30 +323,34 @@
     <div id="particles"></div>
 
     <header class="header">
-        <div class="status-box">
-            <div class="live-dot"></div>
-            <span style="font-size: 0.9rem;">النظام متصل وآمن</span>
-            <span style="color: #444;">|</span>
-            <span style="font-size: 0.9rem;">المشتركون: <span class="global-count" id="userCount">1,024</span></span>
-        </div>
-
-        <div class="logo">Alqurmanix</div>
-
-        <div class="top-icons">
-            <div class="dropdown" id="langDropdown">
-                <button class="icon-btn" onclick="toggleDropdown()">
-                    <i class="fas fa-globe globe-icon"></i>
-                    <span style="font-size: 1rem; font-weight: 600;">AR 🇪🇬</span>
-                </button>
-                <div class="dropdown-menu">
-                    <a href="index-es.html" class="dropdown-item">ES 🇪🇸 الإسبانية</a>
-                    <a href="index-fr.html" class="dropdown-item">FR 🇫🇷 الفرنسية</a>
-                    <a href="index-en.html" class="dropdown-item">EN 🇬🇧 الإنجليزية</a>
-                </div>
+        <!-- السطر الأول: الحالة والأيقونات -->
+        <div class="top-row">
+            <div class="status-box">
+                <div class="live-dot"></div>
+                <span class="status-text">النظام متصل وآمن</span>
             </div>
-            <button class="icon-btn" onclick="window.location.href='FAQ.html'">
-                <i class="fas fa-question-circle faq-icon"></i>
-            </button>
+
+            <div class="top-icons">
+                <div class="dropdown" id="langDropdown">
+                    <button class="icon-btn" onclick="toggleDropdown()">
+                        <span class="real-globe">🌍</span>
+                        <span style="font-size: 0.9rem; font-weight: 600; color:#fff;">AR 🇪🇬</span>
+                    </button>
+                    <div class="dropdown-menu">
+                        <a href="index-es.html" class="dropdown-item">ES 🇪🇸 الإسبانية</a>
+                        <a href="index-fr.html" class="dropdown-item">FR 🇫🇷 الفرنسية</a>
+                        <a href="index-en.html" class="dropdown-item">EN 🇬🇧 الإنجليزية</a>
+                    </div>
+                </div>
+                <button class="icon-btn" onclick="window.location.href='FAQ.html'">
+                    <i class="fas fa-question-circle faq-icon"></i>
+                </button>
+            </div>
+        </div>
+        
+        <!-- السطر الثاني: اللوجو المنسق للهواتف -->
+        <div class="logo-row">
+            <div class="logo">Alqurmanix</div>
         </div>
     </header>
 
@@ -450,9 +392,9 @@
                     </div>
                     
                     <div class="password-reqs">
-                        <div class="req-item" id="req-len"><i class="fas fa-circle"></i> 8 أحرف على الأقل</div>
-                        <div class="req-item" id="req-num"><i class="fas fa-circle"></i> يحتوي على أرقام</div>
-                        <div class="req-item" id="req-char"><i class="fas fa-circle"></i> رموز خاصة (!@#$)</div>
+                        <div class="req-item" id="req-len"><i class="fas fa-circle" style="font-size:0.6rem;"></i> 8 أحرف على الأقل</div>
+                        <div class="req-item" id="req-num"><i class="fas fa-circle" style="font-size:0.6rem;"></i> يحتوي على أرقام</div>
+                        <div class="req-item" id="req-char"><i class="fas fa-circle" style="font-size:0.6rem;"></i> رموز خاصة (!@#$)</div>
                     </div>
 
                     <div class="input-group">
@@ -471,6 +413,7 @@
         <a href="AlqurmanixInfo.html" class="footer-link">من نحن</a>
     </footer>
 
+    <!-- نافذة منبثقة فائقة الفخامة -->
     <div class="modal-overlay" id="customModal">
         <div class="modal-box">
             <i class="fas fa-check-circle modal-icon" id="modalIcon"></i>
@@ -480,6 +423,7 @@
         </div>
     </div>
 
+    <!-- كود الربط الفعلي مع قواعدك الصارمة -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { 
@@ -504,7 +448,7 @@
         const auth = getAuth(app);
         const db = getFirestore(app);
 
-        // وظائف الواجهة المساعدة
+        // واجهة المستخدم والتنقل
         window.switchTab = (tabName) => {
             document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
             document.querySelectorAll('.form-section').forEach(f => f.classList.remove('active'));
@@ -532,6 +476,7 @@
             }
         };
 
+        // النوافذ المنبثقة
         window.showModal = (title, text, iconClass, iconColor) => {
             document.getElementById('modalTitle').innerText = title;
             document.getElementById('modalText').innerText = text;
@@ -546,7 +491,7 @@
             document.getElementById('customModal').classList.remove('active');
         };
 
-        // فحص قوة كلمة المرور
+        // قوة الباسورد
         window.checkPasswordStrength = () => {
             const pass = document.getElementById('signupPassword').value;
             const updateReq = (id, isValid) => {
@@ -564,14 +509,13 @@
             updateReq('req-char', /[!@#$%^&*(),.?":{}|<>]/.test(pass));
         };
 
-        // تأثير الماسح
         const triggerScan = () => {
             const box = document.getElementById('authBox');
             box.classList.add('scanning');
             setTimeout(() => box.classList.remove('scanning'), 1500);
         };
 
-        // 1. الاشتراك الصارم
+        // الربط الفعلي: الاشتراك
         window.handleSignup = async (e) => {
             e.preventDefault();
             triggerScan();
@@ -587,7 +531,7 @@
                 const userCredential = await createUserWithEmailAndPassword(auth, email, pass);
                 const user = userCredential.user;
                 
-                // الامتثال لقواعدك: إنشاء السجل بحالة pending
+                // تطبيق صارم لقواعد قاعدة البيانات
                 await setDoc(doc(db, "users", user.uid), {
                     email: user.email,
                     status: "pending",
@@ -596,9 +540,9 @@
                 });
 
                 await sendEmailVerification(user);
-                await signOut(auth); // خروج إجباري حتى يؤكد الإيميل
+                await signOut(auth);
 
-                showModal("تم بنجاح فاخر", "تم إنشاء الحساب، يرجى مراجعة بريدك الإلكتروني لتفعيل الحساب قبل الدخول.", "fas fa-envelope-open-text", "var(--neon-green)");
+                showModal("تم بنجاح راقٍ", "تم إنشاء الحساب، يرجى مراجعة بريدك الإلكتروني لتفعيل الحساب قبل الدخول.", "fas fa-envelope-open-text", "var(--neon-green)");
                 switchTab('login');
                 document.getElementById('signupForm').reset();
             } catch (error) {
@@ -606,7 +550,7 @@
             }
         };
 
-        // 2. تسجيل الدخول الذكي
+        // الربط الفعلي: تسجيل الدخول الذكي
         window.handleLogin = async (e) => {
             e.preventDefault();
             triggerScan();
@@ -619,29 +563,24 @@
 
                 if (!user.emailVerified) {
                     await signOut(auth);
-                    return showModal("الحساب معلق", "يرجى تأكيد بريدك الإلكتروني أولاً لتفعيل حسابك.", "fas fa-user-lock", "var(--gold-1)");
+                    return showModal("الحساب معلق", "يرجى تأكيد بريدك الإلكتروني أولاً لتفعيل حسابك عبر الرابط المرسل.", "fas fa-user-lock", "var(--gold-1)");
                 }
 
-                // جلب بيانات المستخدم لفحص الحالة
                 const userDocRef = doc(db, "users", user.uid);
                 const userDocSnap = await getDoc(userDocRef);
 
                 if (userDocSnap.exists()) {
                     const userData = userDocSnap.data();
 
-                    // الترقية التلقائية من pending إلى active بناءً على القواعد
                     if (userData.status === "pending") {
                         await updateDoc(userDocRef, { status: "active" });
-                    } 
-                    // إذا كان الحساب محظوراً أو مجمداً
-                    else if (userData.status !== "active" && userData.status !== "pending") {
+                    } else if (userData.status !== "active" && userData.status !== "pending") {
                         await signOut(auth);
-                        return showModal("إيقاف مؤقت", "هذا الحساب غير نشط حالياً، يرجى التواصل مع الدعم الفني.", "fas fa-ban", "#ff4444");
+                        return showModal("حساب غير نشط", "هذا الحساب غير نشط حالياً، يرجى التواصل مع الدعم الفني.", "fas fa-ban", "#ff4444");
                     }
                 }
 
-                // نجاح الدخول
-                showModal("ترحيب حار", "أهلاً بك مجدداً في نظام Alqurmanix الفاخر، جاري تحويلك للوحة التحكم...", "fas fa-crown", "var(--gold-2)");
+                showModal("ترحيب حار", "أهلاً بك مجدداً في نظام Alqurmanix، جاري تحويلك للوحة التحكم الأنيقة...", "fas fa-crown", "var(--gold-2)");
                 setTimeout(() => { window.location.href = 'index.html'; }, 2500);
 
             } catch (error) {
@@ -649,11 +588,11 @@
             }
         };
 
-        // 3. استعادة كلمة المرور
+        // استعادة كلمة المرور
         window.showResetModal = async () => {
             const email = document.getElementById('loginEmail').value;
             if(!email) {
-                showModal("خطوة مطلوبة", "يرجى كتابة بريدك الإلكتروني في خانة تسجيل الدخول أولاً لإرسال الرابط.", "fas fa-info-circle", "var(--gold-1)");
+                showModal("خطوة مطلوبة", "يرجى كتابة بريدك الإلكتروني في الخانة أولاً لإرسال الرابط.", "fas fa-info-circle", "var(--gold-1)");
                 return;
             }
             try {
@@ -661,14 +600,14 @@
                 await sendPasswordResetEmail(auth, email);
                 showModal("تم الإرسال بأمان", "تم إرسال رابط إعادة تعيين كلمة المرور إلى بريدك، يرجى التحقق.", "fas fa-paper-plane", "var(--neon-green)");
             } catch (error) {
-                showModal("خطأ", "لم نتمكن من إرسال الرابط، تأكد من صحة البريد.", "fas fa-exclamation-triangle", "#ff4444");
+                showModal("خطأ", "لم نتمكن من إرسال الرابط، تأكد من صحة البريد المسجل.", "fas fa-exclamation-triangle", "#ff4444");
             }
         };
 
-        // توليد تأثيرات الجسيمات في الخلفية
+        // الجسيمات
         const createParticles = () => {
             const container = document.getElementById('particles');
-            for(let i=0; i<30; i++) {
+            for(let i=0; i<25; i++) {
                 const p = document.createElement('div');
                 p.className = 'particle';
                 p.style.left = Math.random() * 100 + 'vw';
@@ -680,7 +619,6 @@
             }
         };
         createParticles();
-
     </script>
 </body>
 </html>
