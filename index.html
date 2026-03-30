@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Alqurmanix - الدخول والاشتراك الآمن</title>
+    <title>Alqurmanix - الدخول والاشتراك</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800&family=Cinzel:wght@700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -20,7 +20,6 @@
             --glass-bg: rgba(20, 20, 20, 0.6);
             --glass-border: rgba(191, 149, 63, 0.3);
             --neon-green: #00ff66;
-            --neon-red: #ff4444;
         }
 
         body {
@@ -36,6 +35,7 @@
             overflow-x: hidden;
         }
 
+        /* الجسيمات الذهبية */
         #particles {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             pointer-events: none; z-index: 0;
@@ -52,68 +52,125 @@
             100% { transform: translateY(-10vh) scale(1); opacity: 0; }
         }
 
+        /* تنسيق الهيدر المتجاوب (مقسم لسطرين) */
         .header {
-            width: 100%; box-sizing: border-box; padding: 15px 20px;
-            position: relative; z-index: 10; display: flex;
-            flex-direction: column; align-items: center; gap: 15px;
+            width: 100%;
+            box-sizing: border-box;
+            padding: 15px 20px;
+            position: relative;
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
         }
 
         .top-row {
-            display: flex; justify-content: space-between; align-items: center;
-            width: 100%; max-width: 600px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            max-width: 600px;
         }
 
+        /* حالة النظام */
         .status-box {
-            display: flex; align-items: center; gap: 10px;
-            background: var(--glass-bg); padding: 8px 15px;
-            border-radius: 30px; border: 1px solid var(--glass-border);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: var(--glass-bg);
+            padding: 8px 15px;
+            border-radius: 30px;
+            border: 1px solid var(--glass-border);
             backdrop-filter: blur(10px);
         }
         .live-dot {
-            width: 10px; height: 10px; background-color: var(--neon-green);
-            border-radius: 50%; box-shadow: 0 0 10px var(--neon-green), 0 0 20px var(--neon-green);
+            width: 10px; height: 10px;
+            background-color: var(--neon-green);
+            border-radius: 50%;
+            box-shadow: 0 0 10px var(--neon-green), 0 0 20px var(--neon-green);
             animation: pulseGreen 1.5s infinite alternate;
         }
         @keyframes pulseGreen { from { opacity: 0.5; transform: scale(0.8); } to { opacity: 1; transform: scale(1.2); } }
         .status-text { font-size: 0.85rem; font-weight: 600; color: #ccc; }
 
-        .top-icons { display: flex; align-items: center; gap: 15px; }
+        /* الأيقونات العلوية */
+        .top-icons {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
         .icon-btn {
-            background: none; border: none; color: var(--gold-1);
-            cursor: pointer; display: flex; align-items: center; gap: 5px;
+            background: none; border: none;
+            color: var(--gold-1);
+            cursor: pointer;
+            display: flex; align-items: center; gap: 5px;
         }
         
-        .real-globe { font-size: 1.5rem; display: inline-block; animation: spinSlow 8s linear infinite; filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.3)); }
+        /* الكرة الأرضية الحقيقية */
+        .real-globe {
+            font-size: 1.5rem;
+            display: inline-block;
+            animation: spinSlow 8s linear infinite;
+            filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.3));
+        }
         @keyframes spinSlow { 100% { transform: rotate(360deg); } }
 
-        .faq-icon { font-size: 1.5rem; animation: rainbowColors 6s infinite, hoverMove 2s infinite alternate; }
+        /* علامة الاستفهام المتغيرة الألوان */
+        .faq-icon {
+            font-size: 1.5rem;
+            animation: rainbowColors 6s infinite, hoverMove 2s infinite alternate;
+        }
         @keyframes hoverMove { from { transform: translateY(-3px); } to { transform: translateY(3px); } }
         @keyframes rainbowColors {
-            0% { color: #ff0055; text-shadow: 0 0 10px #ff0055; } 16% { color: #ffaa00; text-shadow: 0 0 10px #ffaa00; }
-            33% { color: #00ffaa; text-shadow: 0 0 10px #00ffaa; } 50% { color: #00aaff; text-shadow: 0 0 10px #00aaff; }
-            66% { color: #aa00ff; text-shadow: 0 0 10px #aa00ff; } 83% { color: #ff00aa; text-shadow: 0 0 10px #ff00aa; }
+            0% { color: #ff0055; text-shadow: 0 0 10px #ff0055; }
+            16% { color: #ffaa00; text-shadow: 0 0 10px #ffaa00; }
+            33% { color: #00ffaa; text-shadow: 0 0 10px #00ffaa; }
+            50% { color: #00aaff; text-shadow: 0 0 10px #00aaff; }
+            66% { color: #aa00ff; text-shadow: 0 0 10px #aa00ff; }
+            83% { color: #ff00aa; text-shadow: 0 0 10px #ff00aa; }
             100% { color: #ff0055; text-shadow: 0 0 10px #ff0055; }
         }
 
+        /* القائمة المنسدلة للغات */
         .dropdown { position: relative; }
         .dropdown-menu {
-            position: absolute; top: 130%; left: 0; background: var(--glass-bg);
-            border: 1px solid var(--glass-border); border-radius: 10px;
-            backdrop-filter: blur(15px); display: none; flex-direction: column;
-            min-width: 140px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); z-index: 100;
+            position: absolute;
+            top: 130%; left: 0;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 10px;
+            backdrop-filter: blur(15px);
+            display: none;
+            flex-direction: column;
+            min-width: 140px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            z-index: 100;
         }
         .dropdown.active .dropdown-menu { display: flex; animation: fadeInDown 0.3s ease; }
         @keyframes fadeInDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
         .dropdown-item {
-            padding: 10px 15px; color: #fff; text-decoration: none;
-            display: flex; align-items: center; gap: 10px; font-size: 0.9rem; transition: background 0.3s;
+            padding: 10px 15px;
+            color: #fff; text-decoration: none;
+            display: flex; align-items: center; gap: 10px;
+            font-size: 0.9rem;
+            transition: background 0.3s;
         }
         .dropdown-item:hover { background: rgba(191, 149, 63, 0.2); color: var(--gold-2); }
 
-        .logo-row { width: 100%; text-align: center; }
+        /* اللوجو المصغر المنسق للهواتف */
+        .logo-row {
+            width: 100%;
+            text-align: center;
+        }
         .logo {
-            font-family: 'Cinzel', serif; font-size: 1.8rem; letter-spacing: 2px;
-            font-weight: 700; text-transform: uppercase; animation: goldNeon 4s infinite alternate; cursor: default;
+            font-family: 'Cinzel', serif;
+            font-size: 1.8rem;
+            letter-spacing: 2px;
+            font-weight: 700;
+            text-transform: uppercase;
+            animation: goldNeon 4s infinite alternate;
+            cursor: default;
         }
         @keyframes goldNeon {
             0% { color: var(--gold-1); text-shadow: 0 0 5px var(--gold-1); }
@@ -126,15 +183,27 @@
             100% { color: var(--gold-8); text-shadow: 0 0 10px var(--gold-8); }
         }
 
-        .main-container { flex: 1; display: flex; justify-content: center; align-items: center; padding: 10px 20px; z-index: 10; }
+        /* حاوية النماذج */
+        .main-container {
+            flex: 1; display: flex; justify-content: center; align-items: center;
+            padding: 10px 20px; z-index: 10;
+        }
         .auth-box {
-            background: var(--glass-bg); border: 1px solid var(--glass-border);
-            border-radius: 20px; padding: 30px 20px; width: 100%; max-width: 400px;
-            backdrop-filter: blur(20px); box-shadow: 0 15px 35px rgba(0,0,0,0.6), inset 0 0 20px rgba(191, 149, 63, 0.1);
-            position: relative; overflow: hidden; box-sizing: border-box;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 30px 20px;
+            width: 100%;
+            max-width: 400px;
+            backdrop-filter: blur(20px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.6), inset 0 0 20px rgba(191, 149, 63, 0.1);
+            position: relative; overflow: hidden;
+            box-sizing: border-box;
         }
 
-        .tabs { display: flex; margin-bottom: 25px; border-bottom: 2px solid rgba(255,255,255,0.1); }
+        .tabs {
+            display: flex; margin-bottom: 25px; border-bottom: 2px solid rgba(255,255,255,0.1);
+        }
         .tab {
             flex: 1; text-align: center; padding: 10px 0; cursor: pointer;
             font-size: 1.1rem; font-weight: 600; color: #888; transition: all 0.3s; position: relative;
@@ -142,22 +211,33 @@
         .tab.active { color: var(--gold-2); text-shadow: 0 0 10px var(--gold-2); }
         .tab.active::after {
             content: ''; position: absolute; bottom: -2px; left: 0; width: 100%; height: 2px;
-            background: linear-gradient(90deg, transparent, var(--gold-1), transparent); box-shadow: 0 0 10px var(--gold-1);
+            background: linear-gradient(90deg, transparent, var(--gold-1), transparent);
+            box-shadow: 0 0 10px var(--gold-1);
         }
 
         .form-section { display: none; }
         .form-section.active { display: block; animation: fadeIn 0.5s ease; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
+        /* حقول الإدخال */
         .input-group { position: relative; margin-bottom: 20px; }
         .input-group input {
-            width: 100%; padding: 12px 40px 12px 15px; background: rgba(0,0,0,0.5);
-            border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; color: #fff;
-            font-family: 'Cairo'; font-size: 0.95rem; outline: none; transition: all 0.3s; box-sizing: border-box;
+            width: 100%; padding: 12px 40px 12px 15px;
+            background: rgba(0,0,0,0.5);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 10px; color: #fff; font-family: 'Cairo'; font-size: 0.95rem;
+            outline: none; transition: all 0.3s; box-sizing: border-box;
         }
         .input-group input:focus { border-color: var(--gold-1); box-shadow: 0 0 15px rgba(191, 149, 63, 0.3); }
-        .input-group i.main-icon { position: absolute; right: 15px; top: 50%; transform: translateY(-50%); color: var(--gold-1); }
-        .toggle-password { position: absolute; left: 15px; top: 50%; transform: translateY(-50%); cursor: pointer; color: #888; transition: color 0.3s; }
+        
+        .input-group i.main-icon {
+            position: absolute; right: 15px; top: 50%; transform: translateY(-50%);
+            color: var(--gold-1);
+        }
+        .toggle-password {
+            position: absolute; left: 15px; top: 50%; transform: translateY(-50%);
+            cursor: pointer; color: #888; transition: color 0.3s;
+        }
         .toggle-password:hover { color: var(--gold-2); }
 
         .scanner-line {
@@ -172,20 +252,41 @@
         .req-item { display: flex; align-items: center; gap: 8px; margin-bottom: 5px; transition: color 0.3s; }
         .req-item.valid { color: var(--neon-green); text-shadow: 0 0 5px var(--neon-green); }
 
-        .links-row { display: flex; justify-content: space-between; align-items: center; margin-top: -10px; margin-bottom: 15px; }
-        .forgot-link, .resend-link { color: #aaa; text-decoration: none; font-size: 0.85rem; transition: color 0.3s; }
-        .resend-link { color: var(--gold-1); }
+        .links-row {
+            display: flex; justify-content: space-between; align-items: center;
+            margin-top: -10px; margin-bottom: 15px;
+        }
+        .forgot-link {
+            color: #aaa; text-decoration: none; font-size: 0.85rem; transition: color 0.3s;
+        }
+        .resend-link {
+            color: var(--gold-1); text-decoration: none; font-size: 0.85rem; transition: color 0.3s;
+        }
         .forgot-link:hover, .resend-link:hover { color: var(--gold-2); text-shadow: 0 0 5px var(--gold-2); }
 
         .btn-submit {
-            width: 100%; padding: 12px; background: linear-gradient(45deg, var(--gold-5), var(--gold-1));
-            border: none; border-radius: 10px; color: #000; font-family: 'Cairo'; font-size: 1.1rem;
-            font-weight: 800; cursor: pointer; transition: all 0.3s; overflow: hidden;
+            width: 100%; padding: 12px;
+            background: linear-gradient(45deg, var(--gold-5), var(--gold-1));
+            border: none; border-radius: 10px; color: #000;
+            font-family: 'Cairo'; font-size: 1.1rem; font-weight: 800; cursor: pointer;
+            transition: all 0.3s; overflow: hidden;
         }
         .btn-submit:hover { box-shadow: 0 0 20px var(--gold-1); transform: scale(1.02); }
 
-        .footer { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 15px 25px; padding: 20px; z-index: 10; }
-        .footer-link { color: #fff; text-decoration: none; font-weight: 600; font-size: 0.95rem; transition: all 0.3s; }
+        /* الفوتر المتجاوب */
+        .footer {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            gap: 15px 25px;
+            padding: 20px;
+            z-index: 10;
+        }
+        .footer-link {
+            color: #fff; text-decoration: none; font-weight: 600;
+            font-size: 0.95rem; transition: all 0.3s;
+        }
         .support-link { animation: supportNeon 2s infinite alternate; }
         @keyframes supportNeon {
             0% { color: #fff; text-shadow: 0 0 5px #fff; }
@@ -194,6 +295,7 @@
         }
         .footer-link:hover { color: var(--gold-2); }
 
+        /* النوافذ المنبثقة الفخمة */
         .modal-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0,0,0,0.85); backdrop-filter: blur(8px);
@@ -202,10 +304,12 @@
         }
         .modal-overlay.active { opacity: 1; pointer-events: all; }
         .modal-box {
-            background: #0a0a0a; border: 1px solid var(--gold-1); border-radius: 20px;
-            padding: 35px 20px; text-align: center; max-width: 350px; width: 90%;
+            background: #0a0a0a; border: 1px solid var(--gold-1);
+            border-radius: 20px; padding: 35px 20px; text-align: center;
+            max-width: 350px; width: 90%;
             box-shadow: 0 0 40px rgba(191, 149, 63, 0.3), inset 0 0 15px rgba(191, 149, 63, 0.1);
-            transform: scale(0.8) translateY(20px); transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transform: scale(0.8) translateY(20px);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
         .modal-overlay.active .modal-box { transform: scale(1) translateY(0); }
         .modal-icon { font-size: 3.5rem; margin-bottom: 15px; color: var(--gold-2); text-shadow: 0 0 20px var(--gold-2); }
@@ -213,11 +317,12 @@
         .modal-text { font-size: 0.95rem; color: #ddd; margin-bottom: 25px; line-height: 1.6; }
         .modal-btn {
             background: linear-gradient(45deg, transparent, rgba(191, 149, 63, 0.1));
-            border: 1px solid var(--gold-1); color: var(--gold-2); padding: 8px 30px;
-            border-radius: 8px; cursor: pointer; font-family: 'Cairo'; font-weight: 600;
-            font-size: 1rem; transition: all 0.3s;
+            border: 1px solid var(--gold-1); color: var(--gold-2);
+            padding: 8px 30px; border-radius: 8px; cursor: pointer;
+            font-family: 'Cairo'; font-weight: 600; font-size: 1rem; transition: all 0.3s;
         }
         .modal-btn:hover { background: var(--gold-1); color: #000; box-shadow: 0 0 15px var(--gold-1); }
+
     </style>
 </head>
 <body>
@@ -227,19 +332,20 @@
     <header class="header">
         <div class="top-row">
             <div class="status-box">
-                <div class="live-dot" id="liveDot"></div>
-                <span class="status-text" id="statusText">النظام متصل وآمن</span>
+                <div class="live-dot"></div>
+                <span class="status-text">النظام متصل وآمن</span>
             </div>
+
             <div class="top-icons">
                 <div class="dropdown" id="langDropdown">
-                    <button class="icon-btn" onclick="window.toggleDropdown()">
+                    <button class="icon-btn" onclick="toggleDropdown()">
                         <span class="real-globe">🌍</span>
                         <span style="font-size: 0.9rem; font-weight: 600; color:#fff;">AR 🇪🇬</span>
                     </button>
                     <div class="dropdown-menu">
-                        <a href="#" class="dropdown-item">ES 🇪🇸 الإسبانية</a>
-                        <a href="#" class="dropdown-item">FR 🇫🇷 الفرنسية</a>
-                        <a href="#" class="dropdown-item">EN 🇬🇧 الإنجليزية</a>
+                        <a href="index-es.html" class="dropdown-item">ES 🇪🇸 الإسبانية</a>
+                        <a href="index-fr.html" class="dropdown-item">FR 🇫🇷 الفرنسية</a>
+                        <a href="index-en.html" class="dropdown-item">EN 🇬🇧 الإنجليزية</a>
                     </div>
                 </div>
                 <button class="icon-btn" onclick="window.location.href='FAQ.html'">
@@ -247,7 +353,10 @@
                 </button>
             </div>
         </div>
-        <div class="logo-row"><div class="logo">Alqurmanix</div></div>
+        
+        <div class="logo-row">
+            <div class="logo">Alqurmanix</div>
+        </div>
     </header>
 
     <main class="main-container">
@@ -255,12 +364,12 @@
             <div class="scanner-line"></div>
             
             <div class="tabs">
-                <div class="tab active" onclick="window.switchTab('login')">تسجيل الدخول</div>
-                <div class="tab" onclick="window.switchTab('signup')">الاشتراك</div>
+                <div class="tab active" onclick="switchTab('login')">تسجيل الدخول</div>
+                <div class="tab" onclick="switchTab('signup')">الاشتراك</div>
             </div>
 
             <div id="loginForm" class="form-section active">
-                <form onsubmit="window.handleLogin(event)">
+                <form onsubmit="handleLogin(event)">
                     <div class="input-group">
                         <i class="fas fa-envelope main-icon"></i>
                         <input type="email" id="loginEmail" placeholder="البريد الإلكتروني" required>
@@ -268,32 +377,36 @@
                     <div class="input-group">
                         <i class="fas fa-lock main-icon"></i>
                         <input type="password" id="loginPassword" placeholder="كلمة المرور" required>
-                        <i class="fas fa-eye toggle-password" onclick="window.togglePass('loginPassword', this)"></i>
+                        <i class="fas fa-eye toggle-password" onclick="togglePass('loginPassword', this)"></i>
                     </div>
+                    
                     <div class="links-row">
-                        <a href="#" class="forgot-link" onclick="window.showResetModal()">نسيت كلمة السر؟</a>
-                        <a href="#" class="resend-link" onclick="window.resendVerification()">لم يصلك الرابط؟</a>
+                        <a href="#" class="forgot-link" onclick="showResetModal()">نسيت كلمة السر؟</a>
+                        <a href="#" class="resend-link" onclick="resendVerification()">لم يصلك رابط التفعيل؟</a>
                     </div>
+
                     <button type="submit" class="btn-submit">دخول آمن</button>
                 </form>
             </div>
 
             <div id="signupForm" class="form-section">
-                <form onsubmit="window.handleSignup(event)">
+                <form onsubmit="handleSignup(event)">
                     <div class="input-group">
                         <i class="fas fa-envelope main-icon"></i>
                         <input type="email" id="signupEmail" placeholder="البريد الإلكتروني" required>
                     </div>
                     <div class="input-group">
                         <i class="fas fa-lock main-icon"></i>
-                        <input type="password" id="signupPassword" placeholder="كلمة المرور" oninput="window.checkPasswordStrength()" required>
-                        <i class="fas fa-eye toggle-password" onclick="window.togglePass('signupPassword', this)"></i>
+                        <input type="password" id="signupPassword" placeholder="كلمة المرور" oninput="checkPasswordStrength()" required>
+                        <i class="fas fa-eye toggle-password" onclick="togglePass('signupPassword', this)"></i>
                     </div>
+                    
                     <div class="password-reqs">
                         <div class="req-item" id="req-len"><i class="fas fa-circle" style="font-size:0.6rem;"></i> 8 أحرف على الأقل</div>
                         <div class="req-item" id="req-num"><i class="fas fa-circle" style="font-size:0.6rem;"></i> يحتوي على أرقام</div>
                         <div class="req-item" id="req-char"><i class="fas fa-circle" style="font-size:0.6rem;"></i> رموز خاصة (!@#$)</div>
                     </div>
+
                     <div class="input-group">
                         <i class="fas fa-check-double main-icon"></i>
                         <input type="password" id="signupConfirm" placeholder="تأكيد كلمة المرور" required>
@@ -305,9 +418,9 @@
     </main>
 
     <footer class="footer">
-        <a href="#" class="footer-link support-link">الدعم الفني</a>
-        <a href="#" class="footer-link">تنبيهات الأمان</a>
-        <a href="#" class="footer-link">من نحن</a>
+        <a href="AuthSupport.html" class="footer-link support-link">الدعم الفني</a>
+        <a href="SecurityShield.html" class="footer-link">تنبيهات الأمان</a>
+        <a href="AlqurmanixInfo.html" class="footer-link">من نحن</a>
     </footer>
 
     <div class="modal-overlay" id="customModal">
@@ -315,7 +428,7 @@
             <i class="fas fa-check-circle modal-icon" id="modalIcon"></i>
             <h2 class="modal-title" id="modalTitle">العنوان</h2>
             <p class="modal-text" id="modalText">الرسالة تظهر هنا</p>
-            <button class="modal-btn" onclick="window.closeModal()">حسناً</button>
+            <button class="modal-btn" onclick="closeModal()">حسناً</button>
         </div>
     </div>
 
@@ -323,67 +436,78 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { 
             getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, 
-            sendEmailVerification, sendPasswordResetEmail, signOut, onAuthStateChanged 
+            sendEmailVerification, sendPasswordResetEmail, signOut
         } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
         import { 
-            getFirestore, doc, setDoc, getDoc, updateDoc, serverTimestamp, deleteDoc 
+            getFirestore, doc, setDoc, getDoc, updateDoc, serverTimestamp 
         } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-        /* ================= CONFIG ================= */
         const firebaseConfig = {
             apiKey: "AIzaSyDA0gnR9U3I90umdJsAJI4h93nEPD3BJ9w",
             authDomain: "alqurmanix-aswan.firebaseapp.com",
-            projectId: "alqurmanix-aswan"
+            projectId: "alqurmanix-aswan",
+            storageBucket: "alqurmanix-aswan.firebasestorage.app",
+            messagingSenderId: "882189888648",
+            appId: "1:882189888648:web:41d3f89c74ad76fd6a833d",
+            measurementId: "G-5SZY72ESEV"
         };
+
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
 
-        /* ================= SAFE GET ================= */
-        const $ = (id) => document.getElementById(id);
-
-        /* ================= UI FUNCTIONS ================= */
         window.switchTab = (tabName) => {
             document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
             document.querySelectorAll('.form-section').forEach(f => f.classList.remove('active'));
             if(tabName === 'login') {
                 document.querySelectorAll('.tab')[0].classList.add('active');
-                $('loginForm').classList.add('active');
+                document.getElementById('loginForm').classList.add('active');
             } else {
                 document.querySelectorAll('.tab')[1].classList.add('active');
-                $('signupForm').classList.add('active');
+                document.getElementById('signupForm').classList.add('active');
             }
         };
 
-        window.toggleDropdown = () => { $('langDropdown').classList.toggle('active'); };
+        window.toggleDropdown = () => {
+            document.getElementById('langDropdown').classList.toggle('active');
+        };
 
         window.togglePass = (inputId, iconEl) => {
-            const input = $(inputId);
+            const input = document.getElementById(inputId);
             if(input.type === 'password') {
-                input.type = 'text'; iconEl.classList.replace('fa-eye', 'fa-eye-slash');
+                input.type = 'text';
+                iconEl.classList.replace('fa-eye', 'fa-eye-slash');
             } else {
-                input.type = 'password'; iconEl.classList.replace('fa-eye-slash', 'fa-eye');
+                input.type = 'password';
+                iconEl.classList.replace('fa-eye-slash', 'fa-eye');
             }
         };
 
         window.showModal = (title, text, iconClass, iconColor) => {
-            $('modalTitle').innerText = title;
-            $('modalText').innerText = text;
-            const icon = $('modalIcon');
+            document.getElementById('modalTitle').innerText = title;
+            document.getElementById('modalText').innerText = text;
+            const icon = document.getElementById('modalIcon');
             icon.className = `modal-icon ${iconClass}`;
             icon.style.color = iconColor;
             icon.style.textShadow = `0 0 20px ${iconColor}`;
-            $('customModal').classList.add('active');
+            document.getElementById('customModal').classList.add('active');
         };
 
-        window.closeModal = () => { $('customModal').classList.remove('active'); };
+        window.closeModal = () => {
+            document.getElementById('customModal').classList.remove('active');
+        };
 
         window.checkPasswordStrength = () => {
-            const pass = $('signupPassword').value;
+            const pass = document.getElementById('signupPassword').value;
             const updateReq = (id, isValid) => {
-                const el = $(id);
-                if(isValid) { el.classList.add('valid'); el.querySelector('i').className = 'fas fa-check-circle'; }
-                else { el.classList.remove('valid'); el.querySelector('i').className = 'fas fa-circle'; }
+                const el = document.getElementById(id);
+                if(isValid) {
+                    el.classList.add('valid');
+                    el.querySelector('i').className = 'fas fa-check-circle';
+                } else {
+                    el.classList.remove('valid');
+                    el.querySelector('i').className = 'fas fa-circle';
+                }
             };
             updateReq('req-len', pass.length >= 8);
             updateReq('req-num', /\d/.test(pass));
@@ -391,13 +515,129 @@
         };
 
         const triggerScan = () => {
-            const box = $('authBox');
+            const box = document.getElementById('authBox');
             box.classList.add('scanning');
             setTimeout(() => box.classList.remove('scanning'), 1500);
         };
 
+        window.handleSignup = async (e) => {
+            e.preventDefault();
+            triggerScan();
+            const email = document.getElementById('signupEmail').value;
+            const pass = document.getElementById('signupPassword').value;
+            const conf = document.getElementById('signupConfirm').value;
+
+            if(pass !== conf) {
+                return showModal("تنبيه", "كلمات المرور غير متطابقة", "fas fa-exclamation-triangle", "#ff4444");
+            }
+
+            try {
+                const userCredential = await createUserWithEmailAndPassword(auth, email, pass);
+                const user = userCredential.user;
+                
+                await setDoc(doc(db, "users", user.uid), {
+                    email: user.email,
+                    status: "pending",
+                    createdAt: serverTimestamp(),
+                    lockUntil: null
+                });
+
+                await sendEmailVerification(user);
+                await signOut(auth);
+
+                showModal("تم بنجاح راقٍ", "تم إنشاء الحساب، يرجى مراجعة بريدك الإلكتروني لتفعيل الحساب قبل الدخول.", "fas fa-envelope-open-text", "var(--neon-green)");
+                switchTab('login');
+                document.getElementById('signupForm').reset();
+            } catch (error) {
+                showModal("عذراً", error.message, "fas fa-times-circle", "#ff4444");
+            }
+        };
+
+        window.handleLogin = async (e) => {
+            e.preventDefault();
+            triggerScan();
+            const email = document.getElementById('loginEmail').value;
+            const pass = document.getElementById('loginPassword').value;
+
+            try {
+                const userCredential = await signInWithEmailAndPassword(auth, email, pass);
+                const user = userCredential.user;
+
+                if (!user.emailVerified) {
+                    await signOut(auth);
+                    return showModal("الحساب معلق", "يرجى تأكيد بريدك الإلكتروني أولاً لتفعيل حسابك عبر الرابط المرسل.", "fas fa-user-lock", "var(--gold-1)");
+                }
+
+                const userDocRef = doc(db, "users", user.uid);
+                const userDocSnap = await getDoc(userDocRef);
+
+                if (userDocSnap.exists()) {
+                    const userData = userDocSnap.data();
+
+                    if (userData.status === "pending") {
+                        await updateDoc(userDocRef, { status: "active" });
+                    } else if (userData.status !== "active" && userData.status !== "pending") {
+                        await signOut(auth);
+                        return showModal("حساب غير نشط", "هذا الحساب غير نشط حالياً، يرجى التواصل مع الدعم الفني.", "fas fa-ban", "#ff4444");
+                    }
+                }
+
+                showModal("ترحيب حار", "أهلاً بك مجدداً في نظام Alqurmanix، جاري تحويلك للوحة التحكم الأنيقة...", "fas fa-crown", "var(--gold-2)");
+                setTimeout(() => { window.location.href = 'index.html'; }, 2500);
+
+            } catch (error) {
+                showModal("خطأ في الدخول", "بيانات الاعتماد غير صحيحة، يرجى المحاولة مرة أخرى.", "fas fa-times-circle", "#ff4444");
+            }
+        };
+
+        window.showResetModal = async () => {
+            const email = document.getElementById('loginEmail').value;
+            if(!email) {
+                showModal("خطوة مطلوبة", "يرجى كتابة بريدك الإلكتروني في الخانة أولاً لإرسال الرابط.", "fas fa-info-circle", "var(--gold-1)");
+                return;
+            }
+            try {
+                triggerScan();
+                await sendPasswordResetEmail(auth, email);
+                showModal("تم الإرسال بأمان", "تم إرسال رابط إعادة تعيين كلمة المرور إلى بريدك، يرجى التحقق.", "fas fa-paper-plane", "var(--neon-green)");
+            } catch (error) {
+                showModal("خطأ", "لم نتمكن من إرسال الرابط، تأكد من صحة البريد المسجل.", "fas fa-exclamation-triangle", "#ff4444");
+            }
+        };
+
+        window.resendVerification = async () => {
+            const email = document.getElementById('loginEmail').value;
+            const pass = document.getElementById('loginPassword').value;
+
+            if (!email || !pass) {
+                showModal("بيانات ناقصة", "يرجى كتابة البريد وكلمة المرور في خانات تسجيل الدخول أولاً لإرسال رابط جديد.", "fas fa-info-circle", "var(--gold-1)");
+                return;
+            }
+
+            try {
+                triggerScan();
+                const userCredential = await signInWithEmailAndPassword(auth, email, pass);
+                const user = userCredential.user;
+
+                if (user.emailVerified) {
+                    showModal("حساب مفعل", "هذا الحساب مفعل بالفعل، يمكنك تسجيل الدخول مباشرة.", "fas fa-check-double", "var(--neon-green)");
+                } else {
+                    await sendEmailVerification(user);
+                    showModal("تم الإرسال مجدداً", "تم إرسال رابط تفعيل جديد إلى بريدك الإلكتروني. يرجى التحقق الآن.", "fas fa-paper-plane", "var(--gold-2)");
+                }
+                
+                await signOut(auth);
+            } catch (error) {
+                let errorMsg = "حدث خطأ أثناء المحاولة، تأكد من صحة البيانات.";
+                if (error.code === 'auth/user-not-found') errorMsg = "هذا البريد غير مسجل لدينا.";
+                if (error.code === 'auth/wrong-password') errorMsg = "كلمة المرور غير صحيحة.";
+                
+                showModal("تعذر الإرسال", errorMsg, "fas fa-exclamation-triangle", "#ff4444");
+            }
+        };
+
         const createParticles = () => {
-            const container = $('particles');
+            const container = document.getElementById('particles');
             for(let i=0; i<25; i++) {
                 const p = document.createElement('div');
                 p.className = 'particle';
@@ -410,216 +650,6 @@
             }
         };
         createParticles();
-
-        /* ================= ANTI SPAM ================= */
-        let busy = false;
-        function lock() {
-            if (busy) return false;
-            busy = true;
-            setTimeout(() => busy = false, 2500);
-            return true;
-        }
-
-        /* ================= LOG ================= */
-        async function log(type, uid) {
-            try {
-                await setDoc(doc(db, "auth_logs", crypto.randomUUID()), {
-                    uid, type, timestamp: serverTimestamp()
-                });
-            } catch (e) { console.error("Log Error:", e); }
-        }
-
-        /* ================= SESSION ================= */
-        async function createSession(user) {
-            await setDoc(doc(db, "sessions", user.uid), {
-                createdAt: serverTimestamp(),
-                expiresAt: new Date(Date.now() + 86400000)
-            });
-        }
-
-        async function deleteSession(user) {
-            try { await deleteDoc(doc(db, "sessions", user.uid)); } catch {}
-        }
-
-        /* ================= SIGNUP ================= */
-        window.handleSignup = async (e) => {
-            e.preventDefault();
-            if (!lock()) return;
-            triggerScan();
-
-            const email = $("signupEmail").value.trim();
-            const pass = $("signupPassword").value;
-            const conf = $("signupConfirm").value;
-
-            if (pass !== conf) {
-                window.showModal("خطأ إدخال", "كلمة المرور غير متطابقة، يرجى المراجعة.", "fas fa-times-circle", "#ff4444");
-                return;
-            }
-
-            if (!/^(?=.*\d)(?=.*[!@#$%^&*]).{8,}$/.test(pass)) {
-                window.showModal("حماية ضعيفة", "يرجى الالتزام بمعايير الفخامة واختيار كلمة مرور قوية كما هو موضح.", "fas fa-shield-alt", "#ff4444");
-                return;
-            }
-
-            try {
-                const cred = await createUserWithEmailAndPassword(auth, email, pass);
-                const user = cred.user;
-
-                await setDoc(doc(db, "users", user.uid), {
-                    email: user.email, status: "pending", createdAt: serverTimestamp(), lockUntil: null
-                });
-
-                await setDoc(doc(db, "security", user.uid), {
-                    twoFA: false, lastPasswordChange: serverTimestamp()
-                });
-
-                await sendEmailVerification(user);
-                await log("signup", user.uid);
-                await signOut(auth);
-
-                window.showModal("اكتملت الفخامة", "تم إنشاء الحساب بنجاح، راجع بريدك الإلكتروني للتفعيل قبل الدخول.", "fas fa-envelope-open-text", "#00ff66");
-                $("signupForm").reset();
-                window.switchTab("login");
-
-            } catch (err) {
-                window.showModal("عذراً", err.message, "fas fa-exclamation-triangle", "#ff4444");
-            }
-        };
-
-        /* ================= LOGIN ================= */
-        window.handleLogin = async (e) => {
-            e.preventDefault();
-            if (!lock()) return;
-            triggerScan();
-
-            const email = $("loginEmail").value.trim();
-            const pass = $("loginPassword").value;
-
-            try {
-                const cred = await signInWithEmailAndPassword(auth, email, pass);
-                const user = cred.user;
-
-                if (!user.emailVerified) {
-                    await signOut(auth);
-                    window.showModal("خطوة أخيرة", "يرجى تفعيل بريدك الإلكتروني أولاً للدخول إلى النظام الفاخر.", "fas fa-user-lock", "#ffaa00");
-                    return;
-                }
-
-                const ref = doc(db, "users", user.uid);
-                const snap = await getDoc(ref);
-
-                if (!snap.exists()) throw new Error("no_user");
-                const data = snap.data();
-
-                const banned = await getDoc(doc(db, "blacklist", user.uid));
-                if (banned.exists()) {
-                    await signOut(auth);
-                    window.showModal("قرار إداري", "تم حظر هذا الحساب لمخالفته شروط الاستخدام.", "fas fa-ban", "#ff0000");
-                    return;
-                }
-
-                if (data.lockUntil && Date.now() < data.lockUntil.toMillis()) {
-                    await signOut(auth);
-                    window.showModal("إيقاف مؤقت", "هذا الحساب مقفل مؤقتاً لدواعي أمنية.", "fas fa-lock", "#ffaa00");
-                    return;
-                }
-
-                if (data.status === "pending") { await updateDoc(ref, { status: "active" }); }
-
-                await createSession(user);
-                await log("login", user.uid);
-
-                window.showModal("ترحيب يليق بك", "بيانات صحيحة، جاري تحويلك للوحة التحكم الاستثنائية...", "fas fa-crown", "#FFD700");
-                setTimeout(() => location.href = "index.html", 2500);
-
-            } catch (err) {
-                window.showModal("فشل التحقق", "البيانات غير صحيحة، يرجى المحاولة مرة أخرى.", "fas fa-times-circle", "#ff4444");
-            }
-        };
-
-        /* ================= RESET ================= */
-        window.showResetModal = async () => {
-            const email = $("loginEmail").value.trim();
-            if (!email) {
-                window.showModal("إجراء مطلوب", "يرجى كتابة بريدك الإلكتروني في الخانة أولاً لنرسل لك رابط التعيين.", "fas fa-info-circle", "#ffaa00");
-                return;
-            }
-            try {
-                triggerScan();
-                await sendPasswordResetEmail(auth, email);
-                await setDoc(doc(db, "password_resets", crypto.randomUUID()), {
-                    uid: "unknown", createdAt: serverTimestamp()
-                });
-                window.showModal("رسالة منطلقة", "تم إرسال رابط إعادة تعيين كلمة المرور، تفقد صندوق الوارد.", "fas fa-paper-plane", "#00ff66");
-            } catch {
-                window.showModal("عذراً", "فشل الإرسال، تأكد من صحة البريد المدخل.", "fas fa-exclamation-triangle", "#ff4444");
-            }
-        };
-
-        /* ================= RESEND ================= */
-        window.resendVerification = async () => {
-            const email = $("loginEmail").value;
-            const pass = $("loginPassword").value;
-            if (!email || !pass) {
-                window.showModal("تنبيه", "يرجى ملء خانات تسجيل الدخول (البريد وكلمة المرور) لطلب رابط التفعيل.", "fas fa-info-circle", "#ffaa00");
-                return;
-            }
-            try {
-                triggerScan();
-                const cred = await signInWithEmailAndPassword(auth, email, pass);
-                const user = cred.user;
-
-                if (!user.emailVerified) {
-                    await sendEmailVerification(user);
-                    window.showModal("إرسال ناجح", "تم إرسال رابط تفعيل جديد إلى بريدك. ننتظر قدومك.", "fas fa-paper-plane", "#FFD700");
-                } else {
-                    window.showModal("لا حاجة لذلك", "حسابك مفعل بالفعل، يمكنك الدخول مباشرة بكل سهولة.", "fas fa-check-double", "#00ff66");
-                }
-                await signOut(auth);
-            } catch {
-                window.showModal("عذراً", "فشلت عملية الإرسال، البيانات المدخلة غير صحيحة.", "fas fa-times-circle", "#ff4444");
-            }
-        };
-
-        /* ================= LOGOUT ================= */
-        window.logout = async () => {
-            const user = auth.currentUser;
-            if (user) {
-                await deleteSession(user);
-                await log("logout", user.uid);
-            }
-            await signOut(auth);
-            location.href = "login.html";
-        };
-
-        /* ================= SESSION CHECK ================= */
-        onAuthStateChanged(auth, async (user) => {
-            if (!user) return;
-            try {
-                const s = await getDoc(doc(db, "sessions", user.uid));
-                if (!s.exists()) {
-                    await signOut(auth);
-                    location.href = "login.html";
-                }
-            } catch (e) { console.error(e); }
-        });
-
-        /* ================= ANTI HACK (Click Spamming) ================= */
-        let clicks = 0;
-        window.addEventListener("click", () => {
-            clicks++;
-            if (clicks > 80) {
-                const user = auth.currentUser;
-                if (user) {
-                    setDoc(doc(db, "blacklist", user.uid), { reason: "spam_clicks", timestamp: serverTimestamp() });
-                    signOut(auth);
-                    window.showModal("تحذير أمني صارم", "تم رصد نشاط غير طبيعي، الحساب محظور لحين المراجعة.", "fas fa-ban", "#ff0000");
-                    $('liveDot').style.backgroundColor = '#ff0000';
-                    $('statusText').innerText = 'تم اكتشاف تهديد';
-                }
-            }
-            setTimeout(() => { if(clicks > 0) clicks--; }, 5000);
-        });
     </script>
 </body>
-</html>
+  </html>
