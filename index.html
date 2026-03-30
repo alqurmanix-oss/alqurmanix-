@@ -1033,36 +1033,48 @@ window.doLogin = async function() {
     const cred = await signInWithEmailAndPassword(auth, email, pass);
     const user = cred.user;
 
-    // Check email verified
-    if(!user.emailVerified) {
+    // ✅ THE FIX: reload user to get fresh token from Firebase server
+    // Without this, emailVerified stays false even after the user clicked the link
+    await user.reload();
+    const freshUser = auth.currentUser;
+
+    // Check email verified (on fresh data)
+    if(!freshUser.emailVerified) {
       await signOut(auth);
       return showModal('warning','📧 الحساب غير مفعل',
-        'يرجى تفعيل حسابك عبر الرابط المرسل إلى بريدك الإلكتروني.<br><br>تحقق من <strong>البريد الوارد والمهملات</strong>');
+        'يرجى تفعيل حسابك أولاً عبر الرابط المرسل لبريدك.<br><br>' +
+        'تحقق من <strong>البريد الوارد والمهملات (Spam)</strong><br><br>' +
+        'إذا فعّلت البريد بالفعل، انتظر ثوانٍ ثم أعد المحاولة.');
     }
 
-    // Get user doc
+    // Get user doc from Firestore
     const snap = await getDoc(doc(db,'users',user.uid));
     if(snap.exists()) {
       const data = snap.data();
 
+      // Check lock FIRST
+      if(data.lockUntil && new Date() < data.lockUntil.toDate()) {
+        await signOut(auth);
+        return showModal('error','🔒 حساب مقفل مؤقتاً',
+          'تم قفل الحساب بسبب محاولات دخول متعددة.<br>يرجى المحاولة لاحقاً أو التواصل مع الدعم');
+      }
+
       if(data.status === 'pending') {
-        // Activate
+        // First login after email verification → activate account
         await updateDoc(doc(db,'users',user.uid), { status: 'active' });
       } else if(data.status !== 'active') {
         await signOut(auth);
         return showModal('error','🚫 حساب معلق',
           'هذا الحساب <strong>غير نشط</strong> حالياً.<br>يرجى التواصل مع <strong>الدعم الفني</strong>');
       }
-
-      // Check lock
-      if(data.lockUntil && new Date() < data.lockUntil.toDate()) {
-        await signOut(auth);
-        return showModal('error','🔒 حساب مقفل مؤقتاً',
-          'تم قفل الحساب بسبب محاولات دخول متعددة.<br>يرجى المحاولة لاحقاً أو التواصل مع الدعم');
-      }
+    } else {
+      // Firestore doc missing — sign out for safety
+      await signOut(auth);
+      return showModal('error','⚠️ خطأ في البيانات',
+        'لم يتم العثور على بيانات حسابك.<br>يرجى التواصل مع <strong>الدعم الفني</strong>');
     }
 
-    // Mark session
+    // All good — mark session and redirect
     sessionStorage.setItem('fromIndex','1');
 
     showModal('success','👑 أهلاً بك مجدداً!',
@@ -1073,13 +1085,16 @@ window.doLogin = async function() {
 
   } catch(err) {
     await signOut(auth).catch(()=>{});
-    let msg = 'حدث خطأ غير متوقع';
-    if(['auth/wrong-password','auth/invalid-credential','auth/user-not-found','auth/invalid-login-credentials'].includes(err.code))
+    let msg = 'حدث خطأ غير متوقع، حاول مرة أخرى';
+    const code = err.code || '';
+    if(['auth/wrong-password','auth/invalid-credential','auth/user-not-found','auth/invalid-login-credentials'].includes(code))
       msg = 'البريد الإلكتروني أو كلمة المرور <strong>غير صحيحة</strong>';
-    if(err.code==='auth/too-many-requests')
-      msg = 'تم حظر الحساب مؤقتاً بسبب محاولات متعددة.<br>يرجى <strong>إعادة المحاولة لاحقاً</strong>';
-    if(err.code==='auth/network-request-failed')
-      msg = 'تعذر الاتصال بالخادم، يرجى التحقق من <strong>اتصال الإنترنت</strong>';
+    else if(code === 'auth/too-many-requests')
+      msg = 'تم حظر الحساب مؤقتاً بسبب محاولات متعددة.<br>يرجى <strong>المحاولة لاحقاً</strong>';
+    else if(code === 'auth/network-request-failed')
+      msg = 'تعذر الاتصال بالخادم، تحقق من <strong>اتصال الإنترنت</strong>';
+    else if(code === 'auth/user-disabled')
+      msg = 'هذا الحساب <strong>معطل</strong>، يرجى التواصل مع الدعم';
     showModal('error','❌ فشل تسجيل الدخول', msg);
   } finally {
     btn.disabled = false;
