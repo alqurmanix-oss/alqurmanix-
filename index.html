@@ -4,1204 +4,657 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>AlQurmanix — البوابة الذهبية</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Tajawal:wght@300;400;500;700;900&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-
 <style>
-/* ══════════════════════════════════════════════
-   ROOT VARIABLES — ALQURMANIX GOLD SYSTEM
-══════════════════════════════════════════════ */
-:root {
-  --g1: #fffbe0;
-  --g2: #f7e27a;
-  --g3: #e0a820;
-  --g4: #c87f00;
-  --g5: #9a5f00;
-  --g6: #6b3a00;
-  --g7: #3d1800;
-  --neon-green: #00ffaa;
-  --neon-red: #ff2244;
-  --bg: #030307;
-  --bg2: #07070f;
-  --glass: rgba(255,255,255,0.03);
-  --glass-border: rgba(224,168,32,0.25);
-  --glow: 0 0 30px rgba(224,168,32,0.4), 0 0 80px rgba(224,168,32,0.15);
-  --glow-sm: 0 0 15px rgba(224,168,32,0.35);
-  --shadow-deep: 0 40px 100px rgba(0,0,0,0.9);
+:root{
+  --g1:#fffbe0;--g2:#f7e27a;--g3:#e0a820;--g4:#c87f00;--g5:#9a5f00;
+  --ng:#00ffaa;--nr:#ff2244;--bg:#030307;
+  --gb:rgba(224,168,32,.22);
+  --glow:0 0 25px rgba(224,168,32,.45),0 0 70px rgba(224,168,32,.15);
 }
-
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html,body{width:100%;min-height:100vh;background:var(--bg);font-family:'Tajawal',sans-serif;color:#e8d5a0;overflow-x:hidden}
+body::after{content:'';position:fixed;inset:0;z-index:0;
+  background-image:linear-gradient(rgba(224,168,32,.025)1px,transparent 1px),linear-gradient(90deg,rgba(224,168,32,.025)1px,transparent 1px);
+  background-size:55px 55px;pointer-events:none}
+body::before{content:'';position:fixed;inset:0;z-index:0;
+  background:radial-gradient(ellipse 70% 50% at 20% 10%,rgba(200,127,0,.09)0%,transparent 60%),
+    radial-gradient(ellipse 60% 40% at 80% 90%,rgba(224,168,32,.07)0%,transparent 60%);pointer-events:none}
+canvas#cvs{position:fixed;inset:0;pointer-events:none;z-index:1}
 
-html,body {
-  width:100%; min-height:100vh;
-  background: var(--bg);
-  font-family: 'Tajawal', sans-serif;
-  color: #e8d5a0;
-  overflow-x: hidden;
-}
-
-/* ══ ANIMATED BG ══ */
-body::before {
-  content:'';
-  position: fixed; inset:0; z-index:0;
-  background:
-    radial-gradient(ellipse 80% 60% at 20% 10%, rgba(200,127,0,0.08) 0%, transparent 60%),
-    radial-gradient(ellipse 60% 40% at 80% 90%, rgba(224,168,32,0.06) 0%, transparent 60%),
-    radial-gradient(ellipse 40% 40% at 50% 50%, rgba(10,10,30,0.5) 0%, transparent 100%);
-  pointer-events:none;
-  animation: bgPulse 8s ease-in-out infinite alternate;
-}
-@keyframes bgPulse {
-  0%{opacity:0.8} 100%{opacity:1}
-}
-
-/* GRID LINES */
-body::after {
-  content:'';
-  position:fixed; inset:0; z-index:0;
-  background-image:
-    linear-gradient(rgba(224,168,32,0.03) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(224,168,32,0.03) 1px, transparent 1px);
-  background-size: 60px 60px;
-  pointer-events:none;
-}
-
-/* ══ CANVAS ══ */
-#cvs {
-  position:fixed; inset:0;
-  pointer-events:none; z-index:1;
-}
-
-/* ══════════════════════
-   TOPBAR
-══════════════════════ */
-.topbar {
-  position: fixed; top:0; left:0; right:0;
-  height: 66px;
-  display: flex; align-items: center;
-  padding: 0 24px;
-  gap: 16px;
-  z-index: 50;
-  background: linear-gradient(180deg, rgba(3,3,7,0.98) 0%, transparent 100%);
-  border-bottom: 1px solid rgba(224,168,32,0.1);
-}
-
-/* LOGO */
-.logo {
-  font-family: 'Cinzel Decorative', serif;
-  font-size: 1.25rem;
-  font-weight: 900;
-  letter-spacing: 3px;
-  background: linear-gradient(90deg, var(--g1),var(--g3),var(--g5),var(--g3),var(--g1));
-  background-size: 200% auto;
-  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-  background-clip: text;
-  animation: logoSlide 4s linear infinite;
-  text-shadow: none;
-}
-@keyframes logoSlide {
-  0%{background-position:0% center}
-  100%{background-position:200% center}
-}
-
-.tb-spacer{flex:1}
-
-/* CONNECTION */
-.conn {
-  display: flex; align-items: center; gap: 8px;
-  padding: 6px 14px;
-  border-radius: 30px;
-  background: rgba(0,0,0,0.4);
-  border: 1px solid rgba(0,255,170,0.2);
-  font-size: 0.72rem;
-  font-family: 'Orbitron', monospace;
-  letter-spacing: 1px;
-}
-.conn-dot {
-  width: 8px; height: 8px;
-  border-radius: 50%;
-  background: var(--neon-green);
-  box-shadow: 0 0 8px var(--neon-green), 0 0 16px var(--neon-green);
-  animation: blink 1.6s ease-in-out infinite;
-}
-.conn-dot.red {
-  background: var(--neon-red);
-  box-shadow: 0 0 8px var(--neon-red);
-}
-@keyframes blink{0%,100%{opacity:1}50%{opacity:0.25}}
-.conn-txt{color:#aaa}
-.conn-txt.on{color:var(--neon-green)}
-.conn-txt.off{color:var(--neon-red)}
+/* TOPBAR */
+.topbar{position:relative;z-index:50;display:flex;align-items:center;justify-content:space-between;
+  padding:13px 22px 10px;border-bottom:1px solid rgba(224,168,32,.1);
+  background:linear-gradient(180deg,rgba(3,3,7,.98),rgba(3,3,7,.7))}
 
 /* GLOBE */
 .globe-wrap{position:relative}
-.globe-btn {
-  background: none;
-  border: 1px solid var(--glass-border);
-  border-radius: 10px;
-  padding: 7px 13px;
-  cursor: pointer;
-  display: flex; align-items: center; gap: 8px;
-  color: var(--g2);
-  font-size: 0.8rem;
-  transition: all 0.3s;
-}
-.globe-btn:hover{background:rgba(224,168,32,0.08);border-color:var(--g3);box-shadow:var(--glow-sm)}
-.globe-spin{display:inline-block;animation:spinGlobe 10s linear infinite;font-size:1.3rem}
-@keyframes spinGlobe{from{transform:rotate(0)}to{transform:rotate(360deg)}}
-.lang-dd {
-  position:absolute; top:calc(100% + 8px); left:0;
-  background: #0b0b18;
-  border: 1px solid var(--glass-border);
-  border-radius: 14px;
-  min-width: 185px;
-  display: none;
-  overflow: hidden;
-  box-shadow: 0 20px 60px rgba(0,0,0,0.95), var(--glow-sm);
-  animation: ddIn 0.25s ease;
-  z-index: 200;
-}
-@keyframes ddIn{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}
+.globe-btn{background:none;border:1px solid var(--gb);border-radius:10px;padding:7px 11px;
+  cursor:pointer;display:flex;align-items:center;gap:7px;color:var(--g2);font-size:.8rem;transition:all .3s}
+.globe-btn:hover{background:rgba(224,168,32,.08);border-color:var(--g3);box-shadow:var(--glow)}
+.globe-em{display:inline-block;font-size:1.4rem;animation:gSpin 9s linear infinite;
+  filter:drop-shadow(0 0 4px rgba(100,200,255,.4))}
+@keyframes gSpin{from{transform:rotateY(0)}to{transform:rotateY(360deg)}}
+.lang-dd{position:absolute;top:calc(100% + 8px);left:0;background:#0b0b1a;border:1px solid var(--gb);
+  border-radius:14px;min-width:195px;display:none;overflow:hidden;
+  box-shadow:0 25px 70px rgba(0,0,0,.95),var(--glow);animation:ddIn .25s ease;z-index:300}
 .lang-dd.open{display:block}
-.lang-item {
-  display:flex; align-items:center; gap:10px;
-  padding: 10px 15px;
-  color: #c9a84c; text-decoration:none;
-  font-size: 0.82rem; transition: all 0.2s;
-}
-.lang-item:hover{background:rgba(224,168,32,0.1);color:var(--g1)}
-.lang-code{margin-right:auto;font-family:'Orbitron',monospace;font-size:0.65rem;color:var(--g3)}
+@keyframes ddIn{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}
+.lang-item{display:flex;align-items:center;gap:10px;padding:10px 15px;color:#c9a84c;text-decoration:none;font-size:.83rem;transition:all .2s}
+.lang-item:hover{background:rgba(224,168,32,.1);color:var(--g1)}
+.lcode{margin-right:auto;font-family:'Orbitron',monospace;font-size:.65rem;color:var(--g3)}
 
-/* ══════════════════════
-   MAIN LAYOUT
-══════════════════════ */
-.page {
-  min-height: 100vh;
-  display: flex; align-items: center; justify-content: center;
-  padding: 80px 20px 40px;
-  position: relative; z-index: 10;
-}
+/* FAQ */
+.faq-btn{background:none;border:none;cursor:pointer;font-size:1.5rem;padding:4px;
+  animation:faqF 2.5s ease-in-out infinite alternate,faqC 5s linear infinite}
+@keyframes faqF{from{transform:translateY(0)}to{transform:translateY(-5px)}}
+@keyframes faqC{0%{color:#ff3366;filter:drop-shadow(0 0 6px #ff3366)}25%{color:#ffaa00;filter:drop-shadow(0 0 6px #ffaa00)}50%{color:#00ffaa;filter:drop-shadow(0 0 6px #00ffaa)}75%{color:#5599ff;filter:drop-shadow(0 0 6px #5599ff)}100%{color:#ff3366;filter:drop-shadow(0 0 6px #ff3366)}}
 
-/* AUTH CARD */
-.auth-card {
-  width: 100%;
-  max-width: 460px;
-  position: relative;
-}
+.left-g{display:flex;align-items:center;gap:10px}
 
-/* CARD GLOW RING */
-.card-ring {
-  position: absolute;
-  inset: -2px;
-  border-radius: 30px;
-  background: linear-gradient(135deg, var(--g3), transparent 40%, var(--g4), transparent 70%, var(--g2));
-  opacity: 0.5;
-  z-index: -1;
-  animation: ringPulse 3s ease-in-out infinite;
-}
-@keyframes ringPulse{0%,100%{opacity:0.35}50%{opacity:0.7}}
+/* CONN */
+.conn-box{display:flex;align-items:center;gap:8px;padding:7px 14px;border-radius:30px;
+  background:rgba(0,0,0,.45);border:1px solid rgba(0,255,170,.18);
+  font-family:'Orbitron',monospace;font-size:.7rem;letter-spacing:.5px}
+.cdot{width:9px;height:9px;border-radius:50%;background:var(--ng);
+  box-shadow:0 0 8px var(--ng),0 0 18px var(--ng);animation:blink 1.6s ease-in-out infinite}
+.cdot.off{background:var(--nr);box-shadow:0 0 8px var(--nr);animation:blinkR 1s ease-in-out infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.25}}
+@keyframes blinkR{0%,100%{opacity:1}50%{opacity:.2}}
+.ctxt{color:#aaa}.ctxt.on{color:var(--ng)}.ctxt.off{color:var(--nr)}
 
-.card-body {
-  background: linear-gradient(145deg, rgba(12,12,24,0.97) 0%, rgba(7,7,18,0.99) 100%);
-  border: 1px solid rgba(224,168,32,0.2);
-  border-radius: 28px;
-  padding: 40px 36px 36px;
-  backdrop-filter: blur(30px);
-  box-shadow: var(--shadow-deep), inset 0 1px 0 rgba(224,168,32,0.1), inset 0 0 40px rgba(0,0,0,0.5);
-  position: relative;
-  overflow: hidden;
-}
+/* LOGO */
+.logo-sec{text-align:center;padding:20px 20px 12px;position:relative;z-index:10}
+.logo-txt{font-family:'Cinzel Decorative',serif;font-size:clamp(1.4rem,5vw,2.2rem);font-weight:900;
+  letter-spacing:4px;background:linear-gradient(90deg,var(--g1),var(--g3),var(--g5),var(--g3),var(--g1));
+  background-size:200% auto;-webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  background-clip:text;animation:lSlide 4s linear infinite;cursor:default}
+@keyframes lSlide{0%{background-position:0%}100%{background-position:200%}}
+.logo-sub{font-family:'Orbitron',monospace;font-size:.6rem;color:var(--g5);letter-spacing:4px;margin-top:5px}
+.logo-rule{width:180px;height:1px;margin:10px auto 0;background:linear-gradient(90deg,transparent,var(--g3),transparent);box-shadow:0 0 8px var(--g3)}
 
-/* TOP ORNAMENT */
-.card-ornament {
-  text-align: center;
-  margin-bottom: 28px;
-}
-.ornament-logo {
-  font-family: 'Cinzel Decorative', serif;
-  font-size: 1.6rem; font-weight: 900;
-  background: linear-gradient(135deg, var(--g1) 0%, var(--g3) 50%, var(--g5) 100%);
-  -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
-  display: block; margin-bottom: 6px;
-  animation: goldShimmer 3s ease-in-out infinite;
-}
-@keyframes goldShimmer{0%,100%{filter:brightness(1)}50%{filter:brightness(1.3)}}
-.ornament-line {
-  display: flex; align-items: center; gap: 12px; margin-top: 10px;
-}
-.ornament-line::before,.ornament-line::after {
-  content:''; flex:1; height:1px;
-  background: linear-gradient(90deg, transparent, var(--g3), transparent);
-}
-.ornament-diamond {
-  width: 8px; height: 8px;
-  background: var(--g3);
-  transform: rotate(45deg);
-  box-shadow: 0 0 10px var(--g3);
-}
-
-/* SCANNER LINE */
-.scan-line {
-  position:absolute; top:0; left:0; right:0; height:3px;
-  background: linear-gradient(90deg, transparent, var(--g2), var(--g1), var(--g2), transparent);
-  box-shadow: 0 0 15px var(--g2), 0 0 30px var(--g3);
-  opacity:0;
-  pointer-events:none; z-index:10;
-  border-radius:3px;
-}
-.scanning .scan-line{animation:scanAnim 1.8s ease-in-out forwards}
-@keyframes scanAnim{0%{top:0;opacity:1}50%{opacity:1}100%{top:100%;opacity:0}}
+/* PAGE + CARD */
+.page{min-height:calc(100vh - 130px);display:flex;align-items:center;justify-content:center;padding:10px 18px 28px;position:relative;z-index:10}
+.auth-card{width:100%;max-width:455px;position:relative}
+.card-ring{position:absolute;inset:-2px;border-radius:30px;
+  background:linear-gradient(135deg,var(--g3),transparent 40%,var(--g4),transparent 70%,var(--g2));
+  opacity:.4;z-index:-1;animation:rP 3s ease-in-out infinite}
+@keyframes rP{0%,100%{opacity:.3}50%{opacity:.65}}
+.card-body{background:linear-gradient(150deg,rgba(11,11,22,.98),rgba(6,6,16,.99));border:1px solid rgba(224,168,32,.18);
+  border-radius:28px;padding:30px 28px 26px;backdrop-filter:blur(30px);
+  box-shadow:0 40px 100px rgba(0,0,0,.9),inset 0 1px 0 rgba(224,168,32,.09);position:relative;overflow:hidden}
+.scan-line{position:absolute;top:0;left:0;right:0;height:3px;
+  background:linear-gradient(90deg,transparent,var(--g2),var(--g1),var(--g2),transparent);
+  box-shadow:0 0 14px var(--g2),0 0 28px var(--g3);opacity:0;pointer-events:none;z-index:10}
+.scanning .scan-line{animation:sA 1.8s ease-in-out forwards}
+@keyframes sA{0%{top:0;opacity:1}50%{opacity:1}100%{top:100%;opacity:0}}
 
 /* TABS */
-.tabs {
-  display: flex;
-  background: rgba(0,0,0,0.4);
-  border: 1px solid rgba(224,168,32,0.15);
-  border-radius: 14px;
-  padding: 4px;
-  margin-bottom: 28px;
-  gap: 4px;
-}
-.tab-btn {
-  flex:1; padding: 10px 0;
-  background: none; border: none;
-  border-radius: 10px;
-  cursor: pointer;
-  font-family: 'Tajawal', sans-serif;
-  font-size: 1rem; font-weight: 700;
-  color: #666;
-  transition: all 0.35s;
-  position: relative;
-}
-.tab-btn.active {
-  background: linear-gradient(135deg, rgba(224,168,32,0.2), rgba(200,127,0,0.15));
-  color: var(--g1);
-  box-shadow: 0 0 15px rgba(224,168,32,0.2), inset 0 0 10px rgba(224,168,32,0.05);
-  border: 1px solid rgba(224,168,32,0.3);
-  text-shadow: 0 0 10px var(--g2);
-}
-
-/* FORM SECTION */
+.tabs{display:flex;background:rgba(0,0,0,.45);border:1px solid rgba(224,168,32,.13);
+  border-radius:14px;padding:4px;margin-bottom:22px;gap:4px}
+.tab-btn{flex:1;padding:10px 0;background:none;border:none;border-radius:10px;cursor:pointer;
+  font-family:'Tajawal',sans-serif;font-size:.97rem;font-weight:700;color:#555;transition:all .35s}
+.tab-btn.active{background:linear-gradient(135deg,rgba(224,168,32,.18),rgba(200,127,0,.12));
+  color:var(--g1);border:1px solid rgba(224,168,32,.28);
+  box-shadow:0 0 14px rgba(224,168,32,.18);text-shadow:0 0 10px var(--g2)}
 .form-sec{display:none}
-.form-sec.active{display:block;animation:fadeUp 0.4s ease}
-@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+.form-sec.active{display:block;animation:fUp .4s ease}
+@keyframes fUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
 
-/* INPUT GROUP */
-.inp-wrap {
-  position:relative; margin-bottom: 18px;
-}
-.inp-wrap label {
-  display:block;
-  font-size: 0.78rem;
-  color: var(--g4);
-  margin-bottom: 6px;
-  font-weight: 600;
-  letter-spacing: 0.5px;
-}
-.inp-wrap input {
-  width:100%;
-  padding: 13px 45px 13px 16px;
-  background: rgba(0,0,0,0.5);
-  border: 1px solid rgba(255,255,255,0.08);
-  border-radius: 12px;
-  color: #fff;
-  font-family: 'Tajawal', sans-serif;
-  font-size: 0.95rem;
-  outline: none;
-  transition: all 0.35s;
-  box-sizing: border-box;
-}
-.inp-wrap input:focus {
-  border-color: var(--g3);
-  background: rgba(224,168,32,0.04);
-  box-shadow: 0 0 0 3px rgba(224,168,32,0.1), 0 0 20px rgba(224,168,32,0.15);
-}
-.inp-wrap input::placeholder{color:rgba(200,160,80,0.35)}
-.inp-icon {
-  position:absolute; right:14px; top:50%; transform:translateY(-50%);
-  color: var(--g4); font-size: 0.95rem;
-}
-.inp-wrap label ~ .inp-icon{top: calc(50% + 12px)}
-.toggle-pass {
-  position:absolute; left:14px; top:50%; transform:translateY(-50%);
-  cursor:pointer; color:#666; font-size:0.9rem;
-  transition: color 0.3s; background:none; border:none;
-}
-.inp-wrap label ~ .toggle-pass{top:calc(50% + 12px)}
-.toggle-pass:hover{color:var(--g2)}
+/* INPUTS */
+.iw{position:relative;margin-bottom:15px}
+.iw label{display:block;font-size:.75rem;color:var(--g4);margin-bottom:5px;font-weight:600;letter-spacing:.5px}
+.iw input{width:100%;padding:12px 44px 12px 44px;background:rgba(0,0,0,.52);
+  border:1px solid rgba(255,255,255,.07);border-radius:11px;color:#fff;
+  font-family:'Tajawal',sans-serif;font-size:.92rem;outline:none;transition:all .3s}
+.iw input:focus{border-color:var(--g3);background:rgba(224,168,32,.04);
+  box-shadow:0 0 0 3px rgba(224,168,32,.1),0 0 18px rgba(224,168,32,.12)}
+.iw input::placeholder{color:rgba(200,160,80,.3)}
+.ii{position:absolute;right:14px;top:50%;transform:translateY(-50%);color:var(--g4);font-size:.9rem}
+.iw label~.ii{top:calc(50% + 11px)}
+.eyeb{position:absolute;left:13px;top:50%;transform:translateY(-50%);
+  background:none;border:none;cursor:pointer;color:#555;font-size:.88rem;transition:color .3s}
+.iw label~.eyeb{top:calc(50% + 11px)}
+.eyeb:hover{color:var(--g2)}
 
-/* PASSWORD STRENGTH */
-.pass-strength {
-  margin: -8px 0 16px;
-  display:flex; flex-direction:column; gap:5px;
-}
-.req {
-  display:flex; align-items:center; gap:8px;
-  font-size: 0.75rem; color:#555;
-  transition: all 0.3s;
-}
-.req.ok{color:var(--neon-green);text-shadow:0 0 5px rgba(0,255,170,0.4)}
-.req i{font-size:0.65rem; transition: all 0.3s}
-.req.ok i{color:var(--neon-green)}
+/* STRENGTH */
+.str-wrap{margin:-4px 0 13px;padding:0 2px}
+.str-bar{height:5px;border-radius:3px;background:rgba(255,255,255,.07);margin-bottom:8px;overflow:hidden}
+.str-fill{height:100%;width:0%;border-radius:3px;transition:all .4s}
+.reqs{display:flex;flex-direction:column;gap:4px}
+.req{display:flex;align-items:center;gap:7px;font-size:.73rem;color:#444;transition:all .3s}
+.req.ok{color:var(--ng);text-shadow:0 0 5px rgba(0,255,170,.35)}
+.req i{font-size:.6rem}
 
-/* LINKS ROW */
-.links-row {
-  display:flex; justify-content:space-between; align-items:center;
-  margin: -6px 0 18px; gap:8px; flex-wrap:wrap;
-}
-.link-btn {
-  background:none; border:none; cursor:pointer;
-  font-family:'Tajawal',sans-serif;
-  font-size: 0.82rem; color:#777;
-  transition: all 0.3s; text-decoration:none;
-  padding:0;
-}
-.link-btn:hover{color:var(--g2);text-shadow:0 0 8px var(--g3)}
-.link-btn.accent{color:var(--g4)}
-.link-btn.accent:hover{color:var(--g2)}
+/* FORGOT */
+.frow{display:flex;justify-content:flex-end;margin:-2px 0 13px}
+.ls{background:none;border:none;cursor:pointer;font-family:'Tajawal',sans-serif;
+  font-size:.8rem;color:#666;transition:all .3s;padding:0}
+.ls:hover{color:var(--g2);text-shadow:0 0 8px var(--g3)}
 
-/* SUBMIT BUTTON */
-.btn-main {
-  width:100%; padding: 15px;
-  background: linear-gradient(135deg, var(--g4) 0%, var(--g3) 40%, var(--g2) 70%, var(--g3) 100%);
-  background-size: 200% auto;
-  border: none; border-radius: 14px;
-  color: #000;
-  font-family: 'Tajawal', sans-serif;
-  font-size: 1.05rem; font-weight: 900;
-  cursor: pointer;
-  transition: all 0.4s;
-  letter-spacing: 1px;
-  position: relative; overflow: hidden;
-  box-shadow: 0 0 20px rgba(224,168,32,0.4), 0 10px 30px rgba(0,0,0,0.5);
-  margin-top: 4px;
-}
-.btn-main::before {
-  content:'';
-  position:absolute; inset:0;
-  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
-  transform: translateX(-100%);
-  transition: transform 0.6s;
-}
-.btn-main:hover{
-  background-position: right center;
-  box-shadow: 0 0 40px rgba(224,168,32,0.7), 0 15px 40px rgba(0,0,0,0.6);
-  transform: translateY(-2px) scale(1.01);
-}
+/* BUTTON */
+.btn-main{width:100%;padding:14px;
+  background:linear-gradient(135deg,var(--g4)0%,var(--g3)40%,var(--g2)70%,var(--g3)100%);
+  background-size:200% auto;border:none;border-radius:13px;color:#000;
+  font-family:'Tajawal',sans-serif;font-size:1.05rem;font-weight:900;cursor:pointer;
+  transition:all .4s;letter-spacing:.5px;position:relative;overflow:hidden;
+  box-shadow:0 0 20px rgba(224,168,32,.35),0 10px 30px rgba(0,0,0,.5);margin-top:4px}
+.btn-main::before{content:'';position:absolute;inset:0;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.28),transparent);
+  transform:translateX(-100%);transition:.6s}
+.btn-main:hover{background-position:right;box-shadow:0 0 40px rgba(224,168,32,.65);transform:translateY(-2px)}
 .btn-main:hover::before{transform:translateX(100%)}
-.btn-main:active{transform:translateY(0) scale(0.99)}
-
-/* ══════════════════════
-   LUXURIOUS MODALS
-══════════════════════ */
-.modal-overlay {
-  position:fixed; inset:0;
-  background: rgba(0,0,0,0.92);
-  backdrop-filter: blur(16px) saturate(0.5);
-  z-index:1000;
-  display:flex; align-items:center; justify-content:center;
-  opacity:0; pointer-events:none;
-  transition: opacity 0.4s ease;
-  padding: 20px;
-}
-.modal-overlay.show{opacity:1;pointer-events:all}
-
-.modal-box {
-  position: relative;
-  max-width: 420px; width:100%;
-  animation: modalIn 0.5s cubic-bezier(0.175,0.885,0.32,1.275) forwards;
-  opacity: 0;
-}
-.modal-overlay.show .modal-box{opacity:1}
-@keyframes modalIn{
-  from{transform:scale(0.75) translateY(40px);opacity:0}
-  to{transform:scale(1) translateY(0);opacity:1}
-}
-
-/* MODAL RING */
-.modal-ring {
-  position:absolute; inset:-3px;
-  border-radius: 32px;
-  z-index:-1;
-}
-.modal-ring.success{background:linear-gradient(135deg,var(--g3),rgba(0,255,170,0.3),var(--g3));animation:ringRotate 3s linear infinite}
-.modal-ring.error{background:linear-gradient(135deg,#ff2244,rgba(255,50,80,0.3),#ff2244);animation:ringRotate 3s linear infinite}
-.modal-ring.info{background:linear-gradient(135deg,var(--g3),rgba(100,180,255,0.3),var(--g3));animation:ringRotate 3s linear infinite}
-.modal-ring.warning{background:linear-gradient(135deg,#ff9900,rgba(255,200,0,0.3),#ff9900);animation:ringRotate 3s linear infinite}
-@keyframes ringRotate{from{filter:hue-rotate(0)}to{filter:hue-rotate(360deg)}}
-
-.modal-inner {
-  background: linear-gradient(160deg, #0c0c1e 0%, #080816 100%);
-  border-radius: 28px;
-  padding: 48px 36px 40px;
-  text-align: center;
-  position: relative;
-  overflow: hidden;
-  border: 1px solid rgba(224,168,32,0.15);
-}
-
-/* MODAL PARTICLES BG */
-.modal-inner::before {
-  content:'';
-  position:absolute; inset:0;
-  background:
-    radial-gradient(circle at 20% 20%, rgba(224,168,32,0.06) 0%, transparent 50%),
-    radial-gradient(circle at 80% 80%, rgba(0,255,170,0.04) 0%, transparent 50%);
-  pointer-events:none;
-}
-
-/* MODAL ICON CONTAINER */
-.modal-icon-wrap {
-  width: 90px; height: 90px;
-  border-radius: 50%;
-  display: flex; align-items:center; justify-content:center;
-  margin: 0 auto 24px;
-  position: relative;
-}
-.modal-icon-wrap::before {
-  content:'';
-  position:absolute; inset:-4px;
-  border-radius:50%;
-  animation: iconRing 2s linear infinite;
-}
-.modal-icon-wrap.success{background:rgba(0,255,170,0.1)}
-.modal-icon-wrap.success::before{background:conic-gradient(var(--neon-green),transparent,var(--neon-green))}
-.modal-icon-wrap.error{background:rgba(255,34,68,0.1)}
-.modal-icon-wrap.error::before{background:conic-gradient(var(--neon-red),transparent,var(--neon-red))}
-.modal-icon-wrap.info{background:rgba(224,168,32,0.12)}
-.modal-icon-wrap.info::before{background:conic-gradient(var(--g3),transparent,var(--g3))}
-.modal-icon-wrap.warning{background:rgba(255,153,0,0.1)}
-.modal-icon-wrap.warning::before{background:conic-gradient(#ff9900,transparent,#ff9900)}
-@keyframes iconRing{from{transform:rotate(0)}to{transform:rotate(360deg)}}
-.modal-icon-wrap .icon-inner {
-  position:relative; z-index:1;
-  width:82px; height:82px;
-  border-radius:50%;
-  display:flex; align-items:center; justify-content:center;
-  font-size: 2.2rem;
-}
-.modal-icon-wrap.success .icon-inner{background:rgba(0,255,170,0.15);color:var(--neon-green);box-shadow:0 0 25px rgba(0,255,170,0.3)}
-.modal-icon-wrap.error .icon-inner{background:rgba(255,34,68,0.15);color:var(--neon-red);box-shadow:0 0 25px rgba(255,34,68,0.3)}
-.modal-icon-wrap.info .icon-inner{background:rgba(224,168,32,0.15);color:var(--g2);box-shadow:0 0 25px rgba(224,168,32,0.3)}
-.modal-icon-wrap.warning .icon-inner{background:rgba(255,153,0,0.15);color:#ffaa00;box-shadow:0 0 25px rgba(255,153,0,0.3)}
-
-/* MODAL TITLE */
-.modal-title {
-  font-family:'Cinzel Decorative',serif;
-  font-size: 1.25rem; font-weight:700;
-  margin-bottom: 12px;
-  line-height: 1.4;
-}
-.modal-icon-wrap.success ~ .modal-title{color:var(--g1);text-shadow:0 0 20px rgba(224,168,32,0.5)}
-.modal-icon-wrap.error ~ .modal-title{color:#ff8899}
-.modal-icon-wrap.info ~ .modal-title{color:var(--g2)}
-.modal-icon-wrap.warning ~ .modal-title{color:#ffcc55}
-
-/* MODAL TEXT */
-.modal-text{
-  font-size:0.92rem; color:#bbb;
-  line-height:1.75; margin-bottom:30px;
-}
-.modal-text strong{color:var(--g2)}
-
-/* MODAL DIVIDER */
-.modal-divider {
-  width:60px; height:2px; border-radius:1px;
-  margin: 0 auto 24px;
-  background: linear-gradient(90deg, transparent, var(--g3), transparent);
-}
-
-/* CONFETTI STARS */
-.confetti-wrap {
-  position:absolute; inset:0; pointer-events:none; overflow:hidden;
-}
-.confetti-star {
-  position:absolute;
-  font-size: 1rem;
-  animation: confettiFall 2s ease-out forwards;
-  opacity:0;
-}
-@keyframes confettiFall {
-  0%{opacity:1;transform:translateY(0) rotate(0) scale(1)}
-  100%{opacity:0;transform:translateY(-80px) rotate(720deg) scale(0.3)}
-}
-
-/* CLOSE BTN */
-.modal-close-btn {
-  padding: 13px 48px;
-  border-radius: 14px;
-  border: none;
-  cursor: pointer;
-  font-family:'Tajawal',sans-serif;
-  font-size:1rem; font-weight:800;
-  letter-spacing:1px;
-  transition: all 0.35s;
-  position:relative; overflow:hidden;
-}
-.modal-close-btn::before {
-  content:'';
-  position:absolute; inset:0;
-  background:linear-gradient(90deg,transparent,rgba(255,255,255,0.2),transparent);
-  transform:translateX(-100%); transition:0.5s;
-}
-.modal-close-btn:hover::before{transform:translateX(100%)}
-.modal-close-btn.success{
-  background:linear-gradient(135deg,#00cc88,#00ffaa);
-  color:#000;
-  box-shadow:0 0 20px rgba(0,255,170,0.4);
-}
-.modal-close-btn.success:hover{box-shadow:0 0 40px rgba(0,255,170,0.7);transform:scale(1.05)}
-.modal-close-btn.error{
-  background:linear-gradient(135deg,#cc1133,#ff2244);
-  color:#fff;
-  box-shadow:0 0 20px rgba(255,34,68,0.4);
-}
-.modal-close-btn.error:hover{box-shadow:0 0 40px rgba(255,34,68,0.7);transform:scale(1.05)}
-.modal-close-btn.info{
-  background:linear-gradient(135deg,var(--g4),var(--g3));
-  color:#000;
-  box-shadow:0 0 20px rgba(224,168,32,0.4);
-}
-.modal-close-btn.info:hover{box-shadow:0 0 40px rgba(224,168,32,0.7);transform:scale(1.05)}
-.modal-close-btn.warning{
-  background:linear-gradient(135deg,#cc7700,#ff9900);
-  color:#000;
-  box-shadow:0 0 20px rgba(255,153,0,0.4);
-}
-.modal-close-btn.warning:hover{box-shadow:0 0 40px rgba(255,153,0,0.7);transform:scale(1.05)}
-
-/* PROGRESS BAR in modal */
-.modal-progress {
-  width:100%; height:4px;
-  border-radius:2px; overflow:hidden;
-  background:rgba(255,255,255,0.08);
-  margin-top: 20px;
-  display:none;
-}
-.modal-progress-bar{
-  height:100%; width:0%;
-  border-radius:2px;
-  transition: width 0.1s linear;
-}
-.modal-progress-bar.gold{background:linear-gradient(90deg,var(--g5),var(--g3),var(--g1))}
-.modal-progress-bar.green{background:linear-gradient(90deg,#00cc88,var(--neon-green))}
+.btn-main:disabled{opacity:.6;cursor:not-allowed;transform:none}
 
 /* FOOTER */
-.page-footer {
-  position: relative; z-index:10;
-  padding: 20px;
-  display:flex; flex-wrap:wrap; justify-content:center;
-  gap: 8px 20px;
-}
-.foot-link{
-  color:#555; text-decoration:none;
-  font-size:0.8rem;
-  transition: color 0.3s;
-}
-.foot-link:hover{color:var(--g3)}
-.foot-sep{color:#2a2a2a;font-size:0.8rem}
+.pfoot{position:relative;z-index:10;display:flex;flex-wrap:wrap;justify-content:center;
+  align-items:center;gap:6px 18px;padding:15px 20px 20px;border-top:1px solid rgba(224,168,32,.08)}
+.fsupp{background:none;border:none;cursor:pointer;text-decoration:none;
+  font-family:'Tajawal',sans-serif;font-size:.9rem;font-weight:700;
+  animation:sNeon 2s ease-in-out infinite alternate}
+@keyframes sNeon{0%{color:#fff;text-shadow:0 0 5px #fff}50%{color:var(--g2);text-shadow:0 0 15px var(--g2),0 0 30px var(--g3)}100%{color:var(--g5);text-shadow:0 0 4px var(--g5)}}
+.fsep{color:#222;font-size:.8rem}
+.flink{color:#555;text-decoration:none;font-size:.82rem;transition:color .3s}
+.flink:hover{color:var(--g3)}
 
-/* SCROLLBAR */
-::-webkit-scrollbar{width:5px}
-::-webkit-scrollbar-track{background:var(--bg)}
-::-webkit-scrollbar-thumb{background:var(--g5);border-radius:3px}
+/* ═══ MODAL ═══ */
+.mov{position:fixed;inset:0;background:rgba(0,0,0,.93);backdrop-filter:blur(18px) saturate(.4);
+  z-index:2000;display:flex;align-items:center;justify-content:center;
+  opacity:0;pointer-events:none;transition:opacity .35s;padding:20px}
+.mov.show{opacity:1;pointer-events:all}
+.mw{position:relative;max-width:430px;width:100%}
+.mring{position:absolute;inset:-3px;border-radius:32px;z-index:-1;animation:mRR 3s linear infinite}
+.mring.success{background:conic-gradient(var(--ng),rgba(0,255,170,.1),var(--ng))}
+.mring.error{background:conic-gradient(var(--nr),rgba(255,34,68,.1),var(--nr))}
+.mring.info{background:conic-gradient(var(--g3),rgba(224,168,32,.1),var(--g3))}
+.mring.warning{background:conic-gradient(#ff9900,rgba(255,153,0,.1),#ff9900)}
+@keyframes mRR{from{transform:rotate(0)}to{transform:rotate(360deg)}}
+.minner{background:linear-gradient(155deg,#0c0c1f,#070714);border-radius:28px;
+  padding:42px 30px 34px;text-align:center;position:relative;overflow:hidden;
+  border:1px solid rgba(224,168,32,.13);animation:mIn .5s cubic-bezier(.175,.885,.32,1.275) both}
+@keyframes mIn{from{transform:scale(.75) translateY(35px);opacity:0}to{transform:scale(1) translateY(0);opacity:1}}
+.minner::before{content:'';position:absolute;inset:0;
+  background:radial-gradient(circle at 25% 25%,rgba(224,168,32,.06)0%,transparent 55%),
+    radial-gradient(circle at 75% 75%,rgba(0,255,170,.04)0%,transparent 55%);pointer-events:none}
+.mir{width:90px;height:90px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  margin:0 auto 20px;position:relative}
+.mir::before{content:'';position:absolute;inset:-4px;border-radius:50%;animation:iSpin 2s linear infinite}
+.mir.success{background:rgba(0,255,170,.1)}.mir.success::before{background:conic-gradient(var(--ng),transparent 60%,var(--ng))}
+.mir.error{background:rgba(255,34,68,.1)}.mir.error::before{background:conic-gradient(var(--nr),transparent 60%,var(--nr))}
+.mir.info{background:rgba(224,168,32,.1)}.mir.info::before{background:conic-gradient(var(--g3),transparent 60%,var(--g3))}
+.mir.warning{background:rgba(255,153,0,.1)}.mir.warning::before{background:conic-gradient(#ff9900,transparent 60%,#ff9900)}
+@keyframes iSpin{from{transform:rotate(0)}to{transform:rotate(360deg)}}
+.mii{position:relative;z-index:1;width:82px;height:82px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;font-size:2.3rem}
+.mir.success .mii{background:rgba(0,255,170,.13);color:var(--ng);box-shadow:0 0 25px rgba(0,255,170,.3)}
+.mir.error .mii{background:rgba(255,34,68,.13);color:var(--nr);box-shadow:0 0 25px rgba(255,34,68,.3)}
+.mir.info .mii{background:rgba(224,168,32,.13);color:var(--g2);box-shadow:0 0 25px rgba(224,168,32,.3)}
+.mir.warning .mii{background:rgba(255,153,0,.13);color:#ffaa00;box-shadow:0 0 25px rgba(255,153,0,.3)}
+.mtitle{font-family:'Cinzel Decorative',serif;font-size:1.18rem;font-weight:700;margin-bottom:10px;line-height:1.4}
+.mir.success~.mtitle{color:var(--g1);text-shadow:0 0 15px rgba(224,168,32,.4)}
+.mir.error~.mtitle{color:#ff99aa}.mir.info~.mtitle{color:var(--g2)}.mir.warning~.mtitle{color:#ffcc55}
+.mdiv{width:55px;height:2px;border-radius:1px;margin:0 auto 14px}
+.mir.success~.mtitle~.mdiv{background:linear-gradient(90deg,transparent,var(--ng),transparent)}
+.mir.error~.mtitle~.mdiv{background:linear-gradient(90deg,transparent,var(--nr),transparent)}
+.mir.info~.mtitle~.mdiv{background:linear-gradient(90deg,transparent,var(--g3),transparent)}
+.mir.warning~.mtitle~.mdiv{background:linear-gradient(90deg,transparent,#ff9900,transparent)}
+.mtxt{font-size:.9rem;color:#bbb;line-height:1.8;margin-bottom:20px}
+.mtxt strong{color:var(--g2)}
+.mresend{display:none;width:100%;padding:10px;margin-bottom:12px;
+  background:rgba(224,168,32,.1);border:1px solid var(--gb);border-radius:10px;
+  color:var(--g2);font-family:'Tajawal',sans-serif;font-size:.88rem;font-weight:700;
+  cursor:pointer;transition:all .3s}
+.mresend.show{display:block}
+.mresend:hover{background:rgba(224,168,32,.2);box-shadow:0 0 15px rgba(224,168,32,.25)}
+.mprog{width:100%;height:4px;border-radius:2px;background:rgba(255,255,255,.07);margin-top:16px;display:none;overflow:hidden}
+.mpbar{height:100%;width:0%;border-radius:2px;transition:width .1s linear}
+.mpbar.gold{background:linear-gradient(90deg,var(--g5),var(--g3),var(--g1))}
+.mpbar.green{background:linear-gradient(90deg,#00cc88,var(--ng))}
+.cstar-c{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+.cstar{position:absolute;animation:cF 2s ease-out forwards;opacity:0}
+@keyframes cF{0%{opacity:1;transform:translateY(0) rotate(0) scale(1)}100%{opacity:0;transform:translateY(-90px) rotate(720deg) scale(.2)}}
+.mbtn{padding:12px 44px;border-radius:13px;border:none;cursor:pointer;
+  font-family:'Tajawal',sans-serif;font-size:1rem;font-weight:800;letter-spacing:.5px;
+  transition:all .35s;position:relative;overflow:hidden}
+.mbtn::before{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.2),transparent);transform:translateX(-100%);transition:.5s}
+.mbtn:hover::before{transform:translateX(100%)}
+.mbtn.success{background:linear-gradient(135deg,#00cc88,var(--ng));color:#000;box-shadow:0 0 18px rgba(0,255,170,.35)}
+.mbtn.success:hover{box-shadow:0 0 35px rgba(0,255,170,.6);transform:scale(1.04)}
+.mbtn.error{background:linear-gradient(135deg,#cc1133,var(--nr));color:#fff;box-shadow:0 0 18px rgba(255,34,68,.35)}
+.mbtn.error:hover{box-shadow:0 0 35px rgba(255,34,68,.6);transform:scale(1.04)}
+.mbtn.info{background:linear-gradient(135deg,var(--g4),var(--g3));color:#000;box-shadow:0 0 18px rgba(224,168,32,.35)}
+.mbtn.info:hover{box-shadow:0 0 35px rgba(224,168,32,.6);transform:scale(1.04)}
+.mbtn.warning{background:linear-gradient(135deg,#cc7700,#ff9900);color:#000;box-shadow:0 0 18px rgba(255,153,0,.35)}
+.mbtn.warning:hover{box-shadow:0 0 35px rgba(255,153,0,.6);transform:scale(1.04)}
 
-/* ══ RESPONSIVE ══ */
-@media(max-width:500px){
-  .card-body{padding:30px 22px 28px}
-  .modal-inner{padding:36px 22px 32px}
-  .modal-title{font-size:1.05rem}
-}
+@media(max-width:480px){.card-body{padding:24px 16px 20px}.minner{padding:34px 18px 28px}.logo-txt{font-size:1.3rem}}
 </style>
 </head>
 <body>
-
 <canvas id="cvs"></canvas>
 
-<!-- ══ TOPBAR ══ -->
+<!-- ════════ TOPBAR ════════ -->
 <header class="topbar">
-  <div class="logo">AlQurmanix</div>
-  <div class="tb-spacer"></div>
-
-  <!-- Connection -->
-  <div class="conn">
-    <div class="conn-dot" id="cDot"></div>
-    <span class="conn-txt on" id="cTxt">متصل</span>
+  <div class="left-g">
+    <!-- GLOBE -->
+    <div class="globe-wrap">
+      <button class="globe-btn" onclick="toggleL(event)">
+        <span class="globe-em">🌍</span>
+        <span>AR 🇪🇬</span>
+      </button>
+      <div class="lang-dd" id="ldd">
+        <a href="lang/en.html"  class="lang-item">🇬🇧 English  <span class="lcode">EN</span></a>
+        <a href="lang/es.html"  class="lang-item">🇪🇸 Español  <span class="lcode">ES</span></a>
+        <a href="lang/fr.html"  class="lang-item">🇫🇷 Français <span class="lcode">FR</span></a>
+        <a href="lang/tr.html"  class="lang-item">🇹🇷 Türkçe   <span class="lcode">TR</span></a>
+        <a href="lang/zh.html"  class="lang-item">🇨🇳 中文      <span class="lcode">ZH</span></a>
+        <a href="lang/ja.html"  class="lang-item">🇯🇵 日本語    <span class="lcode">JA</span></a>
+        <a href="lang/ru.html"  class="lang-item">🇷🇺 Русский  <span class="lcode">RU</span></a>
+        <a href="lang/ko.html"  class="lang-item">🇰🇷 한국어    <span class="lcode">KO</span></a>
+        <a href="lang/it.html"  class="lang-item">🇮🇹 Italiano <span class="lcode">IT</span></a>
+        <a href="lang/de.html"  class="lang-item">🇩🇪 Deutsch  <span class="lcode">DE</span></a>
+      </div>
+    </div>
+    <!-- FAQ -->
+    <button class="faq-btn" onclick="location.href='faq.html'" title="الأسئلة الشائعة">❓</button>
   </div>
 
-  <!-- Globe -->
-  <div class="globe-wrap">
-    <button class="globe-btn" onclick="toggleLang(event)">
-      <span class="globe-spin">🌍</span>
-      <span id="curLang">AR 🇪🇬</span>
-    </button>
-    <div class="lang-dd" id="langDd">
-      <a href="lang/ar.html" class="lang-item">🇪🇬 العربية <span class="lang-code">AR</span></a>
-      <a href="lang/en.html" class="lang-item">🇬🇧 English <span class="lang-code">EN</span></a>
-      <a href="lang/es.html" class="lang-item">🇪🇸 Español <span class="lang-code">ES</span></a>
-      <a href="lang/fr.html" class="lang-item">🇫🇷 Français <span class="lang-code">FR</span></a>
-      <a href="lang/zh.html" class="lang-item">🇨🇳 中文 <span class="lang-code">ZH</span></a>
-      <a href="lang/ja.html" class="lang-item">🇯🇵 日本語 <span class="lang-code">JA</span></a>
-      <a href="lang/ru.html" class="lang-item">🇷🇺 Русский <span class="lang-code">RU</span></a>
-      <a href="lang/tr.html" class="lang-item">🇹🇷 Türkçe <span class="lang-code">TR</span></a>
-      <a href="lang/ko.html" class="lang-item">🇰🇷 한국어 <span class="lang-code">KO</span></a>
-    </div>
+  <!-- CONNECTION -->
+  <div class="conn-box">
+    <div class="cdot" id="cdot"></div>
+    <span class="ctxt on" id="ctxt">متصل</span>
   </div>
 </header>
 
-<!-- ══ PAGE ══ -->
+<!-- ════════ LOGO ════════ -->
+<div class="logo-sec">
+  <div class="logo-txt">AlQurmanix</div>
+  <div class="logo-sub">SECURE ACCESS PORTAL — v3.0</div>
+  <div class="logo-rule"></div>
+</div>
+
+<!-- ════════ AUTH CARD ════════ -->
 <div class="page">
-  <div class="auth-card">
-    <div class="card-ring"></div>
-    <div class="card-body" id="authBox">
-      <div class="scan-line"></div>
+<div class="auth-card">
+  <div class="card-ring"></div>
+  <div class="card-body" id="authBox">
+    <div class="scan-line"></div>
+    <!-- TABS -->
+    <div class="tabs">
+      <button class="tab-btn active" id="tL" onclick="switchT('login')">🔑 تسجيل الدخول</button>
+      <button class="tab-btn"        id="tS" onclick="switchT('signup')">✨ حساب جديد</button>
+    </div>
 
-      <!-- ORNAMENT -->
-      <div class="card-ornament">
-        <span class="ornament-logo">AlQurmanix</span>
-        <div class="ornament-line"><div class="ornament-diamond"></div></div>
-        <p style="font-size:0.75rem;color:var(--g5);margin-top:8px;letter-spacing:2px;font-family:'Orbitron',monospace">SECURE ACCESS PORTAL</p>
+    <!-- LOGIN -->
+    <div class="form-sec active" id="fL">
+      <div class="iw">
+        <label>📧 البريد الإلكتروني</label>
+        <i class="fas fa-envelope ii"></i>
+        <input type="email" id="lE" placeholder="example@email.com" autocomplete="email">
       </div>
-
-      <!-- TABS -->
-      <div class="tabs">
-        <button class="tab-btn active" id="tabLogin" onclick="switchTab('login')">🔑 تسجيل الدخول</button>
-        <button class="tab-btn" id="tabSignup" onclick="switchTab('signup')">✨ حساب جديد</button>
+      <div class="iw">
+        <label>🔒 كلمة المرور</label>
+        <i class="fas fa-lock ii"></i>
+        <input type="password" id="lP" placeholder="••••••••" autocomplete="current-password">
+        <button class="eyeb" onclick="eye('lP',this)" type="button"><i class="fas fa-eye"></i></button>
       </div>
-
-      <!-- ══ LOGIN FORM ══ -->
-      <div class="form-sec active" id="fLogin">
-        <div class="inp-wrap">
-          <label>📧 البريد الإلكتروني</label>
-          <i class="fas fa-envelope inp-icon"></i>
-          <input type="email" id="lEmail" placeholder="example@email.com" autocomplete="email">
-        </div>
-        <div class="inp-wrap">
-          <label>🔒 كلمة المرور</label>
-          <i class="fas fa-lock inp-icon"></i>
-          <input type="password" id="lPass" placeholder="••••••••" autocomplete="current-password">
-          <button class="toggle-pass" onclick="togglePass('lPass',this)" type="button">
-            <i class="fas fa-eye"></i>
-          </button>
-        </div>
-        <div class="links-row">
-          <button class="link-btn" type="button" onclick="doReset()">🔑 نسيت كلمة السر؟</button>
-          <button class="link-btn accent" type="button" onclick="doResend()">📨 أعد إرسال التفعيل</button>
-        </div>
-        <button class="btn-main" onclick="doLogin()">🚀 دخول آمن</button>
+      <div class="frow">
+        <button class="ls" onclick="doReset()">🔑 نسيت كلمة السر؟</button>
       </div>
+      <button class="btn-main" id="btnL" onclick="doLogin()">🚀 دخول آمن</button>
+    </div>
 
-      <!-- ══ SIGNUP FORM ══ -->
-      <div class="form-sec" id="fSignup">
-        <div class="inp-wrap">
-          <label>📧 البريد الإلكتروني</label>
-          <i class="fas fa-envelope inp-icon"></i>
-          <input type="email" id="sEmail" placeholder="example@email.com" autocomplete="email">
-        </div>
-        <div class="inp-wrap">
-          <label>🔒 كلمة المرور</label>
-          <i class="fas fa-lock inp-icon"></i>
-          <input type="password" id="sPass" placeholder="••••••••" oninput="checkPass()" autocomplete="new-password">
-          <button class="toggle-pass" onclick="togglePass('sPass',this)" type="button">
-            <i class="fas fa-eye"></i>
-          </button>
-        </div>
-        <div class="pass-strength">
+    <!-- SIGNUP -->
+    <div class="form-sec" id="fS">
+      <div class="iw">
+        <label>📧 البريد الإلكتروني</label>
+        <i class="fas fa-envelope ii"></i>
+        <input type="email" id="sE" placeholder="example@email.com" autocomplete="email">
+      </div>
+      <div class="iw">
+        <label>🔒 كلمة المرور</label>
+        <i class="fas fa-lock ii"></i>
+        <input type="password" id="sP" placeholder="••••••••" oninput="chkStr()" autocomplete="new-password">
+        <button class="eyeb" onclick="eye('sP',this)" type="button"><i class="fas fa-eye"></i></button>
+      </div>
+      <div class="str-wrap">
+        <div class="str-bar"><div class="str-fill" id="sFill"></div></div>
+        <div class="reqs">
           <div class="req" id="r1"><i class="fas fa-circle"></i> 8 أحرف على الأقل</div>
           <div class="req" id="r2"><i class="fas fa-circle"></i> يحتوي على أرقام</div>
           <div class="req" id="r3"><i class="fas fa-circle"></i> رموز خاصة (!@#$%)</div>
           <div class="req" id="r4"><i class="fas fa-circle"></i> حروف كبيرة وصغيرة</div>
         </div>
-        <div class="inp-wrap">
-          <label>🔐 تأكيد كلمة المرور</label>
-          <i class="fas fa-check-double inp-icon"></i>
-          <input type="password" id="sConf" placeholder="••••••••" autocomplete="new-password">
-          <button class="toggle-pass" onclick="togglePass('sConf',this)" type="button">
-            <i class="fas fa-eye"></i>
-          </button>
-        </div>
-        <button class="btn-main" onclick="doSignup()">💎 إنشاء الحساب الذهبي</button>
       </div>
-
-    </div><!-- /card-body -->
-  </div><!-- /auth-card -->
-</div>
-
-<!-- FOOTER -->
-<footer class="page-footer">
-  <a href="support.html" class="foot-link">🎧 الدعم الفني</a>
-  <span class="foot-sep">|</span>
-  <a href="about.html" class="foot-link">🏛️ من نحن</a>
-  <span class="foot-sep">|</span>
-  <a href="privacy.html" class="foot-link">🔐 الخصوصية</a>
-  <span class="foot-sep">|</span>
-  <a href="terms.html" class="foot-link">📜 الشروط</a>
-  <span class="foot-sep">|</span>
-  <a href="faq.html" class="foot-link">❓ الأسئلة الشائعة</a>
-</footer>
-
-<!-- ══════════════════════════════════
-     MODAL
-══════════════════════════════════ -->
-<div class="modal-overlay" id="modal">
-  <div class="modal-box">
-    <div class="modal-ring" id="mRing"></div>
-    <div class="modal-inner">
-      <div class="confetti-wrap" id="confettiWrap"></div>
-
-      <div class="modal-icon-wrap" id="mIconWrap">
-        <div class="icon-inner" id="mIcon">✅</div>
+      <div class="iw">
+        <label>🔐 تأكيد كلمة المرور</label>
+        <i class="fas fa-check-double ii"></i>
+        <input type="password" id="sC" placeholder="••••••••" autocomplete="new-password">
+        <button class="eyeb" onclick="eye('sC',this)" type="button"><i class="fas fa-eye"></i></button>
       </div>
-
-      <h2 class="modal-title" id="mTitle">العنوان</h2>
-      <div class="modal-divider" id="mDivider"></div>
-      <p class="modal-text" id="mText">الرسالة</p>
-
-      <div class="modal-progress" id="mProgress">
-        <div class="modal-progress-bar gold" id="mBar"></div>
-      </div>
-
-      <button class="modal-close-btn info" id="mBtn" onclick="closeModal()">حسناً</button>
+      <button class="btn-main" id="btnS" onclick="doSignup()">💎 إنشاء الحساب الذهبي</button>
     </div>
   </div>
 </div>
+</div>
 
-<!-- ══════════════════════════════════
-     FIREBASE + LOGIC
-══════════════════════════════════ -->
+<!-- ════════ FOOTER ════════ -->
+<footer class="pfoot">
+  <a href="support.html" class="fsupp">🎧 الدعم الفني</a>
+  <span class="fsep">|</span>
+  <a href="security-alerts.html" class="flink">🛡️ تنبيهات الأمان</a>
+  <span class="fsep">|</span>
+  <a href="about.html" class="flink">🏛️ من نحن</a>
+</footer>
+
+<!-- ════════ MODAL ════════ -->
+<div class="mov" id="modal">
+<div class="mw">
+  <div class="mring" id="mRing"></div>
+  <div class="minner">
+    <div class="cstar-c" id="cstarc"></div>
+    <div class="mir" id="mIR"><div class="mii" id="mIc">✅</div></div>
+    <h2 class="mtitle" id="mT">العنوان</h2>
+    <div class="mdiv"></div>
+    <p class="mtxt" id="mTx">الرسالة</p>
+    <button class="mresend" id="mResend" onclick="doResendM()">📨 إعادة إرسال رابط التفعيل</button>
+    <div class="mprog" id="mProg"><div class="mpbar gold" id="mBar"></div></div>
+    <button class="mbtn info" id="mBtn" onclick="closeM()">حسناً</button>
+  </div>
+</div>
+</div>
+
+<!-- ════════ FIREBASE MODULE ════════ -->
 <script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import {
-  getAuth,
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-  sendEmailVerification,
-  sendPasswordResetEmail,
-  signOut,
-  onAuthStateChanged
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-import {
-  getFirestore,
-  doc, setDoc, getDoc, updateDoc,
-  serverTimestamp
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import{initializeApp}from"https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import{getAuth,createUserWithEmailAndPassword,signInWithEmailAndPassword,
+  sendEmailVerification,sendPasswordResetEmail,signOut,onAuthStateChanged}
+  from"https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import{getFirestore,doc,setDoc,getDoc,updateDoc,serverTimestamp,collection,addDoc}
+  from"https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-/* ══ FIREBASE INIT ══ */
-const app = initializeApp({
-  apiKey: "AIzaSyDA0gnR9U3I90umdJsAJI4h93nEPD3BJ9w",
-  authDomain: "alqurmanix-aswan.firebaseapp.com",
-  projectId: "alqurmanix-aswan",
-  storageBucket: "alqurmanix-aswan.firebasestorage.app",
-  messagingSenderId: "882189888648",
-  appId: "1:882189888648:web:41d3f89c74ad76fd6a833d",
-  measurementId: "G-5SZY72ESEV"
+const app=initializeApp({
+  apiKey:"AIzaSyDA0gnR9U3I90umdJsAJI4h93nEPD3BJ9w",
+  authDomain:"alqurmanix-aswan.firebaseapp.com",
+  projectId:"alqurmanix-aswan",
+  storageBucket:"alqurmanix-aswan.firebasestorage.app",
+  messagingSenderId:"882189888648",
+  appId:"1:882189888648:web:41d3f89c74ad76fd6a833d",
+  measurementId:"G-5SZY72ESEV"
 });
-const auth = getAuth(app);
-const db = getFirestore(app);
+const auth=getAuth(app);
+const db=getFirestore(app);
+window._auth=auth;window._db=db;
 
-/* ══ CONNECTION CHECK ══ */
-const testConn = async () => {
-  try {
-    await fetch("https://firestore.googleapis.com/", {mode:'no-cors'});
-    setConn(true);
-  } catch { setConn(false); }
-};
-testConn();
-setInterval(testConn, 15000);
+/* ── CONNECTION ── */
+async function probe(){
+  const d=document.getElementById('cdot'),t=document.getElementById('ctxt');
+  try{await fetch('https://firestore.googleapis.com/',{mode:'no-cors'});
+    d.className='cdot';t.className='ctxt on';t.textContent='متصل';}
+  catch{d.className='cdot off';t.className='ctxt off';t.textContent='غير متصل';}
+}
+probe();setInterval(probe,12000);
 
-function setConn(ok) {
-  const dot = document.getElementById('cDot');
-  const txt = document.getElementById('cTxt');
-  dot.className = 'conn-dot' + (ok ? '' : ' red');
-  txt.className = 'conn-txt ' + (ok ? 'on' : 'off');
-  txt.textContent = ok ? 'متصل' : 'غير متصل';
+/* ── AUTO LOGIN GUARD ── */
+onAuthStateChanged(auth,async u=>{
+  if(!u)return;
+  try{
+    await u.reload();
+    const f=auth.currentUser;
+    if(!f||!f.emailVerified)return;
+    const s=await getDoc(doc(db,'users',f.uid));
+    if(s.exists()&&(s.data().status==='active'||s.data().status==='pending')){
+      sessionStorage.setItem('fromIndex','1');
+      window.location.replace('index.html');
+    }
+  }catch(e){}
+});
+
+/* ── LOG ── */
+async function logEv(uid,type){
+  try{await addDoc(collection(db,'auth_logs'),{uid,type,timestamp:serverTimestamp()});}catch(e){}
 }
 
-/* ══ MODAL SYSTEM ══ */
-const types = {
-  success: { ring:'success', wrap:'success', btn:'success', bar:'green', icon:'🏆', btnTxt:'رائع!' },
-  error:   { ring:'error',   wrap:'error',   btn:'error',   bar:'gold', icon:'⚠️', btnTxt:'حسناً' },
-  info:    { ring:'info',    wrap:'info',    btn:'info',    bar:'gold', icon:'ℹ️', btnTxt:'فهمت' },
-  warning: { ring:'warning', wrap:'warning', btn:'warning', bar:'gold', icon:'🔔', btnTxt:'حسناً' }
+/* ── MODAL ── */
+const MT={
+  success:{r:'success',i:'success',b:'success',pb:'green',em:'🏆',bt:'رائع! 🎉'},
+  error:  {r:'error',  i:'error',  b:'error',  pb:'gold', em:'⚠️', bt:'حسناً'},
+  info:   {r:'info',   i:'info',   b:'info',   pb:'gold', em:'ℹ️', bt:'فهمت'},
+  warning:{r:'warning',i:'warning',b:'warning',pb:'gold', em:'🔔', bt:'حسناً'}
 };
+let pIv=null;
+window._pendEmail='';window._pendPass='';
 
-window.showModal = function(type, title, text, withProgress=false, progressMs=0, onDone=null) {
-  const t = types[type] || types.info;
-  document.getElementById('mRing').className = 'modal-ring ' + t.ring;
-  document.getElementById('mIconWrap').className = 'modal-icon-wrap ' + t.wrap;
-  document.getElementById('mIcon').textContent = t.icon;
-  document.getElementById('mTitle').textContent = title;
-  document.getElementById('mText').innerHTML = text;
-  const btn = document.getElementById('mBtn');
-  btn.className = 'modal-close-btn ' + t.btn;
-  btn.textContent = t.btnTxt;
-
-  // divider color
-  const div = document.getElementById('mDivider');
-  div.style.background = type==='error'
-    ? 'linear-gradient(90deg,transparent,#ff2244,transparent)'
-    : type==='success'
-    ? 'linear-gradient(90deg,transparent,var(--neon-green),transparent)'
-    : 'linear-gradient(90deg,transparent,var(--g3),transparent)';
-
-  // confetti on success
-  spawnConfetti(type==='success');
-
-  // progress bar
-  const prog = document.getElementById('mProgress');
-  const bar = document.getElementById('mBar');
-  prog.style.display = 'none';
-  if (withProgress && progressMs > 0) {
-    prog.style.display = 'block';
-    bar.className = 'modal-progress-bar ' + t.bar;
-    bar.style.width = '0%';
-    const steps = 60;
-    const step = progressMs / steps;
-    let i = 0;
-    const iv = setInterval(() => {
-      i++;
-      bar.style.width = (i/steps*100) + '%';
-      if(i >= steps) {
-        clearInterval(iv);
-        closeModal();
-        if(onDone) onDone();
-      }
-    }, step);
+window.showM=function(type,title,text,{prog=0,onDone=null,showResend=false}={}){
+  const t=MT[type]||MT.info;
+  clearInterval(pIv);
+  document.getElementById('mRing').className='mring '+t.r;
+  document.getElementById('mIR').className='mir '+t.i;
+  document.getElementById('mIc').textContent=t.em;
+  document.getElementById('mT').textContent=title;
+  document.getElementById('mTx').innerHTML=text;
+  const btn=document.getElementById('mBtn');
+  btn.className='mbtn '+t.b;btn.textContent=t.bt;
+  const rb=document.getElementById('mResend');
+  rb.className='mresend'+(showResend?' show':'');
+  spawnS(type==='success');
+  const pg=document.getElementById('mProg'),bar=document.getElementById('mBar');
+  pg.style.display='none';
+  if(prog>0){
+    pg.style.display='block';bar.className='mpbar '+t.pb;bar.style.width='0%';
+    let i=0,steps=60,step=prog/steps;
+    pIv=setInterval(()=>{i++;bar.style.width=(i/steps*100)+'%';
+      if(i>=steps){clearInterval(pIv);closeM();if(onDone)onDone();}},step);
   }
-
   document.getElementById('modal').classList.add('show');
 };
-
-window.closeModal = function() {
-  document.getElementById('modal').classList.remove('show');
-};
-
-function spawnConfetti(yes) {
-  const wrap = document.getElementById('confettiWrap');
-  wrap.innerHTML = '';
-  if(!yes) return;
-  const stars = ['⭐','✨','🌟','💫','🏅','🥇','👑','💎'];
-  for(let i=0;i<18;i++){
-    const s = document.createElement('span');
-    s.className = 'confetti-star';
-    s.textContent = stars[Math.floor(Math.random()*stars.length)];
-    s.style.left = Math.random()*100 + '%';
-    s.style.top = (50+Math.random()*40) + '%';
-    s.style.fontSize = (0.7+Math.random()*0.8) + 'rem';
-    s.style.animationDelay = Math.random()*0.8 + 's';
-    s.style.animationDuration = (1.5+Math.random()*1) + 's';
-    wrap.appendChild(s);
-  }
+window.closeM=function(){clearInterval(pIv);document.getElementById('modal').classList.remove('show');};
+function spawnS(yes){
+  const w=document.getElementById('cstarc');w.innerHTML='';if(!yes)return;
+  const e=['⭐','✨','🌟','💫','👑','💎','🏅','🥇'];
+  for(let i=0;i<22;i++){
+    const s=document.createElement('span');s.className='cstar';
+    s.textContent=e[Math.floor(Math.random()*e.length)];
+    s.style.cssText=`left:${Math.random()*90}%;top:${45+Math.random()*45}%;font-size:${.6+Math.random()*.9}rem;animation-delay:${Math.random()*.9}s;animation-duration:${1.4+Math.random()*1.1}s`;
+    w.appendChild(s);}
 }
 
-/* ══ SCAN EFFECT ══ */
-function scan() {
-  const box = document.getElementById('authBox');
-  box.classList.add('scanning');
-  setTimeout(()=>box.classList.remove('scanning'), 1800);
-}
-
-/* ══ TAB SWITCH ══ */
-window.switchTab = function(t) {
-  document.getElementById('tabLogin').classList.toggle('active', t==='login');
-  document.getElementById('tabSignup').classList.toggle('active', t==='signup');
-  document.getElementById('fLogin').classList.toggle('active', t==='login');
-  document.getElementById('fSignup').classList.toggle('active', t==='signup');
-};
-
-/* ══ TOGGLE PASSWORD ══ */
-window.togglePass = function(id, btn) {
-  const inp = document.getElementById(id);
-  const ico = btn.querySelector('i');
-  if(inp.type==='password'){inp.type='text';ico.className='fas fa-eye-slash'}
-  else{inp.type='password';ico.className='fas fa-eye'}
-};
-
-/* ══ PASSWORD CHECK ══ */
-window.checkPass = function() {
-  const v = document.getElementById('sPass').value;
-  const mark = (id, ok) => {
-    const el = document.getElementById(id);
-    el.classList.toggle('ok', ok);
-    el.querySelector('i').className = ok ? 'fas fa-check-circle' : 'fas fa-circle';
-  };
-  mark('r1', v.length >= 8);
-  mark('r2', /\d/.test(v));
-  mark('r3', /[!@#$%^&*(),.?":{}|<>]/.test(v));
-  mark('r4', /[a-z]/.test(v) && /[A-Z]/.test(v));
-};
-
-/* ══ GLOBE ══ */
-window.toggleLang = function(e){
-  e.stopPropagation();
-  document.getElementById('langDd').classList.toggle('open');
-};
-document.addEventListener('click',()=>document.getElementById('langDd').classList.remove('open'));
-
-/* ══ SIGNUP ══ */
-window.doSignup = async function() {
-  const email = document.getElementById('sEmail').value.trim();
-  const pass  = document.getElementById('sPass').value;
-  const conf  = document.getElementById('sConf').value;
-
-  if(!email || !pass || !conf) {
-    return showModal('warning','⚠️ بيانات ناقصة','يرجى ملء <strong>جميع الحقول</strong> قبل المتابعة');
-  }
-  if(pass !== conf) {
-    return showModal('error','❌ خطأ في كلمة المرور','كلمتا المرور <strong>غير متطابقتين</strong>، يرجى التحقق والمحاولة مجدداً');
-  }
-  if(pass.length < 8) {
-    return showModal('warning','🔒 كلمة مرور ضعيفة','يجب أن تكون كلمة المرور <strong>8 أحرف على الأقل</strong>');
-  }
-
-  scan();
-  // DISABLE BUTTON
-  const btn = document.querySelector('#fSignup .btn-main');
-  btn.disabled = true; btn.textContent = '⏳ جارٍ الإنشاء...';
-
-  try {
-    // 1. Create user
-    const cred = await createUserWithEmailAndPassword(auth, email, pass);
-    const user = cred.user;
-
-    // 2. Write to Firestore (must match security rules)
-    await setDoc(doc(db, 'users', user.uid), {
-      email: user.email,
-      status: 'pending',
-      createdAt: serverTimestamp(),
-      lockUntil: null
-    });
-
-    // 3. Send verification email
-    await sendEmailVerification(user, {
-      url: window.location.origin + '/auth.html',
-      handleCodeInApp: false
-    });
-
-    // 4. Sign out immediately (pending activation)
+/* ── RESEND FROM MODAL ── */
+window.doResendM=async function(){
+  const email=window._pendEmail,pass=window._pendPass;
+  if(!email||!pass)return showM('info','💡 بيانات مطلوبة','أدخل البريد وكلمة المرور في الخانات أولاً');
+  try{
+    const cr=await signInWithEmailAndPassword(auth,email,pass);
+    const u=cr.user;
+    await u.reload();
+    if(auth.currentUser.emailVerified){await signOut(auth);return showM('success','✅ مفعل بالفعل','يمكنك الدخول الآن مباشرة 🚀');}
+    await sendEmailVerification(u,{url:location.origin+'/auth.html'});
     await signOut(auth);
+    showM('success','📨 تم الإرسال','تم إرسال رابط تفعيل جديد.<br>تحقق من <strong>البريد الوارد والمهملات</strong>');
+  }catch(e){showM('error','❌ تعذر الإرسال','تأكد من صحة كلمة المرور وحاول مجدداً');}
+};
 
-    // 5. SHOW LUXURY SUCCESS MODAL with countdown
-    showModal(
-      'success',
-      '🎉 تم إنشاء حسابك بنجاح!',
-      `مرحباً بك في <strong>AlQurmanix</strong>! 🌟<br><br>
+/* ── SCAN ── */
+function scan(){const b=document.getElementById('authBox');b.classList.add('scanning');setTimeout(()=>b.classList.remove('scanning'),1900);}
+
+/* ── TABS ── */
+window.switchT=function(t){
+  document.getElementById('tL').classList.toggle('active',t==='login');
+  document.getElementById('tS').classList.toggle('active',t==='signup');
+  document.getElementById('fL').classList.toggle('active',t==='login');
+  document.getElementById('fS').classList.toggle('active',t==='signup');
+};
+
+/* ── EYE ── */
+window.eye=function(id,btn){
+  const inp=document.getElementById(id),ico=btn.querySelector('i');
+  inp.type=inp.type==='password'?'text':'password';
+  ico.className=inp.type==='text'?'fas fa-eye-slash':'fas fa-eye';
+};
+
+/* ── PASSWORD STRENGTH ── */
+window.chkStr=function(){
+  const v=document.getElementById('sP').value;
+  const c=[v.length>=8,/\d/.test(v),/[!@#$%^&*(),.?":{}|<>]/.test(v),/[a-z]/.test(v)&&/[A-Z]/.test(v)];
+  c.forEach((ok,i)=>{const el=document.getElementById('r'+(i+1));el.classList.toggle('ok',ok);el.querySelector('i').className=ok?'fas fa-check-circle':'fas fa-circle';});
+  const sc=c.filter(Boolean).length,f=document.getElementById('sFill');
+  const cols=['#ff2244','#ff6600','#ffaa00','#00ffaa'],ws=[25,50,75,100];
+  f.style.width=(ws[sc-1]||0)+'%';f.style.background=cols[sc-1]||'transparent';
+  f.style.boxShadow=sc===4?'0 0 10px rgba(0,255,170,.5)':'none';
+};
+
+/* ── GLOBE ── */
+window.toggleL=function(e){e.stopPropagation();document.getElementById('ldd').classList.toggle('open');};
+document.addEventListener('click',()=>document.getElementById('ldd').classList.remove('open'));
+
+/* ════════════ SIGNUP ════════════ */
+window.doSignup=async function(){
+  const email=document.getElementById('sE').value.trim();
+  const pass=document.getElementById('sP').value;
+  const conf=document.getElementById('sC').value;
+  if(!email||!pass||!conf)return showM('warning','⚠️ بيانات ناقصة','يرجى ملء <strong>جميع الحقول</strong> قبل المتابعة');
+  if(pass!==conf)return showM('error','❌ خطأ في كلمة المرور','كلمتا المرور <strong>غير متطابقتين</strong>، راجع وأعد المحاولة');
+  if(pass.length<8)return showM('warning','🔒 كلمة مرور ضعيفة','يجب أن تكون كلمة المرور <strong>8 أحرف على الأقل</strong>');
+  scan();
+  const btn=document.getElementById('btnS');btn.disabled=true;btn.textContent='⏳ جارٍ الإنشاء...';
+  try{
+    /* 1. إنشاء المستخدم في Firebase Auth */
+    const cr=await createUserWithEmailAndPassword(auth,email,pass);
+    const u=cr.user;
+    /* 2. كتابة وثيقة users (مطابقة للقواعد تماماً) */
+    await setDoc(doc(db,'users',u.uid),{
+      email:u.email,status:'pending',createdAt:serverTimestamp(),lockUntil:null});
+    /* 3. كتابة وثيقة security */
+    await setDoc(doc(db,'security',u.uid),{twoFA:false,lastPasswordChange:serverTimestamp()});
+    /* 4. إرسال إيميل التفعيل */
+    await sendEmailVerification(u,{url:location.origin+'/auth.html',handleCodeInApp:false});
+    /* 5. تسجيل حدث */
+    await logEv(u.uid,'signup');
+    /* 6. تسجيل خروج فوري */
+    await signOut(auth);
+    /* 7. نافذة النجاح الفخمة مع عداد */
+    showM('success','🎉 تم إنشاء حسابك!',
+      `مرحباً بك في <strong>AlQurmanix</strong> 🌟<br><br>
        تم إرسال رابط التفعيل إلى:<br>
        <strong style="color:var(--g2)">${email}</strong><br><br>
-       يرجى فتح بريدك وتفعيل الحساب قبل تسجيل الدخول. 📧`,
-      true, 5000, () => switchTab('login')
-    );
-
-    // Reset
-    document.getElementById('sEmail').value = '';
-    document.getElementById('sPass').value = '';
-    document.getElementById('sConf').value = '';
-    ['r1','r2','r3','r4'].forEach(id=>{
-      const el=document.getElementById(id);
-      el.classList.remove('ok');
-      el.querySelector('i').className='fas fa-circle';
-    });
-
-  } catch(err) {
-    let msg = 'حدث خطأ غير متوقع، يرجى المحاولة مجدداً';
-    if(err.code==='auth/email-already-in-use') msg='هذا البريد الإلكتروني <strong>مسجل مسبقاً</strong>، يمكنك تسجيل الدخول مباشرة';
-    if(err.code==='auth/invalid-email') msg='صيغة البريد الإلكتروني <strong>غير صحيحة</strong>';
-    if(err.code==='auth/weak-password') msg='كلمة المرور <strong>ضعيفة جداً</strong>، يرجى اختيار كلمة أقوى';
-    if(err.code==='auth/network-request-failed') msg='تعذر الاتصال بالخادم، يرجى <strong>التحقق من الاتصال</strong>';
-    showModal('error', '❌ فشل إنشاء الحساب', msg);
-  } finally {
-    btn.disabled = false;
-    btn.textContent = '💎 إنشاء الحساب الذهبي';
-  }
+       فعّل حسابك ثم ارجع لتسجيل الدخول 📧`,
+      {prog:5500,onDone:()=>switchT('login')});
+    /* 8. مسح الحقول */
+    ['sE','sP','sC'].forEach(id=>document.getElementById(id).value='');
+    document.getElementById('sFill').style.width='0%';
+    ['r1','r2','r3','r4'].forEach(id=>{const el=document.getElementById(id);el.classList.remove('ok');el.querySelector('i').className='fas fa-circle';});
+  }catch(e){
+    let m='حدث خطأ غير متوقع، يرجى المحاولة مجدداً';
+    if(e.code==='auth/email-already-in-use')m='هذا البريد <strong>مسجل مسبقاً</strong>، يمكنك تسجيل الدخول مباشرة';
+    if(e.code==='auth/invalid-email')m='صيغة البريد الإلكتروني <strong>غير صحيحة</strong>';
+    if(e.code==='auth/weak-password')m='كلمة المرور <strong>ضعيفة جداً</strong>، اختر كلمة أقوى';
+    if(e.code==='auth/network-request-failed')m='تعذر الاتصال، تحقق من <strong>اتصال الإنترنت</strong>';
+    showM('error','❌ فشل إنشاء الحساب',m);
+  }finally{btn.disabled=false;btn.textContent='💎 إنشاء الحساب الذهبي';}
 };
 
-/* ══ LOGIN ══ */
-window.doLogin = async function() {
-  const email = document.getElementById('lEmail').value.trim();
-  const pass  = document.getElementById('lPass').value;
-
-  if(!email || !pass) {
-    return showModal('warning','⚠️ بيانات ناقصة','يرجى إدخال <strong>البريد وكلمة المرور</strong> للمتابعة');
-  }
-
+/* ════════════ LOGIN ════════════ */
+window.doLogin=async function(){
+  const email=document.getElementById('lE').value.trim();
+  const pass=document.getElementById('lP').value;
+  if(!email||!pass)return showM('warning','⚠️ بيانات ناقصة','يرجى إدخال <strong>البريد وكلمة المرور</strong> للمتابعة');
+  window._pendEmail=email;window._pendPass=pass;
   scan();
-  const btn = document.querySelector('#fLogin .btn-main');
-  btn.disabled = true; btn.textContent = '⏳ جارٍ التحقق...';
-
-  try {
-    const cred = await signInWithEmailAndPassword(auth, email, pass);
-    const user = cred.user;
-
-    // ✅ THE FIX: reload user to get fresh token from Firebase server
-    // Without this, emailVerified stays false even after the user clicked the link
-    await user.reload();
-    const freshUser = auth.currentUser;
-
-    // Check email verified (on fresh data)
-    if(!freshUser.emailVerified) {
+  const btn=document.getElementById('btnL');btn.disabled=true;btn.textContent='⏳ جارٍ التحقق...';
+  try{
+    /* 1. تسجيل الدخول */
+    const cr=await signInWithEmailAndPassword(auth,email,pass);
+    const u=cr.user;
+    /* 2. *** THE FIX: reload لتحديث emailVerified من الخادم *** */
+    await u.reload();
+    const f=auth.currentUser;
+    /* 3. فحص التفعيل */
+    if(!f.emailVerified){
       await signOut(auth);
-      return showModal('warning','📧 الحساب غير مفعل',
-        'يرجى تفعيل حسابك أولاً عبر الرابط المرسل لبريدك.<br><br>' +
-        'تحقق من <strong>البريد الوارد والمهملات (Spam)</strong><br><br>' +
-        'إذا فعّلت البريد بالفعل، انتظر ثوانٍ ثم أعد المحاولة.');
+      return showM('warning','📧 الحساب غير مفعل',
+        'يرجى تفعيل حسابك عبر الرابط المرسل إلى بريدك.<br>'+
+        'تحقق من <strong>البريد الوارد والمهملات (Spam)</strong><br><br>'+
+        'إذا فعّلت البريد بالفعل انتظر لحظة ثم أعد المحاولة.',
+        {showResend:true});
     }
-
-    // Get user doc from Firestore
-    const snap = await getDoc(doc(db,'users',user.uid));
-    if(snap.exists()) {
-      const data = snap.data();
-
-      // Check lock FIRST
-      if(data.lockUntil && new Date() < data.lockUntil.toDate()) {
-        await signOut(auth);
-        return showModal('error','🔒 حساب مقفل مؤقتاً',
-          'تم قفل الحساب بسبب محاولات دخول متعددة.<br>يرجى المحاولة لاحقاً أو التواصل مع الدعم');
-      }
-
-      if(data.status === 'pending') {
-        // First login after email verification → activate account
-        await updateDoc(doc(db,'users',user.uid), { status: 'active' });
-      } else if(data.status !== 'active') {
-        await signOut(auth);
-        return showModal('error','🚫 حساب معلق',
-          'هذا الحساب <strong>غير نشط</strong> حالياً.<br>يرجى التواصل مع <strong>الدعم الفني</strong>');
-      }
-    } else {
-      // Firestore doc missing — sign out for safety
+    /* 4. قراءة وثيقة المستخدم من Firestore */
+    const snap=await getDoc(doc(db,'users',f.uid));
+    if(!snap.exists()){await signOut(auth);return showM('error','⚠️ خطأ في البيانات','لم يُعثر على بيانات حسابك.<br>تواصل مع <strong>الدعم الفني</strong>');}
+    const d=snap.data();
+    /* 5. فحص القفل */
+    if(d.lockUntil&&new Date()<d.lockUntil.toDate()){
       await signOut(auth);
-      return showModal('error','⚠️ خطأ في البيانات',
-        'لم يتم العثور على بيانات حسابك.<br>يرجى التواصل مع <strong>الدعم الفني</strong>');
+      return showM('error','🔒 حساب مقفل مؤقتاً',
+        `تم قفل حسابك بسبب محاولات دخول متعددة.<br>يُفتح في: <strong>${d.lockUntil.toDate().toLocaleString('ar-EG')}</strong><br>أو تواصل مع <strong>الدعم الفني</strong>`);
     }
-
-    // All good — mark session and redirect
+    /* 6. فحص الحالة */
+    if(d.status==='pending'){
+      await updateDoc(doc(db,'users',f.uid),{status:'active'});
+    }else if(d.status==='suspended'){
+      await signOut(auth);return showM('warning','⏸️ حساب معلق','حسابك <strong>معلق مؤقتاً</strong> بواسطة الإدارة.<br>تواصل مع <strong>الدعم الفني</strong>');
+    }else if(d.status==='banned'){
+      await signOut(auth);return showM('error','🚫 حساب محظور','تم حظر هذا الحساب نهائياً.<br>للاستفسار تواصل مع <strong>الدعم الفني</strong>');
+    }else if(d.status!=='active'){
+      await signOut(auth);return showM('error','🚫 حساب غير نشط','حالة حسابك غير معروفة.<br>تواصل مع <strong>الدعم الفني</strong>');
+    }
+    /* 7. تسجيل الحدث */
+    await logEv(f.uid,'login');
+    /* 8. التوجيه */
     sessionStorage.setItem('fromIndex','1');
-
-    showModal('success','👑 أهلاً بك مجدداً!',
-      `مرحباً في <strong>AlQurmanix</strong>! 🌟<br><br>
-       جارٍ تحويلك إلى البوابة الذهبية...`,
-      true, 2800, () => { window.location.replace('index.html'); }
-    );
-
-  } catch(err) {
+    showM('success','👑 أهلاً بك!',
+      `مرحباً في <strong>AlQurmanix</strong> 🌟<br><br>جارٍ تحويلك إلى البوابة الذهبية...`,
+      {prog:2800,onDone:()=>window.location.replace('index.html')});
+  }catch(e){
     await signOut(auth).catch(()=>{});
-    let msg = 'حدث خطأ غير متوقع، حاول مرة أخرى';
-    const code = err.code || '';
-    if(['auth/wrong-password','auth/invalid-credential','auth/user-not-found','auth/invalid-login-credentials'].includes(code))
-      msg = 'البريد الإلكتروني أو كلمة المرور <strong>غير صحيحة</strong>';
-    else if(code === 'auth/too-many-requests')
-      msg = 'تم حظر الحساب مؤقتاً بسبب محاولات متعددة.<br>يرجى <strong>المحاولة لاحقاً</strong>';
-    else if(code === 'auth/network-request-failed')
-      msg = 'تعذر الاتصال بالخادم، تحقق من <strong>اتصال الإنترنت</strong>';
-    else if(code === 'auth/user-disabled')
-      msg = 'هذا الحساب <strong>معطل</strong>، يرجى التواصل مع الدعم';
-    showModal('error','❌ فشل تسجيل الدخول', msg);
-  } finally {
-    btn.disabled = false;
-    btn.textContent = '🚀 دخول آمن';
-  }
+    let m='حدث خطأ غير متوقع';
+    const c=e.code||'';
+    if(['auth/wrong-password','auth/invalid-credential','auth/user-not-found','auth/invalid-login-credentials'].includes(c))
+      m='البريد الإلكتروني أو كلمة المرور <strong>غير صحيحة</strong>';
+    else if(c==='auth/too-many-requests')m='تم حظر الحساب مؤقتاً بسبب محاولات متعددة.<br>يرجى <strong>المحاولة لاحقاً</strong>';
+    else if(c==='auth/user-disabled')m='هذا الحساب <strong>معطل من قِبل الإدارة</strong>.<br>تواصل مع الدعم الفني';
+    else if(c==='auth/network-request-failed')m='تعذر الاتصال بالخادم، تحقق من <strong>اتصال الإنترنت</strong>';
+    else if(c==='permission-denied')m='تم رفض الوصول. قد يكون الحساب <strong>محظوراً</strong>.<br>تواصل مع الدعم الفني';
+    showM('error','❌ فشل تسجيل الدخول',m);
+  }finally{btn.disabled=false;btn.textContent='🚀 دخول آمن';}
 };
 
-/* ══ RESET PASSWORD ══ */
-window.doReset = async function() {
-  const email = document.getElementById('lEmail').value.trim();
-  if(!email) {
-    return showModal('info','📧 أدخل بريدك أولاً',
-      'يرجى كتابة <strong>بريدك الإلكتروني</strong> في خانة الإدخال أعلاه ثم اضغط إعادة التعيين');
-  }
+/* ════════════ RESET ════════════ */
+window.doReset=async function(){
+  const email=document.getElementById('lE').value.trim();
+  if(!email)return showM('info','📧 أدخل بريدك أولاً','اكتب <strong>بريدك الإلكتروني</strong> في خانة الإدخال أعلاه ثم اضغط إعادة التعيين');
   scan();
-  try {
-    await sendPasswordResetEmail(auth, email, {
-      url: window.location.origin + '/auth.html'
-    });
-    showModal('success','📨 تم الإرسال بنجاح',
-      `تم إرسال رابط إعادة تعيين كلمة المرور إلى:<br>
-       <strong style="color:var(--g2)">${email}</strong><br><br>
-       تحقق من <strong>البريد الوارد والمهملات</strong> 📥`);
-  } catch(err) {
-    let msg = 'حدث خطأ أثناء الإرسال';
-    if(err.code==='auth/user-not-found') msg='هذا البريد <strong>غير مسجل</strong> في النظام';
-    if(err.code==='auth/invalid-email') msg='صيغة البريد الإلكتروني <strong>غير صحيحة</strong>';
-    showModal('error','❌ تعذر الإرسال', msg);
+  try{
+    await sendPasswordResetEmail(auth,email,{url:location.origin+'/auth.html'});
+    showM('success','📨 تم الإرسال',
+      `تم إرسال رابط إعادة تعيين كلمة المرور إلى:<br><strong style="color:var(--g2)">${email}</strong><br><br>تحقق من <strong>البريد الوارد والمهملات</strong> 📥`);
+  }catch(e){
+    let m='حدث خطأ أثناء الإرسال';
+    if(e.code==='auth/user-not-found')m='هذا البريد <strong>غير مسجل</strong> لدينا';
+    if(e.code==='auth/invalid-email')m='صيغة البريد الإلكتروني <strong>غير صحيحة</strong>';
+    showM('error','❌ تعذر الإرسال',m);
   }
 };
-
-/* ══ RESEND VERIFICATION ══ */
-window.doResend = async function() {
-  const email = document.getElementById('lEmail').value.trim();
-  const pass  = document.getElementById('lPass').value;
-  if(!email||!pass) {
-    return showModal('info','💡 بيانات مطلوبة',
-      'يرجى إدخال <strong>البريد وكلمة المرور</strong> في خانات الدخول لإعادة إرسال رابط التفعيل');
-  }
-  scan();
-  try {
-    const cred = await signInWithEmailAndPassword(auth, email, pass);
-    const user = cred.user;
-    if(user.emailVerified) {
-      await signOut(auth);
-      return showModal('success','✅ الحساب مفعل بالفعل',
-        'حسابك <strong>مفعل ومستعد</strong> للدخول! يمكنك تسجيل الدخول مباشرة الآن 🚀');
-    }
-    await sendEmailVerification(user, {
-      url: window.location.origin + '/auth.html'
-    });
-    await signOut(auth);
-    showModal('success','📨 تم إعادة الإرسال',
-      `تم إرسال رابط تفعيل جديد إلى:<br>
-       <strong style="color:var(--g2)">${email}</strong><br><br>
-       تحقق من <strong>البريد الوارد والمهملات</strong> ⏱️`);
-  } catch(err) {
-    let msg = 'حدث خطأ أثناء المحاولة';
-    if(['auth/wrong-password','auth/invalid-credential'].includes(err.code)) msg='كلمة المرور <strong>غير صحيحة</strong>';
-    if(err.code==='auth/user-not-found') msg='هذا البريد <strong>غير مسجل</strong> في النظام';
-    showModal('error','❌ تعذر الإرسال', msg);
-  }
-};
-
 </script>
 
-<!-- ══ PARTICLES + NON-MODULE JS ══ -->
+<!-- ════════ PARTICLES ════════ -->
 <script>
-/* ══ GOLD PARTICLES ══ */
-const cvs = document.getElementById('cvs');
-const ctx = cvs.getContext('2d');
+const cvs=document.getElementById('cvs'),ctx=cvs.getContext('2d');
 let W,H,pts=[];
-const GOLDS=['#fffbe0','#f7e27a','#e0a820','#ffd700','#ffec80','#c87f00'];
-
-function rsz(){W=cvs.width=window.innerWidth;H=cvs.height=window.innerHeight}
-rsz(); window.addEventListener('resize',rsz);
-
-for(let i=0;i<100;i++) pts.push(mkPt());
-function mkPt(){
-  return{
-    x:Math.random()*window.innerWidth,
-    y:Math.random()*window.innerHeight+window.innerHeight,
-    r:Math.random()*2.5+0.5,
-    vx:(Math.random()-.5)*0.5,
-    vy:-(Math.random()*0.6+0.2),
-    c:GOLDS[Math.floor(Math.random()*GOLDS.length)],
-    a:Math.random()*0.8+0.1,
-    life:Math.random()*360
-  }
-}
-
+const GC=['#fffbe0','#f7e27a','#e0a820','#ffd700','#ffec80','#c87f00'];
+function rsz(){W=cvs.width=innerWidth;H=cvs.height=innerHeight}
+rsz();window.addEventListener('resize',rsz);
+for(let i=0;i<90;i++){pts.push({x:Math.random()*innerWidth,y:Math.random()*innerHeight+innerHeight,
+  r:Math.random()*2.4+.4,vx:(Math.random()-.5)*.45,vy:-(Math.random()*.6+.18),
+  c:GC[Math.floor(Math.random()*GC.length)],a:.1+Math.random()*.8,lf:Math.random()*360});}
 (function loop(){
   ctx.clearRect(0,0,W,H);
-  pts.forEach(p=>{
-    p.life++;
-    p.x+=p.vx+Math.sin(p.life*.018)*.4;
-    p.y+=p.vy;
-    p.a=0.2+Math.abs(Math.sin(p.life*.04))*.6;
-    if(p.y<-10){p.y=H+10;p.x=Math.random()*W}
-    ctx.beginPath();
-    ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
-    ctx.fillStyle=p.c;
-    ctx.globalAlpha=p.a;
-    ctx.shadowBlur=10;ctx.shadowColor=p.c;
-    ctx.fill();
-    ctx.globalAlpha=1;ctx.shadowBlur=0;
-  });
+  pts.forEach(p=>{p.lf++;p.x+=p.vx+Math.sin(p.lf*.017)*.35;p.y+=p.vy;
+    p.a=.15+Math.abs(Math.sin(p.lf*.038))*.6;
+    if(p.y<-8){p.y=H+8;p.x=Math.random()*W}
+    ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+    ctx.fillStyle=p.c;ctx.globalAlpha=p.a;ctx.shadowBlur=9;ctx.shadowColor=p.c;
+    ctx.fill();ctx.globalAlpha=1;ctx.shadowBlur=0;});
   requestAnimationFrame(loop);
 })();
 </script>
